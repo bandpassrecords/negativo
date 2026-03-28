@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:retro1/main.dart';
+import 'package:negativo/main.dart';
 import '../services/hive_service.dart';
 import '../models/app_settings.dart';
 

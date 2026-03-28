@@ -5,13 +5,13 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Retro1 needs camera access to record your daily moments.</string>
+	<string>Negativo needs camera access to record your daily moments.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Retro1 needs ¬phone access to record video with audio.</string>
+	<string>Negativo needs ¬phone access to record video with audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Retro1 needs access to your photo library to import media.</string>
+	<string>Negativo needs access to your photo library to import media.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Retro1 needs permission to save media to your photo library.</string>
+	<string>Negativo needs permission to save media to your photo library.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -20,7 +20,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Retro1</string>
+	<string>Negativo</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -28,7 +28,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>retro1</string>
+	<string>negativo</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

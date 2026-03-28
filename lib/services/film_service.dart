@@ -57,6 +57,13 @@ class FilmService {
     }
   }
 
+  /// Instantly marks a developing roll as developed (for testing only).
+  static Future<void> instantDevelop(FilmRoll roll) async {
+    roll.status = 'developed';
+    await HiveService.saveFilmRoll(roll);
+    await NotificationService.cancelDevelopmentNotification(roll.id);
+  }
+
   /// Checks all developing rolls and marks any completed ones as 'developed'.
   static Future<List<FilmRoll>> checkDevelopmentCompletions() async {
     final developing = HiveService.getFilmRollsByStatus('developing');

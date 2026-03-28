@@ -24,6 +24,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
 
   /// When true the viewfinder shows a full blackout (shutter closed / film advancing).
   bool _shutterClosed = false;
+  bool _needsWinding = true;
 
   int _frameCount = 0;
 
@@ -31,15 +32,39 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    HardwareKeyboard.instance.addHandler(_handleHardwareKey);
     _frameCount = widget.filmRoll.exposureCount;
+    // Unlock all orientations for the viewfinder
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     _initCamera();
   }
 
   @override
   void dispose() {
+    HardwareKeyboard.instance.removeHandler(_handleHardwareKey);
     WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
+    // Re-lock to portrait when leaving the viewfinder
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     super.dispose();
+  }
+
+  bool _handleHardwareKey(KeyEvent event) {
+    if (event is KeyDownEvent &&
+        (event.logicalKey == LogicalKeyboardKey.audioVolumeUp ||
+            event.logicalKey == LogicalKeyboardKey.audioVolumeDown)) {
+      _shoot();
+      return true; // consume — prevents system volume change
+    }
+    return false;
   }
 
   @override
@@ -53,6 +78,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
   }
 
   Future<void> _initCamera() async {
+    setState(() => _permissionDenied = false);
     final status = await Permission.camera.request();
     if (!status.isGranted) {
       setState(() => _permissionDenied = true);
@@ -75,7 +101,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
   }
 
   Future<void> _shoot() async {
-    if (_controller == null || !_cameraReady || _isShooting) return;
+    if (_controller == null || !_cameraReady || _isShooting || _needsWinding) return;
     if (widget.filmRoll.isFull) return;
 
     HapticFeedback.mediumImpact();
@@ -107,6 +133,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
       setState(() {
         _shutterClosed = false;
         _isShooting = false;
+        _needsWinding = true; // must wind before next shot
       });
     }
 
@@ -205,117 +232,269 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
     );
   }
 
+  Widget _buildViewfinderWindow({bool landscape = false}) {
+    final double innerW = landscape ? 150.0 : 88.0;
+    final double innerH = landscape ? 112.0 : 117.0;
+
+    return Container(
+      // Outer eyepiece housing — the camera body rim
+      decoration: BoxDecoration(
+        color: const Color(0xFF111111),
+        borderRadius: BorderRadius.circular(landscape ? 18 : 14),
+        border: Border.all(color: const Color(0xFF2E2E2E), width: 2),
+        boxShadow: [
+          const BoxShadow(
+            color: Colors.black87,
+            blurRadius: 20,
+            spreadRadius: 6,
+          ),
+          // Top highlight — simulates the curved glass catching light
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.08),
+            blurRadius: 1,
+            offset: const Offset(0, -1),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(10),
+      child: SizedBox(
+        width: innerW,
+        height: innerH,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(landscape ? 8 : 5),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Live camera feed
+              CameraPreview(_controller!),
+
+              // Warm amber glass tint — real viewfinder glass has a slight cast
+              IgnorePointer(
+                child: ColoredBox(
+                  color: Colors.amber.withValues(alpha: 0.06),
+                ),
+              ),
+
+              // Strong circular vignette — the "looking through an eyepiece" feel
+              IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(
+                      center: Alignment.center,
+                      radius: 0.85,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.88),
+                      ],
+                      stops: const [0.4, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Glass reflection — subtle streak across the top third
+              IgnorePointer(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: FractionallySizedBox(
+                    heightFactor: 0.3,
+                    widthFactor: 1.0,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withValues(alpha: 0.09),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Blackout during shot
+              AnimatedOpacity(
+                opacity: _shutterClosed ? 1.0 : 0.0,
+                duration: _shutterClosed
+                    ? Duration.zero
+                    : const Duration(milliseconds: 400),
+                child: const ColoredBox(color: Colors.black),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildViewfinder() {
     final total = widget.filmRoll.capacity;
     final remaining = total - _frameCount;
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // ── Black background — user sees nothing ─────────────────
-        const ColoredBox(color: Colors.black),
+    final windLever = _WindLever(
+      onComplete: () => setState(() => _needsWinding = false),
+    );
 
-        // ── Subtle frame lines on black (composition guide) ──────
-        const _FrameLines(),
+    final shutterButton = _ShutterButton(
+      onPressed: remaining > 0 && !_isShooting && !_needsWinding ? _shoot : null,
+      isShooting: _isShooting,
+    );
 
-        // ── Top HUD ─────────────────────────────────────────────
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-              child: Row(
-                children: [
-                  _HudButton(
-                    icon: Icons.arrow_back,
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  const Spacer(),
-                  _FrameCounter(current: _frameCount, total: total),
-                ],
-              ),
+    final lowFramesLabel = remaining <= 3 && remaining > 0
+        ? Text(
+            '$remaining frame${remaining == 1 ? '' : 's'} left',
+            style: const TextStyle(
+              color: Colors.amber,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
             ),
-          ),
-        ),
+          )
+        : null;
 
-        // Roll label
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 58),
-              child: Center(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.06),
-                    borderRadius: BorderRadius.circular(5),
+    return ColoredBox(
+      color: Colors.black,
+      child: SafeArea(
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            if (orientation == Orientation.landscape) {
+              // ── Landscape ─────────────────────────────────────────
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Left: HUD, viewfinder, roll name
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                            child: Row(
+                              children: [
+                                _HudButton(
+                                  icon: Icons.arrow_back,
+                                  onTap: () => Navigator.pop(context),
+                                ),
+                                const Spacer(),
+                                _FrameCounter(current: _frameCount, total: total),
+                              ],
+                            ),
+                          ),
+                        ),
+                        _buildViewfinderWindow(landscape: true),
+                        const SizedBox(height: 6),
+                        Text(
+                          widget.filmRoll.name,
+                          style: const TextStyle(
+                            color: Colors.white38,
+                            fontSize: 11,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+
+                  // Right: lever centred (slightly left) or shutter centred-right
+                  Padding(
+                    padding: const EdgeInsets.only(right: 72, left: 8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (_needsWinding) ...[
+                          SizedBox(
+                            width: 170,
+                            child: windLever,
+                          ),
+                        ] else ...[
+                          if (lowFramesLabel != null) ...[
+                            lowFramesLabel,
+                            const SizedBox(height: 12),
+                          ],
+                          shutterButton,
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+
+            // ── Portrait: shutter pinned to the bottom ─────────────
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 18, vertical: 10),
+                  child: Row(
+                    children: [
+                      _HudButton(
+                        icon: Icons.arrow_back,
+                        onTap: () => Navigator.pop(context),
+                      ),
+                      const Spacer(),
+                      _FrameCounter(current: _frameCount, total: total),
+                    ],
+                  ),
+                ),
+
+                // Viewfinder top-centre
+                Center(child: _buildViewfinderWindow()),
+
+                // Roll name
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
                   child: Text(
                     widget.filmRoll.name,
                     style: const TextStyle(
                       color: Colors.white38,
                       fontSize: 11,
-                      letterSpacing: 0.8,
+                      letterSpacing: 1.0,
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ),
 
-        // ── Bottom shutter bar ───────────────────────────────────
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 28),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (remaining <= 3 && remaining > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
-                      child: Text(
-                        '$remaining frame${remaining == 1 ? '' : 's'} left',
-                        style: const TextStyle(
-                          color: Colors.amber,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
+                // Push shutter to the bottom
+                const Spacer(),
+
+                // Wind lever or shutter bar
+                if (_needsWinding)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 72, right: 40),
+                    child: Align(
+                      alignment: const Alignment(-0.3, 0),
+                      child: SizedBox(
+                        width: 170,
+                        child: windLever,
                       ),
                     ),
-                  _ShutterButton(
-                    onPressed: remaining > 0 && !_isShooting ? _shoot : null,
-                    isShooting: _isShooting,
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 36, left: 32, right: 32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (lowFramesLabel != null) ...[
+                          lowFramesLabel,
+                          const SizedBox(height: 14),
+                        ],
+                        shutterButton,
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
+              ],
+            );
+          },
         ),
-
-        // ── Shot confirmation flash ───────────────────────────────
-        // A very brief white pulse so the user knows the shutter fired.
-        if (_shutterClosed)
-          IgnorePointer(
-            child: AnimatedOpacity(
-              opacity: _shutterClosed ? 1.0 : 0.0,
-              duration: Duration.zero,
-              child: Container(
-                color: Colors.white.withValues(alpha: 0.15),
-              ),
-            ),
-          ),
-      ],
+      ),
     );
   }
 }
@@ -387,70 +566,147 @@ class _FrameCounter extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Overlays
+// Wind lever
 // ─────────────────────────────────────────────────────────────────────────────
 
-class _FrameLines extends StatelessWidget {
-  const _FrameLines();
+class _WindLever extends StatefulWidget {
+  final VoidCallback onComplete;
+  const _WindLever({required this.onComplete});
+
+  @override
+  State<_WindLever> createState() => _WindLeverState();
+}
+
+class _WindLeverState extends State<_WindLever> {
+  double _progress = 0.0;
+  bool _completed = false;
+  int _lastTick = 0;
+
+  void _onDragUpdate(DragUpdateDetails details, double trackWidth) {
+    if (_completed) return;
+    setState(() {
+      _progress = (_progress + details.delta.dx / trackWidth).clamp(0.0, 1.0);
+    });
+
+    // Only vibrate when dragging right AND at a position never reached before
+    if (details.delta.dx > 0) {
+      final tick = (_progress * 8).floor();
+      if (tick > _lastTick) {
+        _lastTick = tick;
+        HapticFeedback.lightImpact();
+        SystemSound.play(SystemSoundType.click);
+      }
+    }
+
+    if (_progress >= 1.0 && !_completed) {
+      _completed = true;
+      _onWindComplete();
+    }
+  }
+
+  Future<void> _onWindComplete() async {
+    // Three rapid clicks — the final ratchet locking sound
+    for (int i = 0; i < 3; i++) {
+      await Future.delayed(Duration(milliseconds: i * 55));
+      HapticFeedback.mediumImpact();
+      SystemSound.play(SystemSoundType.click);
+    }
+    widget.onComplete();
+  }
+
+  void _onDragEnd(DragEndDetails _) {
+    if (_completed) return;
+    // Snap back if not fully wound
+    setState(() {
+      _progress = 0.0;
+      _lastTick = 0;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: CustomPaint(painter: _FrameLinesPainter()),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final trackWidth = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : 220.0;
+
+        return GestureDetector(
+          onHorizontalDragUpdate: (d) => _onDragUpdate(d, trackWidth),
+          onHorizontalDragEnd: _onDragEnd,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Label
+              Text(
+                _completed ? 'READY' : 'WIND FILM',
+                style: TextStyle(
+                  color: _completed ? Colors.amber : Colors.white38,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 2.0,
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Track
+              SizedBox(
+                width: trackWidth,
+                height: 44,
+                child: Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    // Track background
+                    Container(
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: Colors.white12,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    // Fill
+                    FractionallySizedBox(
+                      widthFactor: _progress,
+                      child: Container(
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+                    // Thumb
+                    Positioned(
+                      left: (_progress * (trackWidth - 44)).clamp(0.0, trackWidth - 44),
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _completed ? Colors.amber : Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.4),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.chevron_right,
+                          color: _completed ? Colors.black : Colors.black54,
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
-}
-
-class _FrameLinesPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.45)
-      ..strokeWidth = 1.5
-      ..style = PaintingStyle.stroke;
-
-    const margin = 32.0;
-    const armLength = 22.0;
-
-    // Corner frame marks
-    final corners = [
-      Offset(margin, margin),
-      Offset(size.width - margin, margin),
-      Offset(margin, size.height - margin),
-      Offset(size.width - margin, size.height - margin),
-    ];
-
-    for (final c in corners) {
-      final dx = c.dx < size.width / 2 ? armLength : -armLength;
-      final dy = c.dy < size.height / 2 ? armLength : -armLength;
-      canvas.drawLine(c, Offset(c.dx + dx, c.dy), paint);
-      canvas.drawLine(c, Offset(c.dx, c.dy + dy), paint);
-    }
-
-    // Centre focus circle (rangefinder style)
-    final circlePaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.25)
-      ..strokeWidth = 1.0
-      ..style = PaintingStyle.stroke;
-    canvas.drawCircle(
-      Offset(size.width / 2, size.height / 2),
-      28,
-      circlePaint,
-    );
-
-    // Tiny centre dot
-    final dotPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.35)
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(
-      Offset(size.width / 2, size.height / 2),
-      2.5,
-      dotPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

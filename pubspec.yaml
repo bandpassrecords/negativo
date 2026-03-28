@@ -1,5 +1,5 @@
-name: retro1
-description: Analog camera simulator — shoot film rolls and develop them later
+name: negativo
+description: Negativo — analog camera simulator, shoot film rolls and develop them later
 publish_to: 'none'
 version: 1.0.0+1
 

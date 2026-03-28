@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Analog',
+          'Negativo',
           style: TextStyle(fontWeight: FontWeight.w600, letterSpacing: 1.5),
         ),
         actions: [
@@ -355,7 +355,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right, size: 20, color: cs.outline),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.chevron_right, size: 20, color: cs.outline),
+                    const SizedBox(height: 6),
+                    GestureDetector(
+                      onTap: () async {
+                        await FilmService.instantDevelop(roll);
+                        _loadRolls();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: cs.errorContainer,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'DEV NOW',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.0,
+                            color: cs.onErrorContainer,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

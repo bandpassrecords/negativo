@@ -1,9 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:retro1/l10n/app_localizations.dart' show AppLocalizations;
+import 'package:negativo/l10n/app_localizations.dart' show AppLocalizations;
 import 'screens/home_screen.dart';
 import 'services/notification_service.dart';
 import 'services/hive_service.dart';
@@ -23,7 +22,7 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
-    if (!Platform.isIOS) DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitDown,
   ]);
 
   runApp(const MyApp());
@@ -81,7 +80,7 @@ class _MyAppState extends State<MyApp> {
     const seed = Color(0xFFB8860B); // dark goldenrod — analog amber
 
     return MaterialApp(
-      title: 'Analog',
+      title: 'Negativo',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         AppLocalizations.delegate,

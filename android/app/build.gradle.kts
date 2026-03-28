@@ -28,7 +28,7 @@ if (keystorePropertiesFile != null && keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.bandpassrecords.retro1"
+    namespace = "com.bandpassrecords.negativo"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -48,7 +48,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.bandpassrecords.retro1"
+        applicationId = "com.bandpassrecords.negativo"
         minSdk = if (flutter.minSdkVersion >= 24) flutter.minSdkVersion else 24 // ffmpeg_kit_flutter_new requer API 24+
         targetSdk = 36
         versionCode = flutterVersionCode.toInt()
