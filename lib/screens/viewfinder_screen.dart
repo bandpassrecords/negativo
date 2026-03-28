@@ -360,15 +360,14 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
         child: OrientationBuilder(
           builder: (context, orientation) {
             if (orientation == Orientation.landscape) {
-              // ── Landscape ─────────────────────────────────────────
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Left: HUD, viewfinder, roll name
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
+              // ── Landscape: LayoutBuilder + Stack for % positioning ──
+              return LayoutBuilder(
+                builder: (context, constraints) => Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Content: HUD full-width, viewfinder + name left-aligned
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           width: double.infinity,
@@ -387,43 +386,54 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
                             ),
                           ),
                         ),
-                        _buildViewfinderWindow(landscape: true),
+                        Padding(
+                          padding: EdgeInsets.only(left: constraints.maxWidth * 0.20),
+                          child: _buildViewfinderWindow(landscape: true),
+                        ),
                         const SizedBox(height: 6),
-                        Text(
-                          widget.filmRoll.name,
-                          style: const TextStyle(
-                            color: Colors.white38,
-                            fontSize: 11,
-                            letterSpacing: 1.0,
+                        Padding(
+                          padding: EdgeInsets.only(left: constraints.maxWidth * 0.20),
+                          child: Text(
+                            widget.filmRoll.name,
+                            style: const TextStyle(
+                              color: Colors.white38,
+                              fontSize: 11,
+                              letterSpacing: 1.0,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
 
-                  // Right: lever centred (slightly left) or shutter centred-right
-                  Padding(
-                    padding: const EdgeInsets.only(right: 72, left: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (_needsWinding) ...[
-                          SizedBox(
-                            width: 170,
-                            child: windLever,
-                          ),
-                        ] else ...[
-                          if (lowFramesLabel != null) ...[
-                            lowFramesLabel,
-                            const SizedBox(height: 12),
+                    // Lever — 60% from left, 40% from bottom
+                    if (_needsWinding)
+                      Positioned(
+                        left: constraints.maxWidth * 0.55,
+                        bottom: constraints.maxHeight * 0.20,
+                        child: SizedBox(
+                          width: 170,
+                          child: windLever,
+                        ),
+                      ),
+
+                    // Shutter — same position as lever start
+                    if (!_needsWinding)
+                      Positioned(
+                        left: constraints.maxWidth * 0.55,
+                        bottom: constraints.maxHeight * 0.20,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (lowFramesLabel != null) ...[
+                              lowFramesLabel,
+                              const SizedBox(height: 12),
+                            ],
+                            shutterButton,
                           ],
-                          shutterButton,
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
+                        ),
+                      ),
+                  ],
+                ),
               );
             }
 
