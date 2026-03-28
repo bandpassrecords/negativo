@@ -6,6 +6,7 @@ import '../models/film_roll.dart';
 import '../models/exposure.dart';
 import 'hive_service.dart';
 import 'notification_service.dart';
+import 'scoring_service.dart';
 
 class FilmService {
   static const _uuid = Uuid();
@@ -51,6 +52,8 @@ class FilmService {
     roll.developmentStartedAt = DateTime.now();
     await HiveService.saveFilmRoll(roll);
 
+    await ScoringService.addPoints(ScoringService.ptsStartDev);
+
     final settings = HiveService.getSettings();
     if (settings.developmentNotificationsEnabled) {
       await NotificationService.scheduleDevelopmentNotification(roll);
@@ -73,6 +76,7 @@ class FilmService {
         roll.status = 'developed';
         await HiveService.saveFilmRoll(roll);
         await NotificationService.cancelDevelopmentNotification(roll.id);
+        await ScoringService.addPoints(ScoringService.ptsCompleteDev);
         completed.add(roll);
       }
     }

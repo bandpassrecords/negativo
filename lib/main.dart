@@ -7,6 +7,7 @@ import 'screens/home_screen.dart';
 import 'services/notification_service.dart';
 import 'services/hive_service.dart';
 import 'services/film_service.dart';
+import 'services/scoring_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,7 @@ void main() async {
 
   await HiveService.init();
   await NotificationService.init();
+  await ScoringService.init();
 
   // Check if any developing rolls have completed
   await FilmService.checkDevelopmentCompletions();

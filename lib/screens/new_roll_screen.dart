@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/film_service.dart';
+import '../services/scoring_service.dart';
 
 class NewRollScreen extends StatefulWidget {
   const NewRollScreen({super.key});
@@ -9,11 +10,17 @@ class NewRollScreen extends StatefulWidget {
 }
 
 class _NewRollScreenState extends State<NewRollScreen> {
-  int _selectedCapacity = 24;
+  late int _selectedCapacity;
   final _nameController = TextEditingController();
   bool _loading = false;
 
-  final List<int> _capacities = [12, 24, 36];
+  static const List<int> _allCapacities = [12, 24, 36];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCapacity = ScoringService.availableCapacities.first;
+  }
 
   @override
   void dispose() {
@@ -62,7 +69,8 @@ class _NewRollScreenState extends State<NewRollScreen> {
             ),
             const SizedBox(height: 16),
             Row(
-              children: _capacities.map((cap) {
+              children: _allCapacities.map((cap) {
+                final unlocked = ScoringService.availableCapacities.contains(cap);
                 final selected = cap == _selectedCapacity;
                 return Expanded(
                   child: Padding(
@@ -70,7 +78,10 @@ class _NewRollScreenState extends State<NewRollScreen> {
                     child: _CapacityTile(
                       capacity: cap,
                       selected: selected,
-                      onTap: () => setState(() => _selectedCapacity = cap),
+                      locked: !unlocked,
+                      onTap: unlocked
+                          ? () => setState(() => _selectedCapacity = cap)
+                          : null,
                     ),
                   ),
                 );
@@ -128,11 +139,13 @@ class _NewRollScreenState extends State<NewRollScreen> {
 class _CapacityTile extends StatelessWidget {
   final int capacity;
   final bool selected;
-  final VoidCallback onTap;
+  final bool locked;
+  final VoidCallback? onTap;
 
   const _CapacityTile({
     required this.capacity,
     required this.selected,
+    required this.locked,
     required this.onTap,
   });
 
@@ -145,7 +158,11 @@ class _CapacityTile extends StatelessWidget {
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: selected ? cs.primaryContainer : cs.surfaceContainerLow,
+          color: locked
+              ? cs.surfaceContainerLow.withValues(alpha: 0.5)
+              : selected
+                  ? cs.primaryContainer
+                  : cs.surfaceContainerLow,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: selected ? cs.primary : Colors.transparent,
@@ -154,22 +171,27 @@ class _CapacityTile extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(
-              '$capacity',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-                color: selected ? cs.onPrimaryContainer : cs.onSurface,
+            if (locked)
+              Icon(Icons.lock_outline, size: 22, color: cs.outline.withValues(alpha: 0.5))
+            else
+              Text(
+                '$capacity',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                  color: selected ? cs.onPrimaryContainer : cs.onSurface,
+                ),
               ),
-            ),
             const SizedBox(height: 4),
             Text(
-              'frames',
+              locked ? '$capacity frames' : 'frames',
               style: TextStyle(
                 fontSize: 12,
-                color: selected
-                    ? cs.onPrimaryContainer.withValues(alpha: 0.7)
-                    : cs.outline,
+                color: locked
+                    ? cs.outline.withValues(alpha: 0.5)
+                    : selected
+                        ? cs.onPrimaryContainer.withValues(alpha: 0.7)
+                        : cs.outline,
               ),
             ),
           ],

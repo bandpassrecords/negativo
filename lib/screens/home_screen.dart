@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../models/film_roll.dart';
 import '../services/hive_service.dart';
 import '../services/film_service.dart';
+import '../services/scoring_service.dart';
 import 'new_roll_screen.dart';
 import 'viewfinder_screen.dart';
 import 'film_roll_detail_screen.dart';
 import 'developed_gallery_screen.dart';
 import 'settings_screen.dart';
+import 'progress_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -49,8 +51,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     });
   }
 
-  FilmRoll? get _activeRoll =>
-      _rolls.where((r) => r.status == 'active').firstOrNull;
+  List<FilmRoll> get _activeRolls =>
+      _rolls.where((r) => r.status == 'active').toList();
 
   List<FilmRoll> get _developingRolls =>
       _rolls.where((r) => r.status == 'developing').toList();
@@ -100,6 +102,40 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           style: TextStyle(fontWeight: FontWeight.w600, letterSpacing: 1.5),
         ),
         actions: [
+          GestureDetector(
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProgressScreen()),
+              );
+              setState(() {});
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.star_rounded,
+                      size: 14,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${ScoringService.points}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () async {
@@ -113,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ],
       ),
       body: _rolls.isEmpty ? _buildEmptyState() : _buildRollsList(),
-      floatingActionButton: _activeRoll == null
+      floatingActionButton: _activeRolls.length < ScoringService.maxActiveSlots
           ? FloatingActionButton.extended(
               onPressed: _openNewRoll,
               icon: const Icon(Icons.camera_roll),
@@ -169,8 +205,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
         children: [
-          if (_activeRoll != null) ...[
-            _buildActiveRollCard(_activeRoll!),
+          if (_activeRolls.isNotEmpty) ...[
+            ..._activeRolls.map(_buildActiveRollCard),
             const SizedBox(height: 24),
           ],
           if (_developingRolls.isNotEmpty) ...[
