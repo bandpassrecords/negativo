@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/film_stock.dart';
 import '../services/hive_service.dart';
@@ -55,12 +56,13 @@ class _AlbumsScreenState extends State<AlbumsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Albums'),
+        title: Text(l.albumsTitle),
       ),
       body: _rolls.isEmpty
-          ? _buildEmpty()
+          ? _buildEmpty(l)
           : RefreshIndicator(
               onRefresh: _refresh,
               child: ListView.separated(
@@ -76,7 +78,7 @@ class _AlbumsScreenState extends State<AlbumsScreen>
     );
   }
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(AppLocalizations l) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -84,14 +86,14 @@ class _AlbumsScreenState extends State<AlbumsScreen>
           Icon(Icons.photo_library_outlined,
               size: 72, color: Theme.of(context).colorScheme.outline),
           const SizedBox(height: 20),
-          Text('No developed rolls yet',
+          Text(l.albumsEmpty,
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
                   ?.copyWith(fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           Text(
-            'Shoot a roll and send it for development.',
+            l.albumsEmptySub,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.outline,
                 ),
@@ -113,6 +115,7 @@ class _AlbumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
     final stock = FilmStock.fromId(roll.filmStockId);
     final exposures = HiveService.getExposuresForRoll(roll.id);
     final coverPath = exposures.isNotEmpty ? exposures.first.imagePath : null;
@@ -195,7 +198,7 @@ class _AlbumCard extends StatelessWidget {
                               size: 14, color: cs.outline),
                           const SizedBox(width: 4),
                           Text(
-                            '${exposures.length} photo${exposures.length == 1 ? '' : 's'}',
+                            l.albumsPhotoCount(exposures.length),
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall

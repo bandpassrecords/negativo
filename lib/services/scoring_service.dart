@@ -17,6 +17,10 @@ class ScoringService {
   static const String filmEktar  = 'film_ektar';
   static const String filmVelvia = 'film_velvia';
 
+  // Development time reductions (default is 3 days / 72 h)
+  static const String devTime2Days = 'dev_2days'; // reduce to 2 days
+  static const String devTime1Day  = 'dev_1day';  // reduce to 1 day
+
   // ── Earning ───────────────────────────────────────────────────────────────
   static const int ptsPerPhoto    = 5;
   static const int ptsFullRoll    = 30;  // bonus when every frame is used
@@ -44,7 +48,8 @@ class ScoringService {
 
   // ── Permanent unlock costs ────────────────────────────────────────────────
   static const List<String> featureOrder = [
-    roll24, roll36, filmHp5, slot2, filmEktar, filmVelvia, slotUnlimited,
+    roll24, roll36, filmHp5, slot2, filmEktar, filmVelvia,
+    devTime2Days, devTime1Day, slotUnlimited,
   ];
 
   static const Map<String, int> unlockCosts = {
@@ -54,6 +59,8 @@ class ScoringService {
     slot2:         900,
     filmEktar:     450,
     filmVelvia:    800,
+    devTime2Days:  600,
+    devTime1Day:   1200,
     slotUnlimited: 2500,
   };
 
@@ -64,6 +71,8 @@ class ScoringService {
     slot2:         'Load 2 rolls at once',
     filmEktar:     'Kodak Ektar 100',
     filmVelvia:    'Fujifilm Velvia 50',
+    devTime2Days:  'Faster development (2 days)',
+    devTime1Day:   'Express development (1 day)',
     slotUnlimited: 'Unlimited rolls',
   };
 
@@ -74,6 +83,8 @@ class ScoringService {
     slot2:         'Keep two rolls loaded simultaneously.',
     filmEktar:     'Ultra-vivid colour with punchy reds and sharp detail.',
     filmVelvia:    'Hyper-saturated landscape film with deep shadows.',
+    devTime2Days:  'Cut development time down to 2 days.',
+    devTime1Day:   'Same-day development — your roll is ready in 24 hours.',
     slotUnlimited: 'The ultimate upgrade — load as many rolls as you want.',
   };
 
@@ -118,6 +129,14 @@ class ScoringService {
   }
 
   // ── Derived state ─────────────────────────────────────────────────────────
+
+  /// Development duration in hours based on unlocked speed upgrades.
+  /// Default 72 h (3 days) → 48 h (2 days) → 24 h (1 day).
+  static int get developmentHours {
+    if (isUnlocked(devTime1Day))  return 24;
+    if (isUnlocked(devTime2Days)) return 48;
+    return 72;
+  }
 
   static int get maxActiveSlots {
     if (isUnlocked(slotUnlimited)) return 99;

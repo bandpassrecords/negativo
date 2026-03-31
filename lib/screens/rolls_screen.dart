@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/film_stock.dart';
 import '../services/hive_service.dart';
@@ -81,6 +82,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final isEmpty = _activeRolls.isEmpty && _developingRolls.isEmpty;
 
@@ -122,20 +124,20 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
         ],
       ),
       body: isEmpty
-          ? _buildEmpty()
+          ? _buildEmpty(l)
           : RefreshIndicator(
               onRefresh: _checkAndReload,
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
                 children: [
                   if (_activeRolls.isNotEmpty) ...[
-                    ..._activeRolls.map(_buildActiveCard),
+                    ..._activeRolls.map((r) => _buildActiveCard(r, l, cs)),
                     const SizedBox(height: 24),
                   ],
                   if (_developingRolls.isNotEmpty) ...[
-                    _sectionHeader('Developing', Icons.hourglass_top_rounded),
+                    _sectionHeader(l.rollsDevelopingSection, Icons.hourglass_top_rounded),
                     const SizedBox(height: 8),
-                    ..._developingRolls.map(_buildDevelopingCard),
+                    ..._developingRolls.map((r) => _buildDevelopingCard(r, l, cs)),
                   ],
                 ],
               ),
@@ -144,13 +146,13 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
           ? FloatingActionButton.extended(
               onPressed: _openNewRoll,
               icon: const Icon(Icons.camera_roll),
-              label: const Text('Load Film'),
+              label: Text(l.rollsLoadFilmFab),
             )
           : null,
     );
   }
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(AppLocalizations l) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40),
@@ -161,7 +163,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
                 size: 80, color: Theme.of(context).colorScheme.outline),
             const SizedBox(height: 24),
             Text(
-              'No film loaded',
+              l.rollsEmpty,
               style: Theme.of(context)
                   .textTheme
                   .titleLarge
@@ -169,7 +171,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
             ),
             const SizedBox(height: 8),
             Text(
-              'Load a film roll to start shooting.',
+              l.rollsEmptySub,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.outline,
@@ -179,7 +181,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
             FilledButton.icon(
               onPressed: _openNewRoll,
               icon: const Icon(Icons.camera_roll),
-              label: const Text('Load Film Roll'),
+              label: Text(l.rollsLoadFilmRoll),
             ),
           ],
         ),
@@ -203,8 +205,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildActiveCard(FilmRoll roll) {
-    final cs = Theme.of(context).colorScheme;
+  Widget _buildActiveCard(FilmRoll roll, AppLocalizations l, ColorScheme cs) {
     final used = roll.exposureCount;
     final total = roll.capacity;
 
@@ -228,7 +229,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      'LOADED',
+                      l.rollsStatusLoaded,
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
@@ -255,7 +256,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
               _filmStrip(used, total),
               const SizedBox(height: 6),
               Text(
-                '$used / $total frames used',
+                l.rollsFramesUsed(used, total),
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -268,13 +269,13 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
                     child: FilledButton.icon(
                       onPressed: () => _openViewfinder(roll),
                       icon: const Icon(Icons.camera_alt, size: 18),
-                      label: const Text('Shoot'),
+                      label: Text(l.rollsShoot),
                     ),
                   ),
                   const SizedBox(width: 10),
                   OutlinedButton(
                     onPressed: () => _openDetail(roll),
-                    child: const Text('Develop'),
+                    child: Text(l.rollsDevelop),
                   ),
                 ],
               ),
@@ -285,8 +286,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildDevelopingCard(FilmRoll roll) {
-    final cs = Theme.of(context).colorScheme;
+  Widget _buildDevelopingCard(FilmRoll roll, AppLocalizations l, ColorScheme cs) {
     final remaining = roll.remainingDevelopmentTime;
 
     return Padding(
@@ -325,8 +325,8 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
                       const SizedBox(height: 2),
                       Text(
                         remaining != null && remaining.inSeconds > 0
-                            ? _formatDuration(remaining)
-                            : 'Almost ready…',
+                            ? _formatDuration(remaining, l)
+                            : l.rollsAlmostReady,
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
@@ -353,7 +353,7 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          'DEV NOW',
+                          l.rollsDevNow,
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w800,
@@ -418,9 +418,9 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
     );
   }
 
-  String _formatDuration(Duration d) {
-    if (d.inDays >= 1) return '${d.inDays}d ${d.inHours % 24}h remaining';
-    if (d.inHours >= 1) return '${d.inHours}h ${d.inMinutes % 60}m remaining';
-    return '${d.inMinutes}m remaining';
+  String _formatDuration(Duration d, AppLocalizations l) {
+    if (d.inDays >= 1) return l.rollsDaysHoursRemaining(d.inDays, d.inHours % 24);
+    if (d.inHours >= 1) return l.rollsHoursMinutesRemaining(d.inHours, d.inMinutes % 60);
+    return l.rollsMinutesRemaining(d.inMinutes);
   }
 }

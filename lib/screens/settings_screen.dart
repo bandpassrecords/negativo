@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:negativo/main.dart';
+import '../l10n/app_localizations.dart';
 import '../services/hive_service.dart';
+import '../services/scoring_service.dart';
 import '../models/app_settings.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -27,17 +29,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l.settingsTitle)),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
           // ── Appearance ──────────────────────────────────────────
-          const _SectionHeader(title: 'Appearance'),
+          _SectionHeader(title: l.settingsAppearance),
           ListTile(
-            title: const Text('Theme'),
+            title: Text(l.settingsTheme),
             trailing: SegmentedButton<String>(
               segments: const [
                 ButtonSegment(value: 'light', icon: Icon(Icons.light_mode, size: 18)),
@@ -55,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            title: const Text('Language'),
+            title: Text(l.settingsLanguage),
             trailing: DropdownButton<String>(
               value: _settings.language,
               underline: const SizedBox.shrink(),
@@ -78,38 +80,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(height: 32),
 
           // ── Film Development ─────────────────────────────────────
-          const _SectionHeader(title: 'Film Development'),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Text(
-              'How long should it take to develop your film?',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: cs.outline),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentedButton<int>(
-              segments: const [
-                ButtonSegment(value: 24, label: Text('1 day')),
-                ButtonSegment(value: 48, label: Text('2 days')),
-                ButtonSegment(value: 72, label: Text('3 days')),
-                ButtonSegment(value: 168, label: Text('1 week')),
-              ],
-              selected: {_settings.developmentDurationHours},
-              onSelectionChanged: (v) {
-                setState(() => _settings.developmentDurationHours = v.first);
-                _save();
-              },
-            ),
-          ),
-          const SizedBox(height: 16),
+          _SectionHeader(title: l.settingsFilmDev),
           SwitchListTile(
-            title: const Text('Notify when developed'),
-            subtitle: const Text('Get a notification when your film is ready'),
+            title: Text(l.settingsNotifyDev),
+            subtitle: Text(l.settingsNotifyDevSub),
             value: _settings.developmentNotificationsEnabled,
             onChanged: (v) {
               setState(() => _settings.developmentNotificationsEnabled = v);
@@ -119,18 +93,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
           const Divider(height: 32),
 
+          // ── Debug ────────────────────────────────────────────────
+          const _SectionHeader(title: 'Debug'),
+          ListTile(
+            title: const Text('Grant 50 000 points'),
+            subtitle: const Text('Temporary testing shortcut'),
+            trailing: FilledButton.tonal(
+              onPressed: () async {
+                await ScoringService.addPoints(50000);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('50 000 points added!')),
+                  );
+                }
+              },
+              child: const Text('Grant'),
+            ),
+          ),
+
+          const Divider(height: 32),
+
           // ── Statistics ───────────────────────────────────────────
-          const _SectionHeader(title: 'Statistics'),
+          _SectionHeader(title: l.settingsStatistics),
           _StatTile(
-            label: 'Rolls developed',
+            label: l.settingsRollsDeveloped,
             value: '${HiveService.getTotalDevelopedRolls()}',
           ),
           _StatTile(
-            label: 'Total photos taken',
+            label: l.settingsTotalPhotos,
             value: '${HiveService.getTotalExposures()}',
           ),
           _StatTile(
-            label: 'Total rolls',
+            label: l.settingsTotalRolls,
             value: '${HiveService.getTotalRolls()}',
           ),
 

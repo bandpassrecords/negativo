@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'rolls_screen.dart';
 import 'albums_screen.dart';
 import 'progress_screen.dart';
@@ -34,31 +35,32 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       body: _buildTab(),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.camera_roll_outlined),
-            selectedIcon: Icon(Icons.camera_roll),
-            label: 'Rolls',
+            icon: const Icon(Icons.camera_roll_outlined),
+            selectedIcon: const Icon(Icons.camera_roll),
+            label: l.navRolls,
           ),
           NavigationDestination(
-            icon: Icon(Icons.photo_library_outlined),
-            selectedIcon: Icon(Icons.photo_library),
-            label: 'Albums',
+            icon: const Icon(Icons.photo_library_outlined),
+            selectedIcon: const Icon(Icons.photo_library),
+            label: l.navAlbums,
           ),
           NavigationDestination(
-            icon: Icon(Icons.star_outline_rounded),
-            selectedIcon: Icon(Icons.star_rounded),
-            label: 'Rewards',
+            icon: const Icon(Icons.star_outline_rounded),
+            selectedIcon: const Icon(Icons.star_rounded),
+            label: l.navRewards,
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: l.navSettings,
           ),
         ],
       ),

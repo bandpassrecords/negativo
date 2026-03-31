@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/film_stock.dart';
 import '../services/film_service.dart';
 import '../services/scoring_service.dart';
@@ -31,10 +32,11 @@ class _NewRollScreenState extends State<NewRollScreen> {
   }
 
   Future<void> _loadRoll() async {
+    final l = AppLocalizations.of(context)!;
     final name = _nameController.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Give your roll a name first')),
+        SnackBar(content: Text(l.newRollNameRequired)),
       );
       return;
     }
@@ -49,10 +51,11 @@ class _NewRollScreenState extends State<NewRollScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Load Film Roll')),
+      appBar: AppBar(title: Text(l.newRollTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -60,7 +63,7 @@ class _NewRollScreenState extends State<NewRollScreen> {
           children: [
             // ── Film stock ─────────────────────────────────────────────────
             Text(
-              'Choose film stock',
+              l.newRollChooseStock,
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -68,7 +71,7 @@ class _NewRollScreenState extends State<NewRollScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Each stock gives your photos a distinct look.',
+              l.newRollChooseStockSub,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
@@ -120,7 +123,7 @@ class _NewRollScreenState extends State<NewRollScreen> {
 
             // ── Capacity ───────────────────────────────────────────────────
             Text(
-              'Choose capacity',
+              l.newRollChooseCapacity,
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -128,7 +131,7 @@ class _NewRollScreenState extends State<NewRollScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'How many frames does this roll have?',
+              l.newRollChooseCapacitySub,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
@@ -160,7 +163,7 @@ class _NewRollScreenState extends State<NewRollScreen> {
 
             // ── Name ───────────────────────────────────────────────────────
             Text(
-              'Name this roll',
+              l.newRollNameTitle,
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -168,7 +171,7 @@ class _NewRollScreenState extends State<NewRollScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'What moment or trip is this roll for?',
+              l.newRollNameSub,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
@@ -179,9 +182,9 @@ class _NewRollScreenState extends State<NewRollScreen> {
               controller: _nameController,
               autofocus: false,
               textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(
-                hintText: 'Paris Trip, Summer 2024, Road Trip…',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: l.newRollNameHint,
+                border: const OutlineInputBorder(),
               ),
               onSubmitted: (_) => _loadRoll(),
             ),
@@ -197,7 +200,7 @@ class _NewRollScreenState extends State<NewRollScreen> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.camera_roll),
-                label: const Text('Load Roll'),
+                label: Text(l.newRollLoadButton),
               ),
             ),
           ],
@@ -227,6 +230,7 @@ class _StockCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: onTap,
@@ -280,7 +284,11 @@ class _StockCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 1),
                       Text(
-                        locked ? '${unlockCost ?? '?'} pts to unlock' : stock.tagline,
+                        locked
+                            ? (unlockCost != null
+                                ? l.newRollPtsToUnlock(unlockCost!)
+                                : '?')
+                            : stock.tagline,
                         style: TextStyle(
                           fontSize: 9,
                           color: locked
@@ -331,6 +339,7 @@ class _CapacityTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -364,7 +373,7 @@ class _CapacityTile extends StatelessWidget {
               ),
             const SizedBox(height: 4),
             Text(
-              locked ? '$capacity frames' : 'frames',
+              locked ? '$capacity ${l.newRollFrames}' : l.newRollFrames,
               style: TextStyle(
                 fontSize: 12,
                 color: locked
