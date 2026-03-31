@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/film_roll.dart';
 import '../services/film_service.dart';
 import '../services/media_service.dart';
@@ -31,12 +32,26 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
   String? _pointsOverlayText;
   int _chipGeneration = 0;
 
+  String get _windKey => 'neg_wound_${widget.filmRoll.id}';
+
+  Future<void> _loadWindingState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final needsWinding = prefs.getBool(_windKey) ?? true;
+    if (mounted) setState(() => _needsWinding = needsWinding);
+  }
+
+  Future<void> _saveWindingState(bool needsWinding) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_windKey, needsWinding);
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     HardwareKeyboard.instance.addHandler(_handleHardwareKey);
     _frameCount = widget.filmRoll.exposureCount;
+    _loadWindingState();
     // Unlock all orientations for the viewfinder
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -143,8 +158,9 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
       setState(() {
         _shutterClosed = false;
         _isShooting = false;
-        _needsWinding = true; // must wind before next shot
+        _needsWinding = true;
       });
+      _saveWindingState(true);
     }
 
     if (widget.filmRoll.isFull && mounted) {
@@ -166,6 +182,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
 
   Future<void> _onWindingComplete(double seconds) async {
     setState(() => _needsWinding = false);
+    _saveWindingState(false);
     final bonus = ScoringService.windBonus(seconds);
     if (bonus > 0) {
       await ScoringService.addPoints(bonus);

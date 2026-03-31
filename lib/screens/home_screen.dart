@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/film_roll.dart';
+import '../models/film_stock.dart';
 import '../services/hive_service.dart';
 import '../services/film_service.dart';
 import '../services/scoring_service.dart';
@@ -287,6 +288,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     .titleLarge
                     ?.copyWith(fontWeight: FontWeight.w700),
               ),
+              const SizedBox(height: 6),
+              _buildFilmStockBadge(roll),
               const SizedBox(height: 14),
               _buildFilmStrip(used, total),
               const SizedBox(height: 6),
@@ -318,6 +321,32 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFilmStockBadge(FilmRoll roll) {
+    final stock = FilmStock.fromId(roll.filmStockId);
+    if (stock == null) return const SizedBox.shrink();
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 14,
+          decoration: BoxDecoration(
+            color: stock.accentColor,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          '${stock.brand}  ${stock.name}',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: stock.accentColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+        ),
+      ],
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../models/film_roll.dart';
 import '../models/exposure.dart';
 import '../services/hive_service.dart';
+import '../services/google_photos_service.dart';
 
 class DevelopedGalleryScreen extends StatefulWidget {
   final FilmRoll filmRoll;
@@ -17,6 +18,8 @@ class DevelopedGalleryScreen extends StatefulWidget {
 
 class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
   List<Exposure> _exposures = [];
+  bool _exporting = false;
+  double _exportProgress = 0;
 
   @override
   void initState() {
@@ -29,6 +32,44 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
       _exposures =
           HiveService.getExposuresForRoll(widget.filmRoll.id);
     });
+  }
+
+  Future<void> _exportToGooglePhotos() async {
+    final paths = _exposures
+        .map((e) => e.imagePath)
+        .where((p) => File(p).existsSync())
+        .toList();
+
+    if (paths.isEmpty) return;
+
+    setState(() {
+      _exporting = true;
+      _exportProgress = 0;
+    });
+
+    try {
+      final url = await GooglePhotosService.createAlbumWithPhotos(
+        albumTitle: widget.filmRoll.name,
+        imagePaths: paths,
+        onProgress: (p) => setState(() => _exportProgress = p),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Album created! $url'),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Export failed: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _exporting = false);
+    }
   }
 
   void _openPhoto(int index) {
@@ -48,6 +89,26 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.filmRoll.name),
+        actions: [
+          if (_exporting)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  value: _exportProgress > 0 ? _exportProgress : null,
+                ),
+              ),
+            )
+          else if (_exposures.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.cloud_upload_outlined),
+              tooltip: 'Export to Google Photos',
+              onPressed: _exportToGooglePhotos,
+            ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(20),
           child: Padding(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/film_roll.dart';
+import '../models/film_stock.dart';
 import '../services/scoring_service.dart';
 import '../services/film_service.dart';
 import '../services/hive_service.dart';
@@ -178,14 +179,49 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
             const SizedBox(height: 24),
 
-            // ── Permanent unlocks ───────────────────────────────────────────
+            // ── Film stocks ──────────────────────────────────────────────────
+            _SectionHeader('FILM STOCKS'),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              child: Text(
+                'Kodak Portra 400 is free. Unlock the rest with points.',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: cs.outline),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...FilmStock.all.map((stock) {
+              final unlocked = stock.unlockFeatureId == null ||
+                  ScoringService.isUnlocked(stock.unlockFeatureId!);
+              final cost = stock.unlockFeatureId == null
+                  ? 0
+                  : ScoringService.unlockCosts[stock.unlockFeatureId] ?? 0;
+              return _FilmStockUnlockCard(
+                stock: stock,
+                unlocked: unlocked,
+                cost: cost,
+                points: pts,
+                onUnlock: stock.unlockFeatureId == null
+                    ? null
+                    : () => _tryUnlock(stock.unlockFeatureId!),
+              );
+            }),
+
+            const SizedBox(height: 24),
+
+            // ── Camera upgrades ──────────────────────────────────────────────
             _SectionHeader('UPGRADES'),
             const SizedBox(height: 8),
-            ...ScoringService.featureOrder.map((f) => _UnlockCard(
-                  feature: f,
-                  points: pts,
-                  onUnlock: () => _tryUnlock(f),
-                )),
+            ...ScoringService.featureOrder
+                .where((f) => !f.startsWith('film_'))
+                .map((f) => _UnlockCard(
+                      feature: f,
+                      points: pts,
+                      onUnlock: () => _tryUnlock(f),
+                    )),
 
             // ── Development boost ────────────────────────────────────────────
             if (_developingRolls.isNotEmpty) ...[
@@ -432,6 +468,111 @@ class _DevBoostCard extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _FilmStockUnlockCard extends StatelessWidget {
+  final FilmStock stock;
+  final bool unlocked;
+  final int cost;
+  final int points;
+  final VoidCallback? onUnlock;
+
+  const _FilmStockUnlockCard({
+    required this.stock,
+    required this.unlocked,
+    required this.cost,
+    required this.points,
+    required this.onUnlock,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final canAfford = points >= cost;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Card(
+        color: unlocked ? cs.secondaryContainer : cs.surfaceContainerLow,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Row(
+            children: [
+              // Accent bar
+              Container(
+                width: 5,
+                height: 80,
+                color: unlocked
+                    ? stock.accentColor
+                    : stock.accentColor.withValues(alpha: 0.35),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        stock.brand,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: unlocked
+                              ? cs.onSecondaryContainer.withValues(alpha: 0.6)
+                              : cs.outline,
+                        ),
+                      ),
+                      Text(
+                        stock.name,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: unlocked ? cs.onSecondaryContainer : null,
+                            ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        stock.tagline,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: unlocked
+                              ? stock.accentColor
+                              : stock.accentColor.withValues(alpha: 0.6),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 14),
+                child: unlocked
+                    ? Icon(Icons.check_circle, color: stock.accentColor)
+                    : onUnlock == null
+                        ? Icon(Icons.star_rounded,
+                            color: stock.accentColor.withValues(alpha: 0.4),
+                            size: 20)
+                        : FilledButton(
+                            onPressed: canAfford ? onUnlock : null,
+                            style: FilledButton.styleFrom(
+                              backgroundColor: stock.accentColor,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text('$cost pts',
+                                style: const TextStyle(fontSize: 12)),
+                          ),
               ),
             ],
           ),

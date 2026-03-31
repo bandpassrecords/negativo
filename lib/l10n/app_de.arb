@@ -1,417 +1,284 @@
 {
   "@@locale": "de",
-  "appTitle": "Retro1",
-  "timeline": "Zeitleiste",
-  "settings": "Einstellungen",
-  "refresh": "Aktualisieren",
-  "generateVideos": "Videos Generieren",
-  "editTodayEntry": "Eintrag von Heute Bearbeiten",
-  "recordToday": "Heute Aufnehmen",
-  "view": "Ansehen",
-  "edit": "Bearbeiten",
-  "delete": "Löschen",
-  "cancel": "Abbrechen",
-  "yes": "Ja",
-  "replace": "Ersetzen",
-  "confirmDeletion": "Löschung bestätigen",
-  "confirmDeletionMessage": "Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?",
-  "entryDeleted": "Eintrag gelöscht",
-  "entrySaved": "Eintrag erfolgreich gespeichert!",
-  "addEntryFor": "Eintrag für {date} hinzufügen",
-  "@addEntryFor": {
+  "appTitle": "Negativ",
+  "navRolls": "Filme",
+  "navAlbums": "Alben",
+  "navRewards": "Belohnungen",
+  "navSettings": "Einstellungen",
+
+  "rollsEmpty": "Kein Film geladen",
+  "rollsEmptySub": "Lade einen Film ein, um zu fotografieren.",
+  "rollsLoadFilmRoll": "Film einlegen",
+  "rollsLoadFilmFab": "Film laden",
+  "rollsDevelopingSection": "In Entwicklung",
+  "rollsStatusLoaded": "GELADEN",
+  "rollsShoot": "Fotografieren",
+  "rollsDevelop": "Entwickeln",
+  "rollsAlmostReady": "Fast fertig…",
+  "rollsDevNow": "JETZT ENTWICKELN",
+  "rollsFramesUsed": "{used} / {total} Aufnahmen verwendet",
+  "@rollsFramesUsed": {
     "placeholders": {
-      "date": {
-        "type": "String"
-      }
+      "used": { "type": "int" },
+      "total": { "type": "int" }
     }
   },
-  "captureOrImport": "Möchten Sie Medien aufnehmen oder importieren?",
-  "recordVideo": "Video Aufnehmen",
-  "takePhoto": "Foto Aufnehmen",
-  "videoFromGallery": "Video aus Galerie",
-  "photoFromGallery": "Foto aus Galerie",
-  "chooseHowToRecord": "Wählen Sie, wie Sie Ihren Moment aufnehmen möchten:",
-  "entryAlreadyExists": "Eintrag existiert bereits",
-  "entryAlreadyExistsMessage": "Ein Eintrag existiert bereits für diesen Tag. Möchten Sie ihn ersetzen?",
-  "editorChooseSecond": "Editor - 1 Sekunde Wählen",
-  "playing": "Wiedergabe...",
-  "preview1s": "Vorschau (1s)",
-  "errorLoadingVideo": "Fehler beim Laden des Videos: {error}",
-  "@errorLoadingVideo": {
+  "rollsDaysHoursRemaining": "{days}T {hours}h verbleibend",
+  "@rollsDaysHoursRemaining": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "days": { "type": "int" },
+      "hours": { "type": "int" }
     }
   },
-  "errorSaving": "Fehler beim Speichern: {error}",
-  "@errorSaving": {
+  "rollsHoursMinutesRemaining": "{hours}h {minutes}m verbleibend",
+  "@rollsHoursMinutesRemaining": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
     }
   },
-  "video": "Video",
-  "photo": "Foto",
-  "all": "Alle",
-  "videosOnly": "Nur Videos",
-  "photosOnly": "Nur Fotos",
-  "noCaption": "Keine Beschriftung",
-  "generateByPeriod": "Nach Zeitraum Generieren",
-  "currentMonth": "Aktueller Monat",
-  "currentYear": "Aktuelles Jahr",
-  "selectMonth": "Monat Auswählen",
-  "selectYear": "Jahr Auswählen",
-  "year": "Jahr",
-  "generate": "Generieren",
-  "customRange": "Benutzerdefinierter Bereich",
-  "chooseDates": "Daten wählen",
-  "generatingVideo": "Video wird generiert... Dies kann einige Minuten dauern.",
-  "videoGeneratedSuccess": "Video erfolgreich generiert!",
-  "noEntriesForMonth": "Keine Einträge für diesen Monat gefunden.",
-  "noEntriesForYear": "Keine Einträge für dieses Jahr gefunden.",
-  "renderedVideo": "Retro1 Gerendertes Video",
-  "renderedVideosHistory": "Historie der Gerenderten Videos",
-  "noRenderedVideos": "Noch keine gerenderten Videos",
-  "confirmDeleteRenderedVideo": "Sind Sie sicher, dass Sie dieses gerenderte Video löschen möchten?",
-  "videoDeleted": "Video gelöscht",
-  "videoFileNotFound": "Videodatei nicht gefunden",
-  "fileNotFound": "Datei nicht gefunden",
-  "calendar": "Kalender",
-  "share": "Teilen",
-  "newButton": "Neu",
-  "@newButton": {
-    "description": "Schaltflächenbeschriftung zum Erstellen eines neuen Videos"
-  },
-  "errorSharing": "Fehler beim Teilen: {error}",
-  "@errorSharing": {
+  "rollsMinutesRemaining": "{minutes}m verbleibend",
+  "@rollsMinutesRemaining": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "minutes": { "type": "int" }
     }
   },
-  "noVideoCaptured": "Es wurde kein Video aufgenommen",
-  "errorCapturingVideo": "Fehler beim Aufnehmen des Videos: {error}",
-  "@errorCapturingVideo": {
+
+  "albumsTitle": "Alben",
+  "albumsEmpty": "Noch keine entwickelten Filme",
+  "albumsEmptySub": "Fotografiere einen Film und schicke ihn zur Entwicklung.",
+  "albumsPhotoCount": "{count, plural, one{{count} Foto} other{{count} Fotos}}",
+  "@albumsPhotoCount": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "count": { "type": "int" }
     }
   },
-  "noPhotoCaptured": "Es wurde kein Foto aufgenommen",
-  "errorCapturingPhoto": "Fehler beim Aufnehmen des Fotos: {error}",
-  "@errorCapturingPhoto": {
+
+  "newRollTitle": "Film einlegen",
+  "newRollChooseStock": "Film auswählen",
+  "newRollChooseStockSub": "Jeder Film gibt deinen Fotos einen eigenen Look.",
+  "newRollChooseCapacity": "Kapazität wählen",
+  "newRollChooseCapacitySub": "Wie viele Aufnahmen hat dieser Film?",
+  "newRollNameTitle": "Film benennen",
+  "newRollNameSub": "Für welchen Moment oder welche Reise ist dieser Film?",
+  "newRollNameHint": "Paris-Reise, Sommer 2024, Road Trip…",
+  "newRollLoadButton": "Film laden",
+  "newRollNameRequired": "Gib deinem Film zuerst einen Namen",
+  "newRollFrames": "Aufnahmen",
+  "newRollPtsToUnlock": "{cost} Pkt. zum Freischalten",
+  "@newRollPtsToUnlock": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "cost": { "type": "int" }
     }
   },
-  "noVideoSelected": "Es wurde kein Video ausgewählt",
-  "errorSelectingVideo": "Fehler beim Auswählen des Videos: {error}",
-  "@errorSelectingVideo": {
+
+  "detailSendToDevelop": "Zur Entwicklung schicken?",
+  "detailSendFullBody": "Dein Film mit {capacity} Aufnahmen ist bereit. Er wird in {duration} entwickelt.",
+  "@detailSendFullBody": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "capacity": { "type": "int" },
+      "duration": { "type": "String" }
     }
   },
-  "noPhotoSelected": "Es wurde kein Foto ausgewählt",
-  "errorSelectingPhoto": "Fehler beim Auswählen des Fotos: {error}",
-  "@errorSelectingPhoto": {
+  "detailSendPartialBody": "Du hast {used} von {total} Aufnahmen verwendet. Jetzt zurückspulen und entwickeln?\n\nDie Entwicklung dauert {duration}.",
+  "@detailSendPartialBody": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "used": { "type": "int" },
+      "total": { "type": "int" },
+      "duration": { "type": "String" }
     }
   },
-  "errorProcessingMedia": "Fehler beim Verarbeiten der Medien: {error}",
-  "@errorProcessingMedia": {
+  "detailCancel": "Abbrechen",
+  "detailDevelop": "Entwickeln",
+  "detailDeleteTitle": "Film löschen?",
+  "detailDeleteBody": "{count, plural, one{1 Foto wird dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.} other{Alle {count} Fotos werden dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.}}",
+  "@detailDeleteBody": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "count": { "type": "int" }
     }
   },
-  "noEntriesFound": "Keine Einträge für diesen Zeitraum gefunden.",
-  "noMediaFound": "Keine Medien gefunden",
-  "noMediaFoundForDate": "Keine Medien für das ausgewählte Datum gefunden",
-  "permissionDenied": "Berechtigung verweigert",
-  "errorLoadingMedia": "Fehler beim Laden der Medien: {error}",
-  "@errorLoadingMedia": {
+  "detailDeleteTooltip": "Film löschen",
+  "detailDelete": "Löschen",
+  "detailStatusActive": "Aktiv",
+  "detailStatusDeveloping": "In Entwicklung",
+  "detailStatusDeveloped": "Entwickelt",
+  "detailStatusUnknown": "Unbekannt",
+  "detailInfoCreated": "Erstellt",
+  "detailInfoCapacity": "Kapazität",
+  "detailInfoFramesCount": "{count} Aufnahmen",
+  "@detailInfoFramesCount": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "count": { "type": "int" }
     }
   },
-  "errorSelectingMedia": "Fehler beim Auswählen der Medien: {error}",
-  "@errorSelectingMedia": {
+  "detailInfoExposed": "Belichtet",
+  "detailInfoSentToDevelop": "Zur Entwicklung geschickt",
+  "detailInfoDevelopedOn": "Entwickelt am",
+  "detailInfoReadyOn": "Fertig am",
+  "detailFramesUsedOf": "{used} / {total} Aufnahmen",
+  "@detailFramesUsedOf": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "used": { "type": "int" },
+      "total": { "type": "int" }
     }
   },
-  "removeDateFilter": "Datumsfilter entfernen",
-  "errorGeneratingVideo": "Fehler beim Generieren des Videos: {error}",
-  "@errorGeneratingVideo": {
+  "detailFramesRemaining": "{count, plural, one{1 Aufnahme übrig} other{{count} Aufnahmen übrig}}",
+  "@detailFramesRemaining": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "count": { "type": "int" }
     }
   },
-  "enableNotifications": "Benachrichtigungen aktivieren",
-  "notificationTime": "Benachrichtigungszeit",
-  "reminderAfter": "Erinnerung nach (Stunden)",
-  "weeklySummary": "Wöchentliche Zusammenfassung",
-  "videoQuality": "Videoqualität",
-  "showDateInVideo": "Datum im Video anzeigen",
-  "dateFormatLabel": "Datumsformat im Video",
-  "autoExportEndOfYear": "Automatischer Export am Jahresende",
-  "autoBackup": "Automatisches Backup",
-  "totalEntries": "Gesamte Einträge",
-  "entriesThisYear": "Einträge dieses Jahr",
-  "entries": "Einträge",
-  "settingsSaved": "Einstellungen gespeichert",
-  "quality720p": "720p",
-  "quality1080p": "1080p",
-  "quality4k": "4K",
-  "language": "Sprache",
-  "languageEnglish": "Englisch",
-  "languagePortuguese": "Portugiesisch",
-  "appLanguage": "App-Sprache",
-  "testNotification": "Benachrichtigung testen",
-  "testNotificationDescription": "Jetzt eine Testbenachrichtigung senden (zufälliges Zitat)",
-  "testNotificationSent": "Testbenachrichtigung gesendet!",
-  "testNotificationError": "Fehler beim Senden der Testbenachrichtigung",
-  "testProductionNotification": "Heutige Benachrichtigung vorschau",
-  "testProductionNotificationDescription": "Sehen Sie genau, wie die heutige Benachrichtigung aussehen wird",
-  "today": "Heute",
-  "useExternalAudio": "Externes Audio verwenden",
-  "selectAudioFile": "Audiodatei auswählen",
-  "audioFileSelected": "Audiodatei ausgewählt",
-  "removeAudio": "Audio entfernen",
-  "noAudio": "Kein Audio",
-  "externalAudio": "Externes Audio",
-  "originalAudio": "Originales Audio",
-  "projects": "Projekte",
-  "freeProjects": "Freie Projekte",
-  "noProjectsYet": "Noch keine Projekte",
-  "createFirstProject": "Erstellen Sie Ihr erstes Projekt, um zu beginnen",
-  "newProject": "Neues Projekt",
-  "projectName": "Projektname",
-  "enterProjectName": "Projektname eingeben",
-  "description": "Beschreibung",
-  "descriptionOptional": "Beschreibung (optional)",
-  "enterDescription": "Beschreibung eingeben",
-  "create": "Erstellen",
-  "deleteProject": "Projekt Löschen",
-  "deleteProjectConfirm": "Sind Sie sicher, dass Sie \"{name}\" löschen möchten?",
-  "@deleteProjectConfirm": {
+  "detailAlmostReady": "Fast fertig…",
+  "detailDevelopingBody": "{count} Aufnahmen werden entwickelt. Du erhältst eine Benachrichtigung, wenn sie fertig sind.",
+  "@detailDevelopingBody": {
     "placeholders": {
-      "name": {
-        "type": "String"
-      }
+      "count": { "type": "int" }
     }
   },
-  "items": "Elemente",
-  "yesterday": "Gestern",
-  "daysAgo": "vor {count} Tagen",
-  "@daysAgo": {
+  "detailOpenCamera": "Kamera öffnen",
+  "detailDevelopRoll": "Film entwickeln",
+  "detailRewindDevelop": "Zurückspulen & entwickeln",
+  "detailViewPhotos": "Fotos ansehen",
+  "detailDurationHours": "{count, plural, one{1 Stunde} other{{count} Stunden}}",
+  "@detailDurationHours": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "count": { "type": "int" }
     }
   },
-  "addMedia": "Medien Hinzufügen",
-  "takePhoto": "Foto Aufnehmen",
-  "photoFromGallery": "Foto aus Galerie",
-  "recordVideo": "Video Aufnehmen",
-  "videoFromGallery": "Video aus Galerie",
-  "deleteItem": "Element Löschen",
-  "deleteItemConfirm": "Sind Sie sicher, dass Sie dieses Element löschen möchten?",
-  "noMediaItemsYet": "Noch keine Medienelemente",
-  "errorAddingMedia": "Fehler beim Hinzufügen von Medien: {error}",
-  "@errorAddingMedia": {
+  "detailDurationDays": "{count, plural, one{1 Tag} other{{count} Tage}}",
+  "@detailDurationDays": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "count": { "type": "int" }
     }
   },
-  "renderProjectVideo": "Projektvideo Rendern",
-  "renderProjectVideoConfirm": "Alle {count} Elemente in ein Video rendern?",
-  "@renderProjectVideoConfirm": {
+
+  "galleryPhotoCount": "{count, plural, one{1 Foto} other{{count} Fotos}}",
+  "@galleryPhotoCount": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "count": { "type": "int" }
     }
   },
-  "render": "Rendern",
-  "edited": "Bearbeitet",
-  "original": "Original",
-  "photoAdded": "Foto Hinzugefügt",
-  "doYouWantToEdit": "Möchten Sie das Foto jetzt bearbeiten?",
-  "skip": "Überspringen",
-  "editPhoto": "Foto Bearbeiten",
-  "editVideo": "Video Bearbeiten",
-  "rotate": "Drehen",
-  "filter": "Filter",
-  "animation": "Animation",
-  "speed": "Geschwindigkeit",
-  "muteAudio": "Audio Stummschalten",
-  "save": "Speichern",
-  "editPhotoDaily": "Foto Bearbeiten",
-  "convertToLandscape": "Zu Querformat konvertieren",
-  "convertWithCrop": "Mit Zuschnitt konvertieren",
-  "convertWithoutCrop": "Ohne Zuschnitt konvertieren (Drehen)",
-  "imageAlreadyLandscape": "Das Bild ist bereits im Querformat",
-  "errorConvertingImage": "Fehler beim Konvertieren des Bildes: {error}",
-  "@errorConvertingImage": {
+  "galleryNoPhotos": "Keine Fotos in diesem Film",
+  "galleryShare": "Teilen",
+  "galleryFrameLabel": "Aufnahme {order}",
+  "@galleryFrameLabel": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "order": { "type": "int" }
     }
   },
-  "cropImage": "Bild zuschneiden",
-  "record": "Aufnehmen",
-  "recordFor": "Aufnehmen - {date}",
-  "@recordFor": {
+  "galleryFrameOf": "Aufnahme {current} / {total}",
+  "@galleryFrameOf": {
     "placeholders": {
-      "date": {
-        "type": "String"
-      }
+      "current": { "type": "int" },
+      "total": { "type": "int" }
     }
   },
-  "imageNotFound": "Bild nicht gefunden",
-  "errorLoadingImage": "Fehler beim Laden des Bildes",
-  "errorRotatingImage": "Fehler beim Drehen des Bildes: {error}",
-  "@errorRotatingImage": {
+
+  "progressTitle": "Fortschritt",
+  "progressAvailablePoints": "verfügbare Punkte",
+  "progressTowardNext": "{percent}% bis {feature}",
+  "@progressTowardNext": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "percent": { "type": "int" },
+      "feature": { "type": "String" }
     }
   },
-  "errorApplyingFilter": "Fehler beim Anwenden des Filters: {error}",
-  "@errorApplyingFilter": {
+  "progressAllUnlocked": "🏆 Alle Funktionen freigeschaltet!",
+  "progressLifetimePoints": "{points} Pkt. insgesamt verdient",
+  "@progressLifetimePoints": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "points": { "type": "int" }
     }
   },
-  "editsSaved": "Änderungen gespeichert",
-  "startTime": "Startzeit: {ms}ms",
-  "speed": "Geschwindigkeit: ",
-  "muteAudio": "Audio Stummschalten",
-  "preview1s": "Vorschau 1s",
-  "@startTime": {
+  "progressHowToEarn": "WIE VERDIENEN",
+  "progressEarnPhoto": "Ein Foto aufnehmen",
+  "progressEarnFullRoll": "Alle Aufnahmen eines Films nutzen",
+  "progressEarnStartDev": "Film zur Entwicklung schicken",
+  "progressEarnCompleteDev": "Film vollständig entwickelt",
+  "progressEarnWind": "Film in genau 0,8 s vorspulen",
+  "progressWindPrecision": "Genauigkeit: ±0,05 s = 25 Pkt. · ±0,15 s = 15 Pkt. · ±0,30 s = 8 Pkt. · ±0,50 s = 3 Pkt.",
+  "progressFilmStocks": "FILMSORTEN",
+  "progressFilmStocksFree": "Kodak Portra 400 ist kostenlos. Schalte den Rest mit Punkten frei.",
+  "progressUpgrades": "UPGRADES",
+  "progressDevBoost": "ENTWICKLUNG BESCHLEUNIGEN",
+  "progressDevBoostSub": "Punkte ausgeben, um die Entwicklung zu beschleunigen.",
+  "progressNotEnoughPoints": "Nicht genug Punkte (benötigt {cost}, vorhanden {have})",
+  "@progressNotEnoughPoints": {
     "placeholders": {
-      "ms": {
-        "type": "int"
-      }
+      "cost": { "type": "int" },
+      "have": { "type": "int" }
     }
   },
-  "errorSelectingAudio": "Fehler beim Auswählen des Audios: {error}",
-  "@errorSelectingAudio": {
+  "progressNotEnoughPointsSimple": "Nicht genug Punkte (benötigt {cost})",
+  "@progressNotEnoughPointsSimple": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "cost": { "type": "int" }
     }
   },
-  "languageSpanish": "Spanisch",
-  "languageFrench": "Französisch",
-  "languageGerman": "Deutsch",
-  "languageItalian": "Italienisch",
-  "notifications": "Benachrichtigungen",
-  "video": "Video",
-  "export": "Export",
-  "backup": "Backup",
-  "statistics": "Statistiken",
-  "generateVideosDescription": "Kompilierte Videos generieren",
-  "hours": "Stunden",
-  "reminder": "Erinnerung",
-  "reminderChannelDescription": "Zusätzliche Erinnerungen",
-  "haventRecordedToday": "Haben Sie heute noch nicht aufgenommen?",
-  "captureMomentNow": "Wie wäre es, jetzt einen Moment einzufangen?",
-  "dailyReminder": "Tägliche Erinnerung",
-  "dailyReminderDescription": "Benachrichtigungen, um Sie daran zu erinnern, Ihren Moment des Tages aufzunehmen",
-  "notificationTitle": "Retro1",
-  "notificationBody": "Vergessen Sie nicht, Ihren Moment von heute aufzunehmen!",
-  "appearance": "Erscheinungsbild",
-  "theme": "Design",
-  "themeLight": "Hell",
-  "themeDark": "Dunkel",
-  "themeSystem": "System",
-  "loadMoreDays": "Mehr Tage Laden",
-  "mondayShort": "Mo",
-  "tuesdayShort": "Di",
-  "wednesdayShort": "Mi",
-  "thursdayShort": "Do",
-  "fridayShort": "Fr",
-  "saturdayShort": "Sa",
-  "sundayShort": "So",
-  "browseGallery": "Galerie durchsuchen",
-  "mediaFilterAll": "Alle",
-  "mediaFilterPhotos": "Fotos",
-  "mediaFilterVideos": "Videos",
-  "selectFromGallery": "Aus Galerie auswählen",
-  "openSettings": "Einstellungen öffnen",
-  "errorAccessingFile": "Datei konnte nicht geöffnet werden",
-  "cropVideo": "Video zuschneiden",
-  "cropTo16x9": "Auf 16:9 zuschneiden",
-  "done": "Fertig",
-  "filters": "Filter",
-  "filterOriginal": "Original",
-  "filterVintage": "Vintage",
-  "filterBlackWhite": "S&W",
-  "filterSepia": "Sepia",
-  "filterBright": "Hell",
-  "filterWarm": "Warm",
-  "filterCool": "Kühl",
-  "addText": "Text hinzufügen",
-  "enterYourText": "Text eingeben",
-  "applyCrop": "Anwenden",
-  "positionLabel": "Position",
-  "errorApplyingCrop": "Fehler beim Zuschneiden: {error}",
-  "@errorApplyingCrop": {
+  "progressUnlockedFeature": "🎉 Freigeschaltet: {name}!",
+  "@progressUnlockedFeature": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "name": { "type": "String" }
     }
   },
-  "timelineViewTitle": "Zeitstrahl-Ansicht",
-  "calendarView": "Kalender",
-  "gridView": "Raster",
-  "mediaPickerTitle": "Medienauswahl",
-  "customPicker": "In-App-Galerie",
-  "customPickerDescription": "Medien direkt in der App durchsuchen",
-  "systemPicker": "System-Auswahl",
-  "systemPickerDescription": "Offiziellen Android/iOS-Medienauswähler verwenden",
-  "thumbnailSizeTitle": "Miniaturbildgröße",
-  "smallThumbnails": "Klein",
-  "largeThumbnails": "Groß",
-  "addBefore": "Vorher hinzufügen",
-  "addAfter": "Danach hinzufügen",
-  "errorApplyingText": "Fehler beim Anwenden des Textes: {error}",
-  "@errorApplyingText": {
+  "progressDevComplete": "⚡ Entwicklung abgeschlossen!",
+  "progressHalfTime": "⏩ Zeit halbiert!",
+  "progressAlmostReady": "Fast fertig",
+  "progressDaysHoursLeft": "{days}T {hours}h übrig",
+  "@progressDaysHoursLeft": {
     "placeholders": {
-      "error": {
-        "type": "String"
-      }
+      "days": { "type": "int" },
+      "hours": { "type": "int" }
     }
   },
-  "notificationUseQuotes": "Tägliches inspirierendes Zitat",
-  "notificationUseQuotesDescription": "Ein motivierendes Zitat in der Benachrichtigung anzeigen statt der Standardnachricht"
+  "progressHoursMinutesLeft": "{hours}h {minutes}m übrig",
+  "@progressHoursMinutesLeft": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "progressMinutesLeft": "{minutes}m übrig",
+  "@progressMinutesLeft": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "progressHalfTimeBtn": "⏩ Halbe Zeit\n{cost} Pkt.",
+  "@progressHalfTimeBtn": {
+    "placeholders": {
+      "cost": { "type": "int" }
+    }
+  },
+  "progressInstantBtn": "⚡ Sofort\n{cost} Pkt.",
+  "@progressInstantBtn": {
+    "placeholders": {
+      "cost": { "type": "int" }
+    }
+  },
+
+  "settingsTitle": "Einstellungen",
+  "settingsAppearance": "Erscheinungsbild",
+  "settingsTheme": "Design",
+  "settingsLanguage": "Sprache",
+  "settingsFilmDev": "Filmentwicklung",
+  "settingsFilmDevSub": "Wie lange soll die Entwicklung dauern?",
+  "settingsDev1Day": "1 Tag",
+  "settingsDev2Days": "2 Tage",
+  "settingsDev3Days": "3 Tage",
+  "settingsDev1Week": "1 Woche",
+  "settingsNotifyDev": "Benachrichtigung bei Fertigstellung",
+  "settingsNotifyDevSub": "Erhalte eine Benachrichtigung, wenn dein Film fertig ist",
+  "settingsStatistics": "Statistiken",
+  "settingsRollsDeveloped": "Entwickelte Filme",
+  "settingsTotalPhotos": "Aufnahmen insgesamt",
+  "settingsTotalRolls": "Filme insgesamt",
+
+  "notifDevReadyTitle": "Film entwickelt!",
+  "notifDevReadyBody": "Dein Film \"{name}\" ist zur Abholung bereit.",
+  "@notifDevReadyBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
 }

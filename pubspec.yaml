@@ -29,6 +29,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   intl: ^0.20.2
 
+  # Image processing (film stock filters)
+  image: ^4.2.0
+
   # Utilities
   uuid: ^4.2.1
   shared_preferences: ^2.2.2
@@ -36,6 +39,10 @@ dependencies:
   path: ^1.8.3
   share_plus: ^7.2.1
   cross_file: ^0.3.3
+
+  # Google Photos export
+  google_sign_in: ^6.2.1
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +65,14 @@ module:
 
 flutter_launcher_icons:
   android: true
-  image_path: "assets/icons/app_icon.png"
+  ios: true
+  # Rounded icon used everywhere (legacy Android, iOS — system clips further)
+  image_path: "assets/icons/app_icon_rounded.png"
+  remove_alpha_ios: true
+  # Adaptive icon (Android 8+): launcher applies its own shape mask
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/icons/app_icon.png"
+  web:
+    generate: false
+  windows:
+    generate: false

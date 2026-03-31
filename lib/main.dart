@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:negativo/l10n/app_localizations.dart' show AppLocalizations;
-import 'screens/home_screen.dart';
+import 'screens/main_screen.dart';
 import 'services/notification_service.dart';
 import 'services/hive_service.dart';
 import 'services/film_service.dart';
@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       themeMode: _themeMode,
-      home: const HomeScreen(),
+      home: const MainScreen(),
     );
   }
 }

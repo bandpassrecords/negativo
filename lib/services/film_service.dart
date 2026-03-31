@@ -7,6 +7,7 @@ import '../models/exposure.dart';
 import 'hive_service.dart';
 import 'notification_service.dart';
 import 'scoring_service.dart';
+import 'film_stock_service.dart';
 
 class FilmService {
   static const _uuid = Uuid();
@@ -17,7 +18,11 @@ class FilmService {
   }
 
   /// Creates a new film roll and sets it as active.
-  static Future<FilmRoll> loadNewRoll(String name, int capacity) async {
+  static Future<FilmRoll> loadNewRoll(
+    String name,
+    int capacity, {
+    String? filmStockId,
+  }) async {
     final settings = HiveService.getSettings();
     final roll = FilmRoll(
       id: _uuid.v4(),
@@ -25,6 +30,7 @@ class FilmService {
       capacity: capacity,
       createdAt: DateTime.now(),
       developmentDurationHours: settings.developmentDurationHours,
+      filmStockId: filmStockId,
     );
     await HiveService.saveFilmRoll(roll);
     return roll;
@@ -43,6 +49,10 @@ class FilmService {
     await HiveService.saveExposure(exposure);
     roll.exposureIds.add(exposure.id);
     await HiveService.saveFilmRoll(roll);
+    // Apply film stock filter in background isolate
+    if (roll.filmStockId != null) {
+      await FilmStockService.applyToFile(savedPath, roll.filmStockId!);
+    }
     return exposure;
   }
 
