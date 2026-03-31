@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/exposure.dart';
 import '../services/hive_service.dart';
@@ -86,6 +87,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.filmRoll.name),
@@ -114,7 +116,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
-              '${_exposures.length} photo${_exposures.length == 1 ? '' : 's'}',
+              l.galleryPhotoCount(_exposures.length),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -123,7 +125,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
         ),
       ),
       body: _exposures.isEmpty
-          ? _buildEmpty()
+          ? _buildEmpty(l)
           : GridView.builder(
               padding: const EdgeInsets.all(4),
               gridDelegate:
@@ -169,7 +171,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
     );
   }
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(AppLocalizations l) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +179,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
           Icon(Icons.photo_library_outlined,
               size: 64, color: Theme.of(context).colorScheme.outline),
           const SizedBox(height: 16),
-          Text('No photos in this roll',
+          Text(l.galleryNoPhotos,
               style: Theme.of(context).textTheme.titleMedium),
         ],
       ),
@@ -246,6 +248,7 @@ class _FullscreenViewerState extends State<_FullscreenViewer> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final exposure = widget.exposures[_currentIndex];
 
     return Scaffold(
@@ -254,14 +257,14 @@ class _FullscreenViewerState extends State<_FullscreenViewer> {
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         title: Text(
-          'Frame ${exposure.order} / ${widget.exposures.length}',
+          l.galleryFrameOf(exposure.order, widget.exposures.length),
           style: const TextStyle(color: Colors.white70, fontSize: 14),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.share_outlined, color: Colors.white),
             onPressed: _share,
-            tooltip: 'Share',
+            tooltip: l.galleryShare,
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/film_stock.dart';
 import '../services/scoring_service.dart';
@@ -30,22 +31,24 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 
   Future<void> _tryUnlock(String feature) async {
+    final l = AppLocalizations.of(context)!;
     final cost = ScoringService.unlockCosts[feature]!;
     if (ScoringService.points < cost) {
-      _showSnack('Not enough points (need $cost, have ${ScoringService.points})');
+      _showSnack(l.progressNotEnoughPoints(cost, ScoringService.points));
       return;
     }
     final ok = await ScoringService.unlock(feature);
     if (ok && mounted) {
       setState(() {});
-      _showSnack('🎉 Unlocked: ${ScoringService.unlockNames[feature]}!');
+      _showSnack(l.progressUnlockedFeature(ScoringService.unlockNames[feature]!));
     }
   }
 
   Future<void> _speedDev(FilmRoll roll, bool instant) async {
+    final l = AppLocalizations.of(context)!;
     final cost = instant ? ScoringService.costSpeedInstant : ScoringService.costSpeedHalf;
     if (ScoringService.points < cost) {
-      _showSnack('Not enough points (need $cost)');
+      _showSnack(l.progressNotEnoughPointsSimple(cost));
       return;
     }
     final ok = await ScoringService.spendPoints(cost);
@@ -67,7 +70,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     }
     await _reload();
     if (mounted) {
-      _showSnack(instant ? '⚡ Development complete!' : '⏩ Cut remaining time in half!');
+      _showSnack(instant ? l.progressDevComplete : l.progressHalfTime);
     }
   }
 
@@ -79,6 +82,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final pts = ScoringService.points;
     final lifetime = ScoringService.lifetimePoints;
@@ -86,7 +90,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     final progress = ScoringService.progressToNext();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Progress')),
+      appBar: AppBar(title: Text(l.progressTitle)),
       body: RefreshIndicator(
         onRefresh: _reload,
         child: ListView(
@@ -110,7 +114,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'available points',
+                      l.progressAvailablePoints,
                       style: TextStyle(
                         color: cs.onPrimaryContainer.withValues(alpha: 0.7),
                         fontSize: 13,
@@ -128,7 +132,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${(progress * 100).toInt()}% toward ${ScoringService.unlockNames[next]}',
+                        l.progressTowardNext(
+                          (progress * 100).toInt(),
+                          ScoringService.unlockNames[next]!,
+                        ),
                         style: TextStyle(
                           color: cs.onPrimaryContainer.withValues(alpha: 0.7),
                           fontSize: 12,
@@ -136,7 +143,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       ),
                     ] else
                       Text(
-                        '🏆 All features unlocked!',
+                        l.progressAllUnlocked,
                         style: TextStyle(
                           color: cs.onPrimaryContainer,
                           fontWeight: FontWeight.w700,
@@ -144,7 +151,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       ),
                     const SizedBox(height: 12),
                     Text(
-                      '$lifetime pts earned all-time',
+                      l.progressLifetimePoints(lifetime),
                       style: TextStyle(
                         color: cs.onPrimaryContainer.withValues(alpha: 0.5),
                         fontSize: 11,
@@ -158,18 +165,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
             const SizedBox(height: 24),
 
             // ── How to earn ─────────────────────────────────────────────────
-            _SectionHeader('HOW TO EARN'),
+            _SectionHeader(l.progressHowToEarn),
             const SizedBox(height: 8),
-            _EarnTile(icon: Icons.camera_alt, label: 'Take a photo', pts: '+${ScoringService.ptsPerPhoto}'),
-            _EarnTile(icon: Icons.camera_roll, label: 'Use every frame on a roll', pts: '+${ScoringService.ptsFullRoll}'),
-            _EarnTile(icon: Icons.science_outlined, label: 'Send roll to develop', pts: '+${ScoringService.ptsStartDev}'),
-            _EarnTile(icon: Icons.check_circle_outline, label: 'Roll fully developed', pts: '+${ScoringService.ptsCompleteDev}'),
-            _EarnTile(icon: Icons.timer_outlined, label: 'Wind at exactly 0.8 s', pts: 'up to +25'),
+            _EarnTile(icon: Icons.camera_alt, label: l.progressEarnPhoto, pts: '+${ScoringService.ptsPerPhoto}'),
+            _EarnTile(icon: Icons.camera_roll, label: l.progressEarnFullRoll, pts: '+${ScoringService.ptsFullRoll}'),
+            _EarnTile(icon: Icons.science_outlined, label: l.progressEarnStartDev, pts: '+${ScoringService.ptsStartDev}'),
+            _EarnTile(icon: Icons.check_circle_outline, label: l.progressEarnCompleteDev, pts: '+${ScoringService.ptsCompleteDev}'),
+            _EarnTile(icon: Icons.timer_outlined, label: l.progressEarnWind, pts: 'up to +25'),
             const SizedBox(height: 4),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               child: Text(
-                'Wind precision: ±0.05 s = 25 pts · ±0.15 s = 15 pts · ±0.30 s = 8 pts · ±0.50 s = 3 pts',
+                l.progressWindPrecision,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -180,12 +187,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
             const SizedBox(height: 24),
 
             // ── Film stocks ──────────────────────────────────────────────────
-            _SectionHeader('FILM STOCKS'),
+            _SectionHeader(l.progressFilmStocks),
             const SizedBox(height: 4),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               child: Text(
-                'Kodak Portra 400 is free. Unlock the rest with points.',
+                l.progressFilmStocksFree,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -213,7 +220,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             const SizedBox(height: 24),
 
             // ── Camera upgrades ──────────────────────────────────────────────
-            _SectionHeader('UPGRADES'),
+            _SectionHeader(l.progressUpgrades),
             const SizedBox(height: 8),
             ...ScoringService.featureOrder
                 .where((f) => !f.startsWith('film_'))
@@ -226,12 +233,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
             // ── Development boost ────────────────────────────────────────────
             if (_developingRolls.isNotEmpty) ...[
               const SizedBox(height: 24),
-              _SectionHeader('DEVELOPMENT BOOST'),
+              _SectionHeader(l.progressDevBoost),
               const SizedBox(height: 4),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                 child: Text(
-                  'Spend points to speed up a developing roll.',
+                  l.progressDevBoostSub,
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall
@@ -396,19 +403,20 @@ class _DevBoostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final remaining = roll.remainingDevelopmentTime;
     final canHalf    = points >= ScoringService.costSpeedHalf;
     final canInstant = points >= ScoringService.costSpeedInstant;
 
-    String timeLabel = 'Almost ready';
+    String timeLabel = l.progressAlmostReady;
     if (remaining != null && remaining.inSeconds > 0) {
       if (remaining.inDays >= 1) {
-        timeLabel = '${remaining.inDays}d ${remaining.inHours % 24}h left';
+        timeLabel = l.progressDaysHoursLeft(remaining.inDays, remaining.inHours % 24);
       } else if (remaining.inHours >= 1) {
-        timeLabel = '${remaining.inHours}h ${remaining.inMinutes % 60}m left';
+        timeLabel = l.progressHoursMinutesLeft(remaining.inHours, remaining.inMinutes % 60);
       } else {
-        timeLabel = '${remaining.inMinutes}m left';
+        timeLabel = l.progressMinutesLeft(remaining.inMinutes);
       }
     }
 
@@ -450,7 +458,7 @@ class _DevBoostCard extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8)),
                       child: Text(
-                          '⏩ Half time\n${ScoringService.costSpeedHalf} pts',
+                          l.progressHalfTimeBtn(ScoringService.costSpeedHalf),
                           textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 12)),
                     ),
@@ -462,7 +470,7 @@ class _DevBoostCard extends StatelessWidget {
                       style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8)),
                       child: Text(
-                          '⚡ Instant\n${ScoringService.costSpeedInstant} pts',
+                          l.progressInstantBtn(ScoringService.costSpeedInstant),
                           textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 12)),
                     ),

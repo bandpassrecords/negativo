@@ -23,13 +23,12 @@ class FilmService {
     int capacity, {
     String? filmStockId,
   }) async {
-    final settings = HiveService.getSettings();
     final roll = FilmRoll(
       id: _uuid.v4(),
       name: name,
       capacity: capacity,
       createdAt: DateTime.now(),
-      developmentDurationHours: settings.developmentDurationHours,
+      developmentDurationHours: ScoringService.developmentHours,
       filmStockId: filmStockId,
     );
     await HiveService.saveFilmRoll(roll);

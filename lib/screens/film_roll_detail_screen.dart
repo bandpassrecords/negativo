@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../services/film_service.dart';
 import 'viewfinder_screen.dart';
@@ -24,26 +25,25 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
   }
 
   Future<void> _confirmDevelop() async {
+    final l = AppLocalizations.of(context)!;
+    final duration = _formatHours(_roll.developmentDurationHours, l);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Send for development?'),
+        title: Text(l.detailSendToDevelop),
         content: Text(
           _roll.isFull
-              ? 'Your roll of ${_roll.capacity} frames is ready. '
-                  'It will be developed in ${_formatHours(_roll.developmentDurationHours)}.'
-              : 'You\'ve used ${_roll.exposureCount} of ${_roll.capacity} frames. '
-                  'Rewind early and develop now?\n\n'
-                  'Development takes ${_formatHours(_roll.developmentDurationHours)}.',
+              ? l.detailSendFullBody(_roll.capacity, duration)
+              : l.detailSendPartialBody(_roll.exposureCount, _roll.capacity, duration),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l.detailCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Develop'),
+            child: Text(l.detailDevelop),
           ),
         ],
       ),
@@ -57,18 +57,16 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
   }
 
   Future<void> _confirmDelete() async {
+    final l = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete this roll?'),
-        content: Text(
-          'All ${_roll.exposureCount} photo${_roll.exposureCount == 1 ? '' : 's'} '
-          'will be permanently deleted. This cannot be undone.',
-        ),
+        title: Text(l.detailDeleteTitle),
+        content: Text(l.detailDeleteBody(_roll.exposureCount)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l.detailCancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
@@ -76,7 +74,7 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
               foregroundColor: Theme.of(ctx).colorScheme.onError,
             ),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete'),
+            child: Text(l.detailDelete),
           ),
         ],
       ),
@@ -90,9 +88,9 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
-    final dateStr =
-        DateFormat('MMMM d, yyyy').format(_roll.createdAt);
+    final dateStr = DateFormat('MMMM d, yyyy').format(_roll.createdAt);
 
     return Scaffold(
       appBar: AppBar(
@@ -101,7 +99,7 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
           IconButton(
             icon: Icon(Icons.delete_outline, color: cs.error),
             onPressed: _confirmDelete,
-            tooltip: 'Delete roll',
+            tooltip: l.detailDeleteTooltip,
           ),
         ],
       ),
@@ -110,33 +108,25 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildStatusBadge(cs),
+            _buildStatusBadge(cs, l),
             const SizedBox(height: 24),
-            _buildInfoCard(dateStr),
+            _buildInfoCard(dateStr, l),
             const SizedBox(height: 16),
-            _buildFrameSection(cs),
+            _buildFrameSection(cs, l),
             const SizedBox(height: 32),
-            _buildActions(),
+            _buildActions(l),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatusBadge(ColorScheme cs) {
+  Widget _buildStatusBadge(ColorScheme cs, AppLocalizations l) {
     final (label, color, textColor) = switch (_roll.status) {
-      'active' => ('Active', cs.primaryContainer, cs.onPrimaryContainer),
-      'developing' => (
-          'Developing',
-          cs.secondaryContainer,
-          cs.onSecondaryContainer
-        ),
-      'developed' => (
-          'Developed',
-          cs.tertiaryContainer,
-          cs.onTertiaryContainer
-        ),
-      _ => ('Unknown', cs.surfaceContainerLow, cs.onSurface),
+      'active' => (l.detailStatusActive, cs.primaryContainer, cs.onPrimaryContainer),
+      'developing' => (l.detailStatusDeveloping, cs.secondaryContainer, cs.onSecondaryContainer),
+      'developed' => (l.detailStatusDeveloped, cs.tertiaryContainer, cs.onTertiaryContainer),
+      _ => (l.detailStatusUnknown, cs.surfaceContainerLow, cs.onSurface),
     };
 
     return Container(
@@ -157,25 +147,27 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
     );
   }
 
-  Widget _buildInfoCard(String dateStr) {
+  Widget _buildInfoCard(String dateStr, AppLocalizations l) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _InfoRow(label: 'Created', value: dateStr),
+            _InfoRow(label: l.detailInfoCreated, value: dateStr),
             const Divider(height: 20),
             _InfoRow(
-                label: 'Capacity', value: '${_roll.capacity} frames'),
+                label: l.detailInfoCapacity,
+                value: l.detailInfoFramesCount(_roll.capacity)),
             if (_roll.status != 'active') ...[
               const Divider(height: 20),
               _InfoRow(
-                  label: 'Exposed', value: '${_roll.exposureCount} frames'),
+                  label: l.detailInfoExposed,
+                  value: l.detailInfoFramesCount(_roll.exposureCount)),
             ],
             if (_roll.developmentStartedAt != null) ...[
               const Divider(height: 20),
               _InfoRow(
-                label: 'Sent to develop',
+                label: l.detailInfoSentToDevelop,
                 value: DateFormat('MMM d, yyyy – HH:mm')
                     .format(_roll.developmentStartedAt!),
               ),
@@ -184,8 +176,8 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
               const Divider(height: 20),
               _InfoRow(
                 label: _roll.isDevelopmentComplete
-                    ? 'Developed on'
-                    : 'Ready on',
+                    ? l.detailInfoDevelopedOn
+                    : l.detailInfoReadyOn,
                 value: DateFormat('MMM d, yyyy – HH:mm')
                     .format(_roll.developmentCompletesAt!),
               ),
@@ -196,13 +188,13 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
     );
   }
 
-  Widget _buildFrameSection(ColorScheme cs) {
+  Widget _buildFrameSection(ColorScheme cs, AppLocalizations l) {
     if (_roll.status == 'active') {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${_roll.exposureCount} / ${_roll.capacity} frames',
+            l.detailFramesUsedOf(_roll.exposureCount, _roll.capacity),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -217,9 +209,7 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
                   height: 10,
                   margin: const EdgeInsets.symmetric(horizontal: 1),
                   decoration: BoxDecoration(
-                    color: used
-                        ? cs.primary
-                        : cs.surfaceContainerLow,
+                    color: used ? cs.primary : cs.surfaceContainerLow,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -228,7 +218,7 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            '${_roll.remainingFrames} frame${_roll.remainingFrames == 1 ? '' : 's'} remaining',
+            l.detailFramesRemaining(_roll.remainingFrames),
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
@@ -250,8 +240,8 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
               const SizedBox(width: 8),
               Text(
                 remaining != null && remaining.inSeconds > 0
-                    ? _formatDuration(remaining)
-                    : 'Almost ready…',
+                    ? _formatDuration(remaining, l)
+                    : l.detailAlmostReady,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: cs.secondary,
                       fontWeight: FontWeight.w600,
@@ -261,8 +251,7 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '${_roll.exposureCount} frames are being developed. '
-            'You\'ll get a notification when they\'re ready.',
+            l.detailDevelopingBody(_roll.exposureCount),
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
@@ -275,7 +264,7 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
     return const SizedBox.shrink();
   }
 
-  Widget _buildActions() {
+  Widget _buildActions(AppLocalizations l) {
     switch (_roll.status) {
       case 'active':
         return Column(
@@ -287,14 +276,13 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                          ViewfinderScreen(filmRoll: _roll),
+                      builder: (_) => ViewfinderScreen(filmRoll: _roll),
                     ),
                   );
                   setState(() {});
                 },
                 icon: const Icon(Icons.camera_alt),
-                label: const Text('Open Camera'),
+                label: Text(l.detailOpenCamera),
               ),
             ),
             const SizedBox(height: 10),
@@ -304,8 +292,8 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
                 onPressed: _confirmDevelop,
                 icon: const Icon(Icons.science_outlined),
                 label: Text(_roll.isFull
-                    ? 'Develop Roll'
-                    : 'Rewind & Develop Early'),
+                    ? l.detailDevelopRoll
+                    : l.detailRewindDevelop),
               ),
             ),
           ],
@@ -319,13 +307,12 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      DevelopedGalleryScreen(filmRoll: _roll),
+                  builder: (_) => DevelopedGalleryScreen(filmRoll: _roll),
                 ),
               );
             },
             icon: const Icon(Icons.photo_library),
-            label: const Text('View Photos'),
+            label: Text(l.detailViewPhotos),
           ),
         );
 
@@ -334,21 +321,19 @@ class _FilmRollDetailScreenState extends State<FilmRollDetailScreen> {
     }
   }
 
-  String _formatHours(int hours) {
-    if (hours < 24) return '$hours hours';
+  String _formatHours(int hours, AppLocalizations l) {
+    if (hours < 24) return l.detailDurationHours(hours);
     final days = hours ~/ 24;
-    return '$days day${days == 1 ? '' : 's'}';
+    return l.detailDurationDays(days);
   }
 
-  String _formatDuration(Duration d) {
+  String _formatDuration(Duration d, AppLocalizations l) {
     if (d.inDays >= 1) {
-      final hours = d.inHours % 24;
-      return '${d.inDays}d ${hours}h remaining';
+      return l.rollsDaysHoursRemaining(d.inDays, d.inHours % 24);
     } else if (d.inHours >= 1) {
-      final minutes = d.inMinutes % 60;
-      return '${d.inHours}h ${minutes}m remaining';
+      return l.rollsHoursMinutesRemaining(d.inHours, d.inMinutes % 60);
     } else {
-      return '${d.inMinutes}m remaining';
+      return l.rollsMinutesRemaining(d.inMinutes);
     }
   }
 }

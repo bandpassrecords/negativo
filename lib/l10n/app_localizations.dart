@@ -607,7 +607,7 @@ abstract class AppLocalizations {
   /// No description provided for @progressFilmStocksFree.
   ///
   /// In en, this message translates to:
-  /// **'Kodak Portra 400 is free. Unlock the rest with points.'**
+  /// **'Kodak Gold 200 and Portra 400 are free. Unlock the rest with points.'**
   String get progressFilmStocksFree;
 
   /// No description provided for @progressUpgrades.

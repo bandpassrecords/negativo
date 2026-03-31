@@ -339,7 +339,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get progressFilmStocksFree =>
-      'Kodak Portra 400 es gratis. Desbloquea el resto con puntos.';
+      'Kodak Gold 200 y Portra 400 son gratuitos. Desbloquea el resto con puntos.';
 
   @override
   String get progressUpgrades => 'MEJORAS';

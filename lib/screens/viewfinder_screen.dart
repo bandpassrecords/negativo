@@ -23,6 +23,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
   bool _cameraReady = false;
   bool _permissionDenied = false;
   bool _isShooting = false;
+  bool _isInitializing = false;
 
   /// When true the viewfinder shows a full blackout (shutter closed / film advancing).
   bool _shutterClosed = false;
@@ -87,34 +88,44 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused) {
       _controller?.dispose();
-      setState(() => _cameraReady = false);
+      _controller = null;
+      if (mounted) setState(() => _cameraReady = false);
     } else if (state == AppLifecycleState.resumed) {
       _initCamera();
     }
   }
 
   Future<void> _initCamera() async {
+    if (_isInitializing) return;
+    _isInitializing = true;
     setState(() => _permissionDenied = false);
-    final status = await Permission.camera.request();
-    if (!status.isGranted) {
-      setState(() => _permissionDenied = true);
-      return;
-    }
     try {
+      final status = await Permission.camera.request();
+      if (!status.isGranted) {
+        if (mounted) setState(() => _permissionDenied = true);
+        return;
+      }
       final cameras = await availableCameras();
       if (cameras.isEmpty) return;
-      _controller = CameraController(
+      final controller = CameraController(
         cameras.first,
         ResolutionPreset.high,
         enableAudio: false,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
-      await _controller!.initialize();
-      if (mounted) setState(() => _cameraReady = true);
+      await controller.initialize();
+      if (mounted) {
+        _controller = controller;
+        setState(() => _cameraReady = true);
+      } else {
+        controller.dispose();
+      }
     } catch (_) {
       if (mounted) setState(() => _permissionDenied = true);
+    } finally {
+      _isInitializing = false;
     }
   }
 
