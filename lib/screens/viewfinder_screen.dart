@@ -5,7 +5,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/film_roll.dart';
 import '../services/film_service.dart';
-import '../services/media_service.dart';
 import '../services/scoring_service.dart';
 
 class ViewfinderScreen extends StatefulWidget {
@@ -147,22 +146,24 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
     await Future.delayed(const Duration(milliseconds: 80));
 
     // 3. Capture while the screen is completely dark.
+    //    Run file I/O in parallel with the cosmetic hold so total black time
+    //    is max(file_ops, 500 ms) instead of file_ops + 500 ms.
     try {
       final image = await _controller!.takePicture();
-      final savedPath = await MediaService.copyToAppDirectory(image.path);
-      await FilmService.addExposure(widget.filmRoll, savedPath);
-      setState(() => _frameCount = widget.filmRoll.exposureCount);
-      int earned = ScoringService.ptsPerPhoto;
-      await ScoringService.addPoints(earned);
-      if (widget.filmRoll.isFull) {
-        earned += ScoringService.ptsFullRoll;
-        await ScoringService.addPoints(ScoringService.ptsFullRoll);
-      }
-      _showPointsChip('+$earned pts');
-    } catch (_) {}
-
-    // 4. Hold the black for a beat (film advancing feel).
-    await Future.delayed(const Duration(milliseconds: 500));
+      await Future.wait([
+        FilmService.addExposure(widget.filmRoll, image.path).then((_) async {
+          setState(() => _frameCount = widget.filmRoll.exposureCount);
+          int earned = ScoringService.ptsPerPhoto;
+          if (widget.filmRoll.isFull) earned += ScoringService.ptsFullRoll;
+          await ScoringService.addPoints(earned);
+          _showPointsChip('+$earned pts');
+        }),
+        // 4. Hold the black for a beat (film advancing feel).
+        Future.delayed(const Duration(milliseconds: 500)),
+      ]);
+    } catch (_) {
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
 
     // 5. Fade the viewfinder back in slowly.
     if (mounted) {

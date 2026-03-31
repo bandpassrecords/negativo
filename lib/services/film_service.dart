@@ -48,9 +48,10 @@ class FilmService {
     await HiveService.saveExposure(exposure);
     roll.exposureIds.add(exposure.id);
     await HiveService.saveFilmRoll(roll);
-    // Apply film stock filter in background isolate
+    // Apply film stock filter in background isolate — fire and forget so
+    // the shutter returns immediately without waiting for processing to finish.
     if (roll.filmStockId != null) {
-      await FilmStockService.applyToFile(savedPath, roll.filmStockId!);
+      FilmStockService.applyToFile(savedPath, roll.filmStockId!);
     }
     return exposure;
   }
