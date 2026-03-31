@@ -198,7 +198,7 @@
   "progressEarnWind": "Avanzar película en exactamente 0,8 s",
   "progressWindPrecision": "Precisión: ±0,05 s = 25 pts · ±0,15 s = 15 pts · ±0,30 s = 8 pts · ±0,50 s = 3 pts",
   "progressFilmStocks": "TIPOS DE PELÍCULA",
-  "progressFilmStocksFree": "Kodak Portra 400 es gratis. Desbloquea el resto con puntos.",
+  "progressFilmStocksFree": "Kodak Gold 200 y Portra 400 son gratuitos. Desbloquea el resto con puntos.",
   "progressUpgrades": "MEJORAS",
   "progressDevBoost": "ACELERAR REVELADO",
   "progressDevBoostSub": "Usa puntos para acelerar el revelado de un rollo.",

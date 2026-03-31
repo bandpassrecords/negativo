@@ -200,7 +200,7 @@
   "progressEarnWind": "Wind at exactly 0.8 s",
   "progressWindPrecision": "Wind precision: ±0.05 s = 25 pts · ±0.15 s = 15 pts · ±0.30 s = 8 pts · ±0.50 s = 3 pts",
   "progressFilmStocks": "FILM STOCKS",
-  "progressFilmStocksFree": "Kodak Portra 400 is free. Unlock the rest with points.",
+  "progressFilmStocksFree": "Kodak Gold 200 and Portra 400 are free. Unlock the rest with points.",
   "progressUpgrades": "UPGRADES",
   "progressDevBoost": "DEVELOPMENT BOOST",
   "progressDevBoostSub": "Spend points to speed up a developing roll.",

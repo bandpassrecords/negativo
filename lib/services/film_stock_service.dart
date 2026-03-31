@@ -27,11 +27,12 @@ Future<void> _processImage(Map<String, String> args) async {
 
 img.Image _applyStock(img.Image src, String stockId) {
   switch (stockId) {
-    case 'portra400': return _portra400(src);
-    case 'velvia50':  return _velvia50(src);
-    case 'hp5':       return _hp5(src);
-    case 'ektar100':  return _ektar100(src);
-    default:          return src;
+    case 'portra400':    return _portra400(src);
+    case 'velvia50':     return _velvia50(src);
+    case 'hp5':          return _hp5(src);
+    case 'ektar100':     return _ektar100(src);
+    case 'cinestill800t': return _cinestill800t(src);
+    default:             return src; // gold200 and any unknown = no filter
   }
 }
 
@@ -85,6 +86,21 @@ img.Image _ektar100(img.Image src) {
     pixel.b = _c(b * 1.03);
   }
   return img.adjustColor(out, saturation: 1.35, contrast: 1.18);
+}
+
+// ─── Cinestill 800T ──────────────────────────────────────────────────────────
+// Tungsten-balanced: cool blue cast, lifted blacks, slight desaturation.
+img.Image _cinestill800t(img.Image src) {
+  final out = src.clone();
+  for (final pixel in out) {
+    final r = pixel.r.toDouble();
+    final g = pixel.g.toDouble();
+    final b = pixel.b.toDouble();
+    pixel.r = _c(r * 0.94 + 8);
+    pixel.g = _c(g * 0.97 + 6);
+    pixel.b = _c(b * 1.10 + 10);
+  }
+  return img.adjustColor(out, saturation: 0.88, contrast: 1.06);
 }
 
 int _c(double v) => v.clamp(0.0, 255.0).round();

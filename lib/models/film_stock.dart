@@ -22,7 +22,19 @@ class FilmStock {
     this.unlockFeatureId,
   });
 
-  // ── The four stocks ──────────────────────────────────────────────────────
+  // ── The six stocks ───────────────────────────────────────────────────────
+
+  static const gold200 = FilmStock(
+    id: 'gold200',
+    name: 'Gold 200',
+    brand: 'Kodak',
+    tagline: 'Natural · Clean · Unfiltered',
+    description:
+        'Pure, unprocessed capture. No colour grade — '
+        'exactly what your lens sees.',
+    accentColor: Color(0xFFFFB300),
+    unlockFeatureId: null, // free
+  );
 
   static const portra400 = FilmStock(
     id: 'portra400',
@@ -72,7 +84,19 @@ class FilmStock {
     unlockFeatureId: 'film_velvia',
   );
 
-  static const all = [portra400, hp5, ektar100, velvia50];
+  static const cinestill800t = FilmStock(
+    id: 'cinestill800t',
+    name: '800T',
+    brand: 'Cinestill',
+    tagline: 'Cinematic · Tungsten · Moody',
+    description:
+        'Tungsten-balanced cinema film. Cool shadows, '
+        'lifted blacks and an unmistakable cinematic mood.',
+    accentColor: Color(0xFF5C6BC0),
+    unlockFeatureId: 'film_cinestill',
+  );
+
+  static const all = [gold200, portra400, hp5, ektar100, velvia50, cinestill800t];
 
   static FilmStock? fromId(String? id) {
     if (id == null) return null;

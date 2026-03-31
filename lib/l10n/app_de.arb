@@ -198,7 +198,7 @@
   "progressEarnWind": "Film in genau 0,8 s vorspulen",
   "progressWindPrecision": "Genauigkeit: ±0,05 s = 25 Pkt. · ±0,15 s = 15 Pkt. · ±0,30 s = 8 Pkt. · ±0,50 s = 3 Pkt.",
   "progressFilmStocks": "FILMSORTEN",
-  "progressFilmStocksFree": "Kodak Portra 400 ist kostenlos. Schalte den Rest mit Punkten frei.",
+  "progressFilmStocksFree": "Kodak Gold 200 und Portra 400 sind kostenlos. Schalte den Rest mit Punkten frei.",
   "progressUpgrades": "UPGRADES",
   "progressDevBoost": "ENTWICKLUNG BESCHLEUNIGEN",
   "progressDevBoostSub": "Punkte ausgeben, um die Entwicklung zu beschleunigen.",

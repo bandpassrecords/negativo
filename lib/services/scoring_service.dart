@@ -12,10 +12,11 @@ class ScoringService {
   static const String slot2         = 'slot_2';
   static const String slotUnlimited = 'slot_unlimited';
 
-  // Film stocks (Portra 400 is always free)
-  static const String filmHp5    = 'film_hp5';
-  static const String filmEktar  = 'film_ektar';
-  static const String filmVelvia = 'film_velvia';
+  // Film stocks (Gold 200 and Portra 400 are always free)
+  static const String filmHp5       = 'film_hp5';
+  static const String filmEktar     = 'film_ektar';
+  static const String filmVelvia    = 'film_velvia';
+  static const String filmCinestill = 'film_cinestill';
 
   // Development time reductions (default is 3 days / 72 h)
   static const String devTime2Days = 'dev_2days'; // reduce to 2 days
@@ -49,43 +50,46 @@ class ScoringService {
   // ── Permanent unlock costs ────────────────────────────────────────────────
   static const List<String> featureOrder = [
     roll24, roll36, filmHp5, slot2, filmEktar, filmVelvia,
-    devTime2Days, devTime1Day, slotUnlimited,
+    filmCinestill, devTime2Days, devTime1Day, slotUnlimited,
   ];
 
   static const Map<String, int> unlockCosts = {
-    roll24:        150,
-    roll36:        400,
-    filmHp5:       200,
-    slot2:         900,
-    filmEktar:     450,
-    filmVelvia:    800,
-    devTime2Days:  600,
-    devTime1Day:   1200,
-    slotUnlimited: 2500,
+    roll24:          150,
+    roll36:          400,
+    filmHp5:         200,
+    slot2:           900,
+    filmEktar:       450,
+    filmVelvia:      800,
+    filmCinestill:   1000,
+    devTime2Days:    600,
+    devTime1Day:     1200,
+    slotUnlimited:   2500,
   };
 
   static const Map<String, String> unlockNames = {
-    roll24:        '24-frame rolls',
-    roll36:        '36-frame rolls',
-    filmHp5:       'Ilford HP5 Plus',
-    slot2:         'Load 2 rolls at once',
-    filmEktar:     'Kodak Ektar 100',
-    filmVelvia:    'Fujifilm Velvia 50',
-    devTime2Days:  'Faster development (2 days)',
-    devTime1Day:   'Express development (1 day)',
-    slotUnlimited: 'Unlimited rolls',
+    roll24:          '24-frame rolls',
+    roll36:          '36-frame rolls',
+    filmHp5:         'Ilford HP5 Plus',
+    slot2:           'Load 2 rolls at once',
+    filmEktar:       'Kodak Ektar 100',
+    filmVelvia:      'Fujifilm Velvia 50',
+    filmCinestill:   'Cinestill 800T',
+    devTime2Days:    'Faster development (2 days)',
+    devTime1Day:     'Express development (1 day)',
+    slotUnlimited:   'Unlimited rolls',
   };
 
   static const Map<String, String> unlockDescriptions = {
-    roll24:        'Unlock 24-exposure film rolls for longer sessions.',
-    roll36:        'Unlock the photographer\'s standard — 36 exposures.',
-    filmHp5:       'Classic black-and-white stock. Rich tones and fine grain.',
-    slot2:         'Keep two rolls loaded simultaneously.',
-    filmEktar:     'Ultra-vivid colour with punchy reds and sharp detail.',
-    filmVelvia:    'Hyper-saturated landscape film with deep shadows.',
-    devTime2Days:  'Cut development time down to 2 days.',
-    devTime1Day:   'Same-day development — your roll is ready in 24 hours.',
-    slotUnlimited: 'The ultimate upgrade — load as many rolls as you want.',
+    roll24:          'Unlock 24-exposure film rolls for longer sessions.',
+    roll36:          'Unlock the photographer\'s standard — 36 exposures.',
+    filmHp5:         'Classic black-and-white stock. Rich tones and fine grain.',
+    slot2:           'Keep two rolls loaded simultaneously.',
+    filmEktar:       'Ultra-vivid colour with punchy reds and sharp detail.',
+    filmVelvia:      'Hyper-saturated landscape film with deep shadows.',
+    filmCinestill:   'Tungsten-balanced cinema film. Cool, moody tones.',
+    devTime2Days:    'Cut development time down to 2 days.',
+    devTime1Day:     'Same-day development — your roll is ready in 24 hours.',
+    slotUnlimited:   'The ultimate upgrade — load as many rolls as you want.',
   };
 
   // ── Consumable costs (spent per action) ───────────────────────────────────
