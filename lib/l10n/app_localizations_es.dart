@@ -9,768 +9,452 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get appTitle => 'Retro1';
+  String get appTitle => 'Negativo';
 
   @override
-  String get timeline => 'Línea de tiempo';
+  String get navRolls => 'Rollos';
 
   @override
-  String get settings => 'Configuración';
+  String get navAlbums => 'Álbumes';
 
   @override
-  String get refresh => 'Actualizar';
+  String get navRewards => 'Recompensas';
 
   @override
-  String get generateVideos => 'Generar Videos';
+  String get navSettings => 'Ajustes';
 
   @override
-  String get editTodayEntry => 'Editar Entrada de Hoy';
+  String get rollsEmpty => 'No hay película cargada';
 
   @override
-  String get recordToday => 'Grabar Hoy';
+  String get rollsEmptySub => 'Carga un rollo para empezar a fotografiar.';
 
   @override
-  String get view => 'Ver';
+  String get rollsLoadFilmRoll => 'Cargar Rollo';
 
   @override
-  String get edit => 'Editar';
+  String get rollsLoadFilmFab => 'Cargar Película';
 
   @override
-  String get delete => 'Eliminar';
+  String get rollsDevelopingSection => 'En Revelado';
 
   @override
-  String get cancel => 'Cancelar';
+  String get rollsStatusLoaded => 'CARGADO';
 
   @override
-  String get yes => 'Sí';
+  String get rollsShoot => 'Fotografiar';
 
   @override
-  String get replace => 'Reemplazar';
+  String get rollsDevelop => 'Revelar';
 
   @override
-  String get confirmDeletion => 'Confirmar eliminación';
+  String get rollsAlmostReady => 'Casi listo…';
 
   @override
-  String get confirmDeletionMessage =>
-      '¿Está seguro de que desea eliminar esta entrada?';
+  String get rollsDevNow => 'REVELAR YA';
 
   @override
-  String get entryDeleted => 'Entrada eliminada';
-
-  @override
-  String get entrySaved => '¡Entrada guardada con éxito!';
-
-  @override
-  String addEntryFor(String date) {
-    return 'Agregar entrada para $date';
+  String rollsFramesUsed(int used, int total) {
+    return '$used / $total fotogramas usados';
   }
 
   @override
-  String get captureOrImport => '¿Desea capturar o importar medios?';
-
-  @override
-  String get recordVideo => 'Grabar Video';
-
-  @override
-  String get takePhoto => 'Tomar Foto';
-
-  @override
-  String get videoFromGallery => 'Video de la Galería';
-
-  @override
-  String get photoFromGallery => 'Foto de la Galería';
-
-  @override
-  String get chooseHowToRecord => 'Elija cómo desea grabar su momento:';
-
-  @override
-  String get entryAlreadyExists => 'Ya existe una entrada';
-
-  @override
-  String get entryAlreadyExistsMessage =>
-      'Ya existe una entrada para este día. ¿Desea reemplazarla?';
-
-  @override
-  String get editorChooseSecond => 'Editor - Elija 1 Segundo';
-
-  @override
-  String get playing => 'Reproduciendo...';
-
-  @override
-  String get preview1s => 'Vista previa (1s)';
-
-  @override
-  String errorLoadingVideo(String error) {
-    return 'Error al cargar video: $error';
+  String rollsDaysHoursRemaining(int days, int hours) {
+    return '${days}d ${hours}h restantes';
   }
 
   @override
-  String errorSaving(String error) {
-    return 'Error al guardar: $error';
+  String rollsHoursMinutesRemaining(int hours, int minutes) {
+    return '${hours}h ${minutes}m restantes';
   }
 
   @override
-  String get video => 'Video';
-
-  @override
-  String get photo => 'Foto';
-
-  @override
-  String get all => 'Todos';
-
-  @override
-  String get videosOnly => 'Solo Videos';
-
-  @override
-  String get photosOnly => 'Solo Fotos';
-
-  @override
-  String get noCaption => 'Sin leyenda';
-
-  @override
-  String get generateByPeriod => 'Generar por Período';
-
-  @override
-  String get currentMonth => 'Mes Actual';
-
-  @override
-  String get currentYear => 'Año Actual';
-
-  @override
-  String get selectMonth => 'Seleccionar Mes';
-
-  @override
-  String get selectYear => 'Seleccionar Año';
-
-  @override
-  String get year => 'Año';
-
-  @override
-  String get generate => 'Generar';
-
-  @override
-  String get customRange => 'Rango Personalizado';
-
-  @override
-  String get chooseDates => 'Elija las fechas';
-
-  @override
-  String get generatingVideo =>
-      'Generando video... Esto puede tardar unos minutos.';
-
-  @override
-  String get videoGeneratedSuccess => '¡Video generado con éxito!';
-
-  @override
-  String get noEntriesForMonth => 'No se encontraron entradas para este mes.';
-
-  @override
-  String get noEntriesForYear => 'No se encontraron entradas para este año.';
-
-  @override
-  String get renderedVideo => 'Vídeo Renderizado Retro1';
-
-  @override
-  String get renderedVideosHistory => 'Historial de Vídeos Renderizados';
-
-  @override
-  String get noRenderedVideos => 'Aún no hay vídeos renderizados';
-
-  @override
-  String get confirmDeleteRenderedVideo =>
-      '¿Está seguro de que desea eliminar este vídeo renderizado?';
-
-  @override
-  String get videoDeleted => 'Vídeo eliminado';
-
-  @override
-  String get videoFileNotFound => 'Archivo de vídeo no encontrado';
-
-  @override
-  String get fileNotFound => 'Archivo no encontrado';
-
-  @override
-  String get calendar => 'Calendario';
-
-  @override
-  String get projects => 'Proyectos';
-
-  @override
-  String get share => 'Compartir';
-
-  @override
-  String get newButton => 'Nuevo';
-
-  @override
-  String errorSharing(String error) {
-    return 'Error al compartir: $error';
+  String rollsMinutesRemaining(int minutes) {
+    return '${minutes}m restantes';
   }
 
   @override
-  String get noVideoCaptured => 'No se capturó ningún video';
+  String get albumsTitle => 'Álbumes';
 
   @override
-  String errorCapturingVideo(String error) {
-    return 'Error al capturar video: $error';
+  String get albumsEmpty => 'Aún no hay rollos revelados';
+
+  @override
+  String get albumsEmptySub => 'Fotografía un rollo y envíalo a revelar.';
+
+  @override
+  String albumsPhotoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fotos',
+      one: '$count foto',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get noPhotoCaptured => 'No se capturó ninguna foto';
+  String get newRollTitle => 'Cargar Rollo de Película';
 
   @override
-  String errorCapturingPhoto(String error) {
-    return 'Error al capturar foto: $error';
+  String get newRollChooseStock => 'Elige el tipo de película';
+
+  @override
+  String get newRollChooseStockSub =>
+      'Cada película da un aspecto único a tus fotos.';
+
+  @override
+  String get newRollChooseCapacity => 'Elige la capacidad';
+
+  @override
+  String get newRollChooseCapacitySub =>
+      '¿Cuántos fotogramas tiene este rollo?';
+
+  @override
+  String get newRollNameTitle => 'Nombra este rollo';
+
+  @override
+  String get newRollNameSub => '¿Para qué momento o viaje es este rollo?';
+
+  @override
+  String get newRollNameHint => 'Viaje a París, Verano 2024, Road Trip…';
+
+  @override
+  String get newRollLoadButton => 'Cargar Rollo';
+
+  @override
+  String get newRollNameRequired => 'Primero dale un nombre a tu rollo';
+
+  @override
+  String get newRollFrames => 'fotogramas';
+
+  @override
+  String newRollPtsToUnlock(int cost) {
+    return '$cost pts para desbloquear';
   }
 
   @override
-  String get noVideoSelected => 'No se seleccionó ningún video';
+  String get detailSendToDevelop => '¿Enviar a revelar?';
 
   @override
-  String errorSelectingVideo(String error) {
-    return 'Error al seleccionar video: $error';
+  String detailSendFullBody(int capacity, String duration) {
+    return 'Tu rollo de $capacity fotogramas está listo. Se revelará en $duration.';
   }
 
   @override
-  String get noPhotoSelected => 'No se seleccionó ninguna foto';
-
-  @override
-  String errorSelectingPhoto(String error) {
-    return 'Error al seleccionar foto: $error';
+  String detailSendPartialBody(int used, int total, String duration) {
+    return 'Has usado $used de $total fotogramas. ¿Rebobinar y revelar ahora?\n\nEl revelado tarda $duration.';
   }
 
   @override
-  String errorProcessingMedia(String error) {
-    return 'Error al procesar medios: $error';
+  String get detailCancel => 'Cancelar';
+
+  @override
+  String get detailDevelop => 'Revelar';
+
+  @override
+  String get detailDeleteTitle => '¿Eliminar este rollo?';
+
+  @override
+  String detailDeleteBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Las $count fotos serán eliminadas permanentemente. Esto no se puede deshacer.',
+      one: '1 foto será eliminada permanentemente. Esto no se puede deshacer.',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get noEntriesFound => 'No se encontraron entradas para este período.';
+  String get detailDeleteTooltip => 'Eliminar rollo';
 
   @override
-  String get noMediaFound => 'No se encontró ninguna media';
+  String get detailDelete => 'Eliminar';
 
   @override
-  String get noMediaFoundForDate =>
-      'No se encontró ninguna media para la fecha seleccionada';
+  String get detailStatusActive => 'Activo';
 
   @override
-  String get permissionDenied => 'Permiso denegado';
+  String get detailStatusDeveloping => 'Revelando';
 
   @override
-  String errorLoadingMedia(String error) {
-    return 'Error al cargar media: $error';
+  String get detailStatusDeveloped => 'Revelado';
+
+  @override
+  String get detailStatusUnknown => 'Desconocido';
+
+  @override
+  String get detailInfoCreated => 'Creado';
+
+  @override
+  String get detailInfoCapacity => 'Capacidad';
+
+  @override
+  String detailInfoFramesCount(int count) {
+    return '$count fotogramas';
   }
 
   @override
-  String errorSelectingMedia(String error) {
-    return 'Error al seleccionar media: $error';
+  String get detailInfoExposed => 'Expuestos';
+
+  @override
+  String get detailInfoSentToDevelop => 'Enviado a revelar';
+
+  @override
+  String get detailInfoDevelopedOn => 'Revelado el';
+
+  @override
+  String get detailInfoReadyOn => 'Listo el';
+
+  @override
+  String detailFramesUsedOf(int used, int total) {
+    return '$used / $total fotogramas';
   }
 
   @override
-  String get removeDateFilter => 'Quitar filtro de fecha';
-
-  @override
-  String errorGeneratingVideo(String error) {
-    return 'Error al generar video: $error';
+  String detailFramesRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fotogramas restantes',
+      one: '1 fotograma restante',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get enableNotifications => 'Activar notificaciones';
+  String get detailAlmostReady => 'Casi listo…';
 
   @override
-  String get notificationTime => 'Hora de notificación';
-
-  @override
-  String get reminderAfter => 'Recordatorio después (horas)';
-
-  @override
-  String get weeklySummary => 'Resumen semanal';
-
-  @override
-  String get videoQuality => 'Calidad del video';
-
-  @override
-  String get showDateInVideo => 'Mostrar fecha en video';
-
-  @override
-  String get dateFormatLabel => 'Formato de fecha en video';
-
-  @override
-  String get autoExportEndOfYear => 'Exportación automática al final del año';
-
-  @override
-  String get autoBackup => 'Copia de seguridad automática';
-
-  @override
-  String get totalEntries => 'Total de entradas';
-
-  @override
-  String get entriesThisYear => 'Entradas de este año';
-
-  @override
-  String get entries => 'entradas';
-
-  @override
-  String get settingsSaved => 'Configuración guardada';
-
-  @override
-  String get quality720p => '720p';
-
-  @override
-  String get quality1080p => '1080p';
-
-  @override
-  String get quality4k => '4K';
-
-  @override
-  String get language => 'Idioma';
-
-  @override
-  String get languageEnglish => 'Inglés';
-
-  @override
-  String get languagePortuguese => 'Portugués';
-
-  @override
-  String get appLanguage => 'Idioma de la aplicación';
-
-  @override
-  String get testNotification => 'Probar notificación';
-
-  @override
-  String get testNotificationDescription =>
-      'Enviar una notificación de prueba ahora (frase aleatoria)';
-
-  @override
-  String get testNotificationSent => '¡Notificación de prueba enviada!';
-
-  @override
-  String get testNotificationError => 'Error al enviar notificación de prueba';
-
-  @override
-  String get testProductionNotification => 'Ver notificación de hoy';
-
-  @override
-  String get testProductionNotificationDescription =>
-      'Ve exactamente cómo aparecerá la notificación de hoy';
-
-  @override
-  String get today => 'Hoy';
-
-  @override
-  String get useExternalAudio => 'Usar audio externo';
-
-  @override
-  String get selectAudioFile => 'Seleccionar archivo de audio';
-
-  @override
-  String get audioFileSelected => 'Archivo de audio seleccionado';
-
-  @override
-  String get removeAudio => 'Quitar audio';
-
-  @override
-  String get noAudio => 'Sin audio';
-
-  @override
-  String get externalAudio => 'Audio externo';
-
-  @override
-  String get originalAudio => 'Audio original';
-
-  @override
-  String get freeProjects => 'Proyectos Libres';
-
-  @override
-  String get noProjectsYet => 'Aún no hay proyectos';
-
-  @override
-  String get createFirstProject => 'Cree su primer proyecto para comenzar';
-
-  @override
-  String get newProject => 'Nuevo Proyecto';
-
-  @override
-  String get projectName => 'Nombre del Proyecto';
-
-  @override
-  String get enterProjectName => 'Ingrese el nombre del proyecto';
-
-  @override
-  String get description => 'Descripción';
-
-  @override
-  String get descriptionOptional => 'Descripción (opcional)';
-
-  @override
-  String get enterDescription => 'Ingrese la descripción';
-
-  @override
-  String get create => 'Crear';
-
-  @override
-  String get deleteProject => 'Eliminar Proyecto';
-
-  @override
-  String deleteProjectConfirm(String name) {
-    return '¿Está seguro de que desea eliminar \"$name\"?';
+  String detailDevelopingBody(int count) {
+    return '$count fotogramas se están revelando. Recibirás una notificación cuando estén listos.';
   }
 
   @override
-  String get items => 'elementos';
+  String get detailOpenCamera => 'Abrir Cámara';
 
   @override
-  String get yesterday => 'Ayer';
+  String get detailDevelopRoll => 'Revelar Rollo';
 
   @override
-  String daysAgo(int count) {
-    return 'Hace $count días';
+  String get detailRewindDevelop => 'Rebobinar y Revelar';
+
+  @override
+  String get detailViewPhotos => 'Ver Fotos';
+
+  @override
+  String detailDurationHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count horas',
+      one: '1 hora',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get addMedia => 'Agregar Medios';
-
-  @override
-  String get deleteItem => 'Eliminar Elemento';
-
-  @override
-  String get deleteItemConfirm =>
-      '¿Está seguro de que desea eliminar este elemento?';
-
-  @override
-  String get noMediaItemsYet => 'Aún no hay elementos de medios';
-
-  @override
-  String errorAddingMedia(String error) {
-    return 'Error al agregar medios: $error';
+  String detailDurationDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get renderProjectVideo => 'Renderizar Video del Proyecto';
-
-  @override
-  String renderProjectVideoConfirm(int count) {
-    return '¿Renderizar todos los $count elementos en un video?';
+  String galleryPhotoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fotos',
+      one: '1 foto',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get render => 'Renderizar';
+  String get galleryNoPhotos => 'No hay fotos en este rollo';
 
   @override
-  String get edited => 'Editado';
+  String get galleryShare => 'Compartir';
 
   @override
-  String get original => 'Original';
-
-  @override
-  String get photoAdded => 'Foto Agregada';
-
-  @override
-  String get doYouWantToEdit => '¿Desea editar la foto ahora?';
-
-  @override
-  String get skip => 'Omitir';
-
-  @override
-  String get editPhoto => 'Editar Foto';
-
-  @override
-  String get editVideo => 'Editar Video';
-
-  @override
-  String get rotate => 'Rotar';
-
-  @override
-  String get filter => 'Filtro';
-
-  @override
-  String get animation => 'Animación';
-
-  @override
-  String get speed => 'Velocidad';
-
-  @override
-  String get muteAudio => 'Silenciar Audio';
-
-  @override
-  String get save => 'Guardar';
-
-  @override
-  String get editPhotoDaily => 'Editar Foto';
-
-  @override
-  String get convertToLandscape => 'Convertir a Paisaje';
-
-  @override
-  String get convertWithCrop => 'Convertir con Recorte';
-
-  @override
-  String get convertWithoutCrop => 'Convertir sin Recorte (Rotar)';
-
-  @override
-  String get imageAlreadyLandscape =>
-      'La imagen ya está en orientación paisaje';
-
-  @override
-  String errorConvertingImage(String error) {
-    return 'Error al convertir imagen: $error';
+  String galleryFrameLabel(int order) {
+    return 'Fotograma $order';
   }
 
   @override
-  String get cropImage => 'Recortar Imagen';
-
-  @override
-  String get record => 'Grabar';
-
-  @override
-  String recordFor(String date) {
-    return 'Grabar - $date';
+  String galleryFrameOf(int current, int total) {
+    return 'Fotograma $current / $total';
   }
 
   @override
-  String get imageNotFound => 'Imagen no encontrada';
+  String get progressTitle => 'Progreso';
 
   @override
-  String get errorLoadingImage => 'Error al cargar imagen';
+  String get progressAvailablePoints => 'puntos disponibles';
 
   @override
-  String errorRotatingImage(String error) {
-    return 'Error al rotar imagen: $error';
+  String progressTowardNext(int percent, String feature) {
+    return '$percent% hacia $feature';
   }
 
   @override
-  String errorApplyingFilter(String error) {
-    return 'Error al aplicar filtro: $error';
+  String get progressAllUnlocked => '🏆 ¡Todas las funciones desbloqueadas!';
+
+  @override
+  String progressLifetimePoints(int points) {
+    return '$points pts ganados en total';
   }
 
   @override
-  String get editsSaved => 'Ediciones guardadas';
+  String get progressHowToEarn => 'CÓMO GANAR';
 
   @override
-  String startTime(int ms) {
-    return 'Tiempo de inicio: ${ms}ms';
+  String get progressEarnPhoto => 'Tomar una foto';
+
+  @override
+  String get progressEarnFullRoll => 'Usar todos los fotogramas de un rollo';
+
+  @override
+  String get progressEarnStartDev => 'Enviar rollo a revelar';
+
+  @override
+  String get progressEarnCompleteDev => 'Rollo completamente revelado';
+
+  @override
+  String get progressEarnWind => 'Avanzar película en exactamente 0,8 s';
+
+  @override
+  String get progressWindPrecision =>
+      'Precisión: ±0,05 s = 25 pts · ±0,15 s = 15 pts · ±0,30 s = 8 pts · ±0,50 s = 3 pts';
+
+  @override
+  String get progressFilmStocks => 'TIPOS DE PELÍCULA';
+
+  @override
+  String get progressFilmStocksFree =>
+      'Kodak Portra 400 es gratis. Desbloquea el resto con puntos.';
+
+  @override
+  String get progressUpgrades => 'MEJORAS';
+
+  @override
+  String get progressDevBoost => 'ACELERAR REVELADO';
+
+  @override
+  String get progressDevBoostSub =>
+      'Usa puntos para acelerar el revelado de un rollo.';
+
+  @override
+  String progressNotEnoughPoints(int cost, int have) {
+    return 'Puntos insuficientes (necesitas $cost, tienes $have)';
   }
 
   @override
-  String errorSelectingAudio(String error) {
-    return 'Error al seleccionar audio: $error';
+  String progressNotEnoughPointsSimple(int cost) {
+    return 'Puntos insuficientes (necesitas $cost)';
   }
 
   @override
-  String get languageSpanish => 'Español';
-
-  @override
-  String get languageFrench => 'Francés';
-
-  @override
-  String get languageGerman => 'Alemán';
-
-  @override
-  String get languageItalian => 'Italiano';
-
-  @override
-  String get notifications => 'Notificaciones';
-
-  @override
-  String get export => 'Exportación';
-
-  @override
-  String get backup => 'Copia de Seguridad';
-
-  @override
-  String get statistics => 'Estadísticas';
-
-  @override
-  String get generateVideosDescription => 'Generar videos compilados';
-
-  @override
-  String get hours => 'horas';
-
-  @override
-  String get reminder => 'Recordatorio';
-
-  @override
-  String get reminderChannelDescription => 'Recordatorios adicionales';
-
-  @override
-  String get haventRecordedToday => '¿Aún no has registrado hoy?';
-
-  @override
-  String get captureMomentNow => '¿Qué tal capturar un momento ahora?';
-
-  @override
-  String get dailyReminder => 'Recordatorio Diario';
-
-  @override
-  String get dailyReminderDescription =>
-      'Notificaciones para recordarte de registrar tu momento del día';
-
-  @override
-  String get notificationTitle => 'Retro1';
-
-  @override
-  String get notificationBody => '¡No olvides registrar tu momento de hoy!';
-
-  @override
-  String get appearance => 'Apariencia';
-
-  @override
-  String get theme => 'Tema';
-
-  @override
-  String get themeLight => 'Claro';
-
-  @override
-  String get themeDark => 'Oscuro';
-
-  @override
-  String get themeSystem => 'Sistema';
-
-  @override
-  String get loadMoreDays => 'Cargar Más Días';
-
-  @override
-  String get mondayShort => 'Lun';
-
-  @override
-  String get tuesdayShort => 'Mar';
-
-  @override
-  String get wednesdayShort => 'Mié';
-
-  @override
-  String get thursdayShort => 'Jue';
-
-  @override
-  String get fridayShort => 'Vie';
-
-  @override
-  String get saturdayShort => 'Sáb';
-
-  @override
-  String get sundayShort => 'Dom';
-
-  @override
-  String get browseGallery => 'Explorar Galería';
-
-  @override
-  String get mediaFilterAll => 'Todos';
-
-  @override
-  String get mediaFilterPhotos => 'Fotos';
-
-  @override
-  String get mediaFilterVideos => 'Videos';
-
-  @override
-  String get selectFromGallery => 'Seleccionar de la Galería';
-
-  @override
-  String get openSettings => 'Abrir Configuración';
-
-  @override
-  String get errorAccessingFile => 'No se pudo acceder al archivo';
-
-  @override
-  String get cropVideo => 'Recortar Video';
-
-  @override
-  String get cropTo16x9 => 'Recortar a 16:9';
-
-  @override
-  String get done => 'Listo';
-
-  @override
-  String get filters => 'Filtros';
-
-  @override
-  String get filterOriginal => 'Original';
-
-  @override
-  String get filterVintage => 'Vintage';
-
-  @override
-  String get filterBlackWhite => 'B/N';
-
-  @override
-  String get filterSepia => 'Sepia';
-
-  @override
-  String get filterBright => 'Brillante';
-
-  @override
-  String get filterWarm => 'Cálido';
-
-  @override
-  String get filterCool => 'Frío';
-
-  @override
-  String get addText => 'Agregar Texto';
-
-  @override
-  String get enterYourText => 'Ingresa tu texto';
-
-  @override
-  String get applyCrop => 'Aplicar';
-
-  @override
-  String get positionLabel => 'Posición';
-
-  @override
-  String errorApplyingCrop(String error) {
-    return 'Error al recortar: $error';
+  String progressUnlockedFeature(String name) {
+    return '🎉 ¡Desbloqueado: $name!';
   }
 
   @override
-  String get timelineViewTitle => 'Vista de la Línea de Tiempo';
+  String get progressDevComplete => '⚡ ¡Revelado completo!';
 
   @override
-  String get calendarView => 'Calendario';
+  String get progressHalfTime => '⏩ ¡Tiempo reducido a la mitad!';
 
   @override
-  String get gridView => 'Cuadrícula';
+  String get progressAlmostReady => 'Casi listo';
 
   @override
-  String get mediaPickerTitle => 'Selector de Medios';
-
-  @override
-  String get customPicker => 'Galería In-App';
-
-  @override
-  String get customPickerDescription =>
-      'Explora tus medios dentro de la aplicación';
-
-  @override
-  String get systemPicker => 'Selector del Sistema';
-
-  @override
-  String get systemPickerDescription =>
-      'Usa el selector de medios oficial de Android/iOS';
-
-  @override
-  String get thumbnailSizeTitle => 'Tamaño de Miniaturas';
-
-  @override
-  String get smallThumbnails => 'Pequeño';
-
-  @override
-  String get largeThumbnails => 'Grande';
-
-  @override
-  String get addBefore => 'Agregar antes';
-
-  @override
-  String get addAfter => 'Agregar después';
-
-  @override
-  String errorApplyingText(String error) {
-    return 'Error al aplicar texto: $error';
+  String progressDaysHoursLeft(int days, int hours) {
+    return '${days}d ${hours}h restantes';
   }
 
   @override
-  String get notificationUseQuotes => 'Frase inspiradora diaria';
+  String progressHoursMinutesLeft(int hours, int minutes) {
+    return '${hours}h ${minutes}m restantes';
+  }
 
   @override
-  String get notificationUseQuotesDescription =>
-      'Mostrar una frase motivacional en la notificación en lugar del mensaje predeterminado';
+  String progressMinutesLeft(int minutes) {
+    return '${minutes}m restantes';
+  }
+
+  @override
+  String progressHalfTimeBtn(int cost) {
+    return '⏩ Mitad de tiempo\n$cost pts';
+  }
+
+  @override
+  String progressInstantBtn(int cost) {
+    return '⚡ Instantáneo\n$cost pts';
+  }
+
+  @override
+  String get settingsTitle => 'Ajustes';
+
+  @override
+  String get settingsAppearance => 'Apariencia';
+
+  @override
+  String get settingsTheme => 'Tema';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String get settingsFilmDev => 'Revelado de Película';
+
+  @override
+  String get settingsFilmDevSub =>
+      '¿Cuánto tiempo debe tardar en revelar tu película?';
+
+  @override
+  String get settingsDev1Day => '1 día';
+
+  @override
+  String get settingsDev2Days => '2 días';
+
+  @override
+  String get settingsDev3Days => '3 días';
+
+  @override
+  String get settingsDev1Week => '1 semana';
+
+  @override
+  String get settingsNotifyDev => 'Notificar cuando esté revelado';
+
+  @override
+  String get settingsNotifyDevSub =>
+      'Recibe una notificación cuando tu película esté lista';
+
+  @override
+  String get settingsStatistics => 'Estadísticas';
+
+  @override
+  String get settingsRollsDeveloped => 'Rollos revelados';
+
+  @override
+  String get settingsTotalPhotos => 'Total de fotos tomadas';
+
+  @override
+  String get settingsTotalRolls => 'Total de rollos';
+
+  @override
+  String get notifDevReadyTitle => '¡Película revelada!';
+
+  @override
+  String notifDevReadyBody(String name) {
+    return 'Tu rollo \"$name\" está listo para recoger.';
+  }
 }

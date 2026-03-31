@@ -2,9 +2,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/film_roll.dart';
 import '../services/film_service.dart';
 import '../services/media_service.dart';
+import '../services/scoring_service.dart';
 
 class ViewfinderScreen extends StatefulWidget {
   final FilmRoll filmRoll;
@@ -27,6 +29,21 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
   bool _needsWinding = true;
 
   int _frameCount = 0;
+  String? _pointsOverlayText;
+  int _chipGeneration = 0;
+
+  String get _windKey => 'neg_wound_${widget.filmRoll.id}';
+
+  Future<void> _loadWindingState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final needsWinding = prefs.getBool(_windKey) ?? true;
+    if (mounted) setState(() => _needsWinding = needsWinding);
+  }
+
+  Future<void> _saveWindingState(bool needsWinding) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_windKey, needsWinding);
+  }
 
   @override
   void initState() {
@@ -34,6 +51,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
     WidgetsBinding.instance.addObserver(this);
     HardwareKeyboard.instance.addHandler(_handleHardwareKey);
     _frameCount = widget.filmRoll.exposureCount;
+    _loadWindingState();
     // Unlock all orientations for the viewfinder
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -123,6 +141,13 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
       final savedPath = await MediaService.copyToAppDirectory(image.path);
       await FilmService.addExposure(widget.filmRoll, savedPath);
       setState(() => _frameCount = widget.filmRoll.exposureCount);
+      int earned = ScoringService.ptsPerPhoto;
+      await ScoringService.addPoints(earned);
+      if (widget.filmRoll.isFull) {
+        earned += ScoringService.ptsFullRoll;
+        await ScoringService.addPoints(ScoringService.ptsFullRoll);
+      }
+      _showPointsChip('+$earned pts');
     } catch (_) {}
 
     // 4. Hold the black for a beat (film advancing feel).
@@ -133,13 +158,43 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
       setState(() {
         _shutterClosed = false;
         _isShooting = false;
-        _needsWinding = true; // must wind before next shot
+        _needsWinding = true;
       });
+      _saveWindingState(true);
     }
 
     if (widget.filmRoll.isFull && mounted) {
       await Future.delayed(const Duration(milliseconds: 450));
       if (mounted) _showRollFullDialog();
+    }
+  }
+
+  void _showPointsChip(String text) {
+    _chipGeneration++;
+    final gen = _chipGeneration;
+    setState(() => _pointsOverlayText = text);
+    Future.delayed(const Duration(milliseconds: 1600), () {
+      if (mounted && _chipGeneration == gen) {
+        setState(() => _pointsOverlayText = null);
+      }
+    });
+  }
+
+  Future<void> _onWindingComplete(double seconds) async {
+    setState(() => _needsWinding = false);
+    _saveWindingState(false);
+    final bonus = ScoringService.windBonus(seconds);
+    if (bonus > 0) {
+      await ScoringService.addPoints(bonus);
+      final label = ScoringService.windBonusLabel(bonus);
+      if (mounted) _showPointsChip('$label  +$bonus pts');
+    } else {
+      // Still show feedback so the user knows the mechanic
+      final d = (seconds - ScoringService.windTarget).abs();
+      final hint = d < ScoringService.windTarget
+          ? 'Wind slower — target 0.8s'
+          : 'Wind faster — target 0.8s';
+      if (mounted) _showPointsChip(hint);
     }
   }
 
@@ -334,9 +389,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
     final total = widget.filmRoll.capacity;
     final remaining = total - _frameCount;
 
-    final windLever = _WindLever(
-      onComplete: () => setState(() => _needsWinding = false),
-    );
+    final windLever = _WindLever(onComplete: _onWindingComplete);
 
     final shutterButton = _ShutterButton(
       onPressed: remaining > 0 && !_isShooting && !_needsWinding ? _shoot : null,
@@ -354,21 +407,23 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
           )
         : null;
 
-    return ColoredBox(
-      color: Colors.black,
-      child: SafeArea(
-        child: OrientationBuilder(
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ColoredBox(
+          color: Colors.black,
+          child: SafeArea(
+            child: OrientationBuilder(
           builder: (context, orientation) {
             if (orientation == Orientation.landscape) {
-              // ── Landscape ─────────────────────────────────────────
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Left: HUD, viewfinder, roll name
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
+              // ── Landscape: LayoutBuilder + Stack for % positioning ──
+              return LayoutBuilder(
+                builder: (context, constraints) => Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Content: HUD full-width, viewfinder + name left-aligned
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           width: double.infinity,
@@ -387,43 +442,54 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
                             ),
                           ),
                         ),
-                        _buildViewfinderWindow(landscape: true),
+                        Padding(
+                          padding: EdgeInsets.only(left: constraints.maxWidth * 0.20),
+                          child: _buildViewfinderWindow(landscape: true),
+                        ),
                         const SizedBox(height: 6),
-                        Text(
-                          widget.filmRoll.name,
-                          style: const TextStyle(
-                            color: Colors.white38,
-                            fontSize: 11,
-                            letterSpacing: 1.0,
+                        Padding(
+                          padding: EdgeInsets.only(left: constraints.maxWidth * 0.20),
+                          child: Text(
+                            widget.filmRoll.name,
+                            style: const TextStyle(
+                              color: Colors.white38,
+                              fontSize: 11,
+                              letterSpacing: 1.0,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
 
-                  // Right: lever centred (slightly left) or shutter centred-right
-                  Padding(
-                    padding: const EdgeInsets.only(right: 72, left: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (_needsWinding) ...[
-                          SizedBox(
-                            width: 170,
-                            child: windLever,
-                          ),
-                        ] else ...[
-                          if (lowFramesLabel != null) ...[
-                            lowFramesLabel,
-                            const SizedBox(height: 12),
+                    // Lever — 60% from left, 40% from bottom
+                    if (_needsWinding)
+                      Positioned(
+                        left: constraints.maxWidth * 0.55,
+                        bottom: constraints.maxHeight * 0.20,
+                        child: SizedBox(
+                          width: 170,
+                          child: windLever,
+                        ),
+                      ),
+
+                    // Shutter — same position as lever start
+                    if (!_needsWinding)
+                      Positioned(
+                        left: constraints.maxWidth * 0.55,
+                        bottom: constraints.maxHeight * 0.20,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (lowFramesLabel != null) ...[
+                              lowFramesLabel,
+                              const SizedBox(height: 12),
+                            ],
+                            shutterButton,
                           ],
-                          shutterButton,
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
+                        ),
+                      ),
+                  ],
+                ),
               );
             }
 
@@ -495,6 +561,43 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
           },
         ),
       ),
+    ),
+        // Points overlay — floats above everything
+        if (_pointsOverlayText != null)
+          Positioned(
+            bottom: 160,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+                decoration: BoxDecoration(
+                  color: _pointsOverlayText!.startsWith('+')
+                      ? Colors.amber.withValues(alpha: 0.15)
+                      : Colors.white.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: _pointsOverlayText!.startsWith('+')
+                        ? Colors.amber.withValues(alpha: 0.5)
+                        : Colors.white24,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  _pointsOverlayText!,
+                  style: TextStyle(
+                    color: _pointsOverlayText!.startsWith('+')
+                        ? Colors.amber
+                        : Colors.white60,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -570,7 +673,7 @@ class _FrameCounter extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _WindLever extends StatefulWidget {
-  final VoidCallback onComplete;
+  final void Function(double seconds) onComplete;
   const _WindLever({required this.onComplete});
 
   @override
@@ -581,9 +684,11 @@ class _WindLeverState extends State<_WindLever> {
   double _progress = 0.0;
   bool _completed = false;
   int _lastTick = 0;
+  DateTime? _windStartTime;
 
   void _onDragUpdate(DragUpdateDetails details, double trackWidth) {
     if (_completed) return;
+    _windStartTime ??= DateTime.now();
     setState(() {
       _progress = (_progress + details.delta.dx / trackWidth).clamp(0.0, 1.0);
     });
@@ -605,13 +710,16 @@ class _WindLeverState extends State<_WindLever> {
   }
 
   Future<void> _onWindComplete() async {
+    final seconds = _windStartTime == null
+        ? 999.0
+        : DateTime.now().difference(_windStartTime!).inMilliseconds / 1000.0;
     // Three rapid clicks — the final ratchet locking sound
     for (int i = 0; i < 3; i++) {
       await Future.delayed(Duration(milliseconds: i * 55));
       HapticFeedback.mediumImpact();
       SystemSound.play(SystemSoundType.click);
     }
-    widget.onComplete();
+    widget.onComplete(seconds);
   }
 
   void _onDragEnd(DragEndDetails _) {
@@ -620,6 +728,7 @@ class _WindLeverState extends State<_WindLever> {
     setState(() {
       _progress = 0.0;
       _lastTick = 0;
+      _windStartTime = null;
     });
   }
 
