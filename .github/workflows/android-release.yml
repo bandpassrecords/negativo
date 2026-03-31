@@ -270,7 +270,7 @@ jobs:
           ls -la android/app/release.keystore || echo "keystore NOT FOUND"
           echo ""
           echo "Building AAB..."
-          flutter build appbundle --release
+          flutter build appbundle --release -v
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
