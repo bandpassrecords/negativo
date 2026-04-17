@@ -49,7 +49,8 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
     });
 
     try {
-      final url = await GooglePhotosService.createAlbumWithPhotos(
+      GooglePhotosService.instance.initialize(serverClientId: '1007563150643-s6qhvitnn4urjtb07cd6j3in9nvt6acm.apps.googleusercontent.com');
+      final url = await GooglePhotosService.instance.createAlbumWithPhotos(
         albumTitle: widget.filmRoll.name,
         imagePaths: paths,
         onProgress: (p) => setState(() => _exportProgress = p),

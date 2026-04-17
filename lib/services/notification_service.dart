@@ -14,7 +14,7 @@ class NotificationService {
     tz.initializeTimeZones();
     _configureLocalTimezone();
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings('@drawable/ic_notification');
     const darwinSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -109,6 +109,7 @@ class NotificationService {
       priority: Priority.high,
       enableVibration: true,
       playSound: true,
+      icon: '@drawable/ic_notification',
     );
     const darwinDetails = DarwinNotificationDetails(
       presentAlert: true,
