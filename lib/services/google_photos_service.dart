@@ -10,25 +10,18 @@ class GooglePhotosService {
 
   static final GooglePhotosService instance = GooglePhotosService._();
 
-  // appendonly is sufficient for creating albums + uploading photos,
-  // and avoids the restricted-scope verification requirement of photoslibrary.
   static const List<String> _scopes = [
-    'https://www.googleapis.com/auth/photoslibrary.appendonly',
+    'https://www.googleapis.com/auth/photoslibrary',
+    'https://www.googleapis.com/auth/photoslibrary.sharing',
   ];
 
   bool _isInitialized = false;
-  bool _isAuthenticated = false;
   GoogleSignInAccount? _currentUser;
   StreamSubscription<GoogleSignInAuthenticationEvent>? _authSubscription;
   static bool _sessionInitialized = false;
 
   GoogleSignInAccount? get currentUser => _currentUser;
-  bool get isSignedIn => _currentUser != null && _isAuthenticated;
 
-  /// Initializes GoogleSignIn. Safe to call multiple times.
-  ///
-  /// [serverClientId] is the Web OAuth 2.0 client ID from Google Cloud Console.
-  /// Required on Android to authorize scopes via Credential Manager.
   void initialize({required String serverClientId}) {
     if (_isInitialized) return;
     _isInitialized = true;
@@ -49,20 +42,14 @@ class GooglePhotosService {
   }
 
   Future<void> _onAuthEvent(GoogleSignInAuthenticationEvent event) async {
-    final GoogleSignInAccount? user = switch (event) {
+    _currentUser = switch (event) {
       GoogleSignInAuthenticationEventSignIn() => event.user,
       GoogleSignInAuthenticationEventSignOut() => null,
     };
 
-    final GoogleSignInClientAuthorization? auth =
-        await user?.authorizationClient.authorizationForScopes(_scopes);
-
-    _currentUser = user;
-    _isAuthenticated = auth != null;
-
     if (kDebugMode) {
-      if (user != null) {
-        debugPrint('GooglePhotos: signed in as ${user.email}, authorized: $_isAuthenticated');
+      if (_currentUser != null) {
+        debugPrint('GooglePhotos: signed in as ${_currentUser!.email}');
       } else {
         debugPrint('GooglePhotos: signed out');
       }
@@ -70,11 +57,8 @@ class GooglePhotosService {
   }
 
   void _onAuthError(Object e) {
-    if (kDebugMode) {
-      debugPrint('GooglePhotos auth error: $e');
-    }
+    if (kDebugMode) debugPrint('GooglePhotos auth error: $e');
     _currentUser = null;
-    _isAuthenticated = false;
   }
 
   void dispose() {
@@ -82,33 +66,36 @@ class GooglePhotosService {
     _authSubscription = null;
   }
 
-  /// Signs in interactively and requests Photos authorization.
-  /// Returns the authorized account, or null if the user cancels.
-  /// Throws on any other error so callers see the real failure reason.
-  Future<GoogleSignInAccount?> signIn() async {
+  /// Authenticates the user and returns authorization headers for Photos API calls.
+  /// Matches the reference pattern: get authHeaders fresh, pass to every request.
+  /// Uses promptIfNecessary: true so authorization is requested automatically if not yet granted.
+  Future<Map<String, String>> _getAuthHeaders() async {
     if (!GoogleSignIn.instance.supportsAuthenticate()) {
       throw Exception('Google Sign-In is not supported on this platform');
     }
 
+    // Authenticate (identity). scopeHint tells Credential Manager which scopes we'll need.
     await GoogleSignIn.instance.authenticate(scopeHint: _scopes);
 
-    // Wait briefly for the authenticationEvents listener to update state
-    await Future<void>.delayed(const Duration(milliseconds: 300));
+    // Give the authenticationEvents stream time to update _currentUser.
+    await Future<void>.delayed(const Duration(milliseconds: 500));
 
-    if (_currentUser == null) return null;
+    if (_currentUser == null) throw Exception('Sign-in cancelled');
 
-    // Check for existing scope authorization (no prompt)
-    final existing = await _currentUser!.authorizationClient
-        .authorizationForScopes(_scopes);
-    if (existing != null) {
-      _isAuthenticated = true;
-      return _currentUser;
+    // Get auth headers — prompts for Photos scope authorization if not already granted.
+    // This is the 7.x equivalent of the reference's account.authHeaders.
+    final headers = await _currentUser!.authorizationClient.authorizationHeaders(
+      _scopes,
+      promptIfNecessary: true,
+    );
+
+    if (headers == null) {
+      throw Exception('Failed to obtain authorization for Google Photos. '
+          'Check that the photoslibrary scope is enabled in Google Cloud Console '
+          'and your account is added as a test user.');
     }
 
-    // Request authorization interactively
-    await _currentUser!.authorizationClient.authorizeScopes(_scopes);
-    _isAuthenticated = true;
-    return _currentUser;
+    return headers;
   }
 
   Future<void> signOut() => GoogleSignIn.instance.signOut();
@@ -123,20 +110,15 @@ class GooglePhotosService {
     required List<String> imagePaths,
     void Function(double progress)? onProgress,
   }) async {
-    GoogleSignInAccount? account;
+    Map<String, String> headers;
     try {
-      account = await signIn();
+      headers = await _getAuthHeaders();
     } on GoogleSignInException catch (e) {
-      if (e.code == GoogleSignInExceptionCode.canceled) return Future.error(Exception('Sign-in cancelled'));
-      throw Exception('Google sign-in failed: ${e.code} — ${e.description}');
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        throw Exception('Sign-in cancelled');
+      }
+      throw Exception('Google sign-in failed (${e.code}): ${e.description}');
     }
-    if (account == null) throw Exception('Sign-in cancelled');
-
-    final headers = await account.authorizationClient.authorizationHeaders(
-      _scopes,
-      promptIfNecessary: true,
-    );
-    if (headers == null) throw Exception('Failed to authorize Photos access');
 
     final albumId = await _createAlbum(headers, albumTitle);
 
@@ -161,8 +143,7 @@ class GooglePhotosService {
     return 'https://photos.google.com/album/$albumId';
   }
 
-  Future<String> _createAlbum(
-      Map<String, String> headers, String title) async {
+  Future<String> _createAlbum(Map<String, String> headers, String title) async {
     final response = await http.post(
       Uri.parse('https://photoslibrary.googleapis.com/v1/albums'),
       headers: {...headers, 'Content-Type': 'application/json'},
@@ -172,8 +153,7 @@ class GooglePhotosService {
     return (jsonDecode(response.body) as Map<String, dynamic>)['id'] as String;
   }
 
-  Future<String> _uploadBytes(
-      Map<String, String> headers, String filePath) async {
+  Future<String> _uploadBytes(Map<String, String> headers, String filePath) async {
     final file = File(filePath);
     final bytes = await file.readAsBytes();
     final fileName = file.path.split('/').last;
@@ -199,11 +179,11 @@ class GooglePhotosService {
     List<String> uploadTokens,
   ) async {
     final response = await http.post(
-      Uri.parse(
-          'https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate'),
+      Uri.parse('https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate'),
       headers: {...headers, 'Content-Type': 'application/json'},
       body: jsonEncode({
         'albumId': albumId,
+        'albumPosition': {'position': 'LAST_IN_ALBUM'},
         'newMediaItems': uploadTokens
             .map((t) => {'simpleMediaItem': {'uploadToken': t}})
             .toList(),
