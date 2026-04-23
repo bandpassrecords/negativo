@@ -90,6 +90,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _save();
             },
           ),
+          SwitchListTile(
+            title: const Text('Album reveal'),
+            subtitle: const Text('Show film negative before revealing each photo'),
+            value: _settings.albumRevealEnabled,
+            onChanged: (v) {
+              setState(() => _settings.albumRevealEnabled = v);
+              _save();
+            },
+          ),
 
           const Divider(height: 32),
 

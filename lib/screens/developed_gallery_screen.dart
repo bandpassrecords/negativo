@@ -5,12 +5,18 @@ import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/exposure.dart';
 import '../services/hive_service.dart';
-import '../services/google_photos_service.dart';
+
+enum _SelectMode { none, thumbnail, share }
 
 class DevelopedGalleryScreen extends StatefulWidget {
   final FilmRoll filmRoll;
+  final bool openInThumbnailSelect;
 
-  const DevelopedGalleryScreen({super.key, required this.filmRoll});
+  const DevelopedGalleryScreen({
+    super.key,
+    required this.filmRoll,
+    this.openInThumbnailSelect = false,
+  });
 
   @override
   State<DevelopedGalleryScreen> createState() =>
@@ -19,59 +25,25 @@ class DevelopedGalleryScreen extends StatefulWidget {
 
 class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
   List<Exposure> _exposures = [];
-  bool _exporting = false;
-  double _exportProgress = 0;
+  _SelectMode _mode = _SelectMode.none;
+  late Set<String> _selectedThumbnailIds;
+  final Set<String> _selectedShareIds = {};
+  bool _sharing = false;
 
   @override
   void initState() {
     super.initState();
     _loadExposures();
+    _selectedThumbnailIds = Set.from(widget.filmRoll.thumbnailExposureIds);
+    if (widget.openInThumbnailSelect) {
+      _mode = _SelectMode.thumbnail;
+    }
   }
 
   void _loadExposures() {
     setState(() {
-      _exposures =
-          HiveService.getExposuresForRoll(widget.filmRoll.id);
+      _exposures = HiveService.getExposuresForRoll(widget.filmRoll.id);
     });
-  }
-
-  Future<void> _exportToGooglePhotos() async {
-    final paths = _exposures
-        .map((e) => e.imagePath)
-        .where((p) => File(p).existsSync())
-        .toList();
-
-    if (paths.isEmpty) return;
-
-    setState(() {
-      _exporting = true;
-      _exportProgress = 0;
-    });
-
-    try {
-      GooglePhotosService.instance.initialize(serverClientId: '1007563150643-s6qhvitnn4urjtb07cd6j3in9nvt6acm.apps.googleusercontent.com');
-      final url = await GooglePhotosService.instance.createAlbumWithPhotos(
-        albumTitle: widget.filmRoll.name,
-        imagePaths: paths,
-        onProgress: (p) => setState(() => _exportProgress = p),
-      );
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Album created! $url'),
-            duration: const Duration(seconds: 5),
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Export failed: $e')),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _exporting = false);
-    }
   }
 
   void _openPhoto(int index) {
@@ -86,45 +58,110 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
     );
   }
 
+  // ── Thumbnail select ────────────────────────────────────────────────────────
+
+  void _enterThumbnailSelect() {
+    setState(() {
+      _mode = _SelectMode.thumbnail;
+      _selectedThumbnailIds = Set.from(widget.filmRoll.thumbnailExposureIds);
+    });
+  }
+
+  void _toggleThumbnailSelection(String exposureId) {
+    setState(() {
+      if (_selectedThumbnailIds.contains(exposureId)) {
+        _selectedThumbnailIds.remove(exposureId);
+      } else if (_selectedThumbnailIds.length < 4) {
+        _selectedThumbnailIds.add(exposureId);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Maximum 4 photos for the thumbnail'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    });
+  }
+
+  Future<void> _saveThumbnailSelection() async {
+    widget.filmRoll.thumbnailExposureIds = _exposures
+        .where((e) => _selectedThumbnailIds.contains(e.id))
+        .map((e) => e.id)
+        .toList();
+    await HiveService.saveFilmRoll(widget.filmRoll);
+    if (mounted) {
+      setState(() => _mode = _SelectMode.none);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Thumbnail updated'),
+            duration: Duration(seconds: 2)),
+      );
+    }
+  }
+
+  // ── Share select ────────────────────────────────────────────────────────────
+
+  void _enterShareSelect() {
+    setState(() {
+      _mode = _SelectMode.share;
+      _selectedShareIds.clear();
+    });
+  }
+
+  void _toggleShareSelection(String exposureId) {
+    setState(() {
+      if (_selectedShareIds.contains(exposureId)) {
+        _selectedShareIds.remove(exposureId);
+      } else {
+        _selectedShareIds.add(exposureId);
+      }
+    });
+  }
+
+  void _selectAllForShare() {
+    setState(() {
+      if (_selectedShareIds.length == _exposures.length) {
+        _selectedShareIds.clear();
+      } else {
+        _selectedShareIds.addAll(_exposures.map((e) => e.id));
+      }
+    });
+  }
+
+  Future<void> _shareSelected() async {
+    final files = _exposures
+        .where((e) => _selectedShareIds.contains(e.id))
+        .map((e) => e.imagePath)
+        .where((p) => File(p).existsSync())
+        .map((p) => XFile(p))
+        .toList();
+
+    if (files.isEmpty) return;
+
+    setState(() => _sharing = true);
+    try {
+      await Share.shareXFiles(
+        files,
+        subject: widget.filmRoll.name,
+      );
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
+  }
+
+  // ── Build ───────────────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.filmRoll.name),
-        actions: [
-          if (_exporting)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  value: _exportProgress > 0 ? _exportProgress : null,
-                ),
-              ),
-            )
-          else if (_exposures.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.cloud_upload_outlined),
-              tooltip: 'Export to Google Photos',
-              onPressed: _exportToGooglePhotos,
-            ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(20),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              l.galleryPhotoCount(_exposures.length),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-            ),
-          ),
-        ),
-      ),
+      appBar: switch (_mode) {
+        _SelectMode.thumbnail => _buildThumbnailAppBar(),
+        _SelectMode.share => _buildShareAppBar(),
+        _SelectMode.none => _buildNormalAppBar(l),
+      },
       body: _exposures.isEmpty
           ? _buildEmpty(l)
           : GridView.builder(
@@ -136,39 +173,199 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
                 mainAxisSpacing: 3,
               ),
               itemCount: _exposures.length,
-              itemBuilder: (context, i) {
-                final exposure = _exposures[i];
-                return GestureDetector(
-                  onTap: () => _openPhoto(i),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      _PhotoTile(imagePath: exposure.imagePath),
-                      Positioned(
-                        bottom: 4,
-                        left: 4,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            '${exposure.order}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+              itemBuilder: (context, i) => _buildTile(context, i),
             ),
+      bottomNavigationBar: switch (_mode) {
+        _SelectMode.thumbnail => _buildThumbnailBottomBar(),
+        _SelectMode.share => _buildShareBottomBar(),
+        _SelectMode.none => null,
+      },
+    );
+  }
+
+  Widget _buildTile(BuildContext context, int i) {
+    final exposure = _exposures[i];
+
+    switch (_mode) {
+      case _SelectMode.none:
+        return GestureDetector(
+          onTap: () => _openPhoto(i),
+          onLongPress: _enterShareSelect,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              _PhotoTile(imagePath: exposure.imagePath),
+              Positioned(
+                bottom: 4,
+                left: 4,
+                child: _FrameBadge(label: '${exposure.order}'),
+              ),
+            ],
+          ),
+        );
+
+      case _SelectMode.thumbnail:
+        final isSelected = _selectedThumbnailIds.contains(exposure.id);
+        final selectionIndex = _exposures
+                .where((e) => _selectedThumbnailIds.contains(e.id))
+                .toList()
+                .indexOf(exposure) +
+            1;
+        return GestureDetector(
+          onTap: () => _toggleThumbnailSelection(exposure.id),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              _PhotoTile(imagePath: exposure.imagePath),
+              if (!isSelected) Container(color: Colors.black45),
+              Positioned(
+                top: 6,
+                right: 6,
+                child: isSelected
+                    ? _SelectionBadge(
+                        label: '$selectionIndex',
+                        color: Theme.of(context).colorScheme.primary,
+                      )
+                    : const _EmptyBadge(),
+              ),
+            ],
+          ),
+        );
+
+      case _SelectMode.share:
+        final isSelected = _selectedShareIds.contains(exposure.id);
+        return GestureDetector(
+          onTap: () => _toggleShareSelection(exposure.id),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              _PhotoTile(imagePath: exposure.imagePath),
+              if (!isSelected) Container(color: Colors.black38),
+              Positioned(
+                top: 6,
+                right: 6,
+                child: isSelected
+                    ? _SelectionBadge(
+                        label: '',
+                        color: Theme.of(context).colorScheme.primary,
+                        icon: Icons.check,
+                      )
+                    : const _EmptyBadge(),
+              ),
+            ],
+          ),
+        );
+    }
+  }
+
+  AppBar _buildNormalAppBar(AppLocalizations l) {
+    return AppBar(
+      title: Text(widget.filmRoll.name),
+      actions: [
+        if (_exposures.isNotEmpty) ...[
+          IconButton(
+            icon: const Icon(Icons.grid_view_outlined),
+            tooltip: 'Edit thumbnail',
+            onPressed: _enterThumbnailSelect,
+          ),
+          IconButton(
+            icon: const Icon(Icons.share_outlined),
+            tooltip: 'Share photos',
+            onPressed: _enterShareSelect,
+          ),
+        ],
+      ],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(20),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            l.galleryPhotoCount(_exposures.length),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  AppBar _buildThumbnailAppBar() {
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.close),
+        onPressed: () => setState(() => _mode = _SelectMode.none),
+      ),
+      title: const Text('Select thumbnail'),
+      actions: [
+        TextButton(
+          onPressed: _saveThumbnailSelection,
+          child: const Text('Done'),
+        ),
+      ],
+    );
+  }
+
+  AppBar _buildShareAppBar() {
+    final allSelected = _selectedShareIds.length == _exposures.length;
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.close),
+        onPressed: () => setState(() => _mode = _SelectMode.none),
+      ),
+      title: Text(
+        _selectedShareIds.isEmpty
+            ? 'Select photos'
+            : '${_selectedShareIds.length} selected',
+      ),
+      actions: [
+        TextButton(
+          onPressed: _selectAllForShare,
+          child: Text(allSelected ? 'Deselect all' : 'Select all'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildThumbnailBottomBar() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+        child: Text(
+          '${_selectedThumbnailIds.length}/4 selected  ·  Tap photos to select',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShareBottomBar() {
+    final count = _selectedShareIds.length;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+        child: FilledButton.icon(
+          onPressed: count == 0 || _sharing ? null : _shareSelected,
+          icon: _sharing
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: Colors.white),
+                )
+              : const Icon(Icons.share_outlined),
+          label: Text(
+            count == 0
+                ? 'Share'
+                : count == 1
+                    ? 'Share 1 photo'
+                    : 'Share $count photos',
+          ),
+        ),
+      ),
     );
   }
 
@@ -188,9 +385,77 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
   }
 }
 
+// ─── Shared small widgets ─────────────────────────────────────────────────────
+
+class _FrameBadge extends StatelessWidget {
+  final String label;
+  const _FrameBadge({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+            color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+}
+
+class _SelectionBadge extends StatelessWidget {
+  final String label;
+  final Color color;
+  final IconData? icon;
+
+  const _SelectionBadge({required this.label, required this.color, this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 22,
+      height: 22,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      child: Center(
+        child: icon != null
+            ? Icon(icon, size: 14, color: Colors.white)
+            : Text(
+                label,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700),
+              ),
+      ),
+    );
+  }
+}
+
+class _EmptyBadge extends StatelessWidget {
+  const _EmptyBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 22,
+      height: 22,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white60, width: 1.5),
+      ),
+    );
+  }
+}
+
+// ─── Photo tile ───────────────────────────────────────────────────────────────
+
 class _PhotoTile extends StatelessWidget {
   final String imagePath;
-
   const _PhotoTile({required this.imagePath});
 
   @override
@@ -206,6 +471,8 @@ class _PhotoTile extends StatelessWidget {
     return Image.file(file, fit: BoxFit.cover);
   }
 }
+
+// ─── Fullscreen viewer ────────────────────────────────────────────────────────
 
 class _FullscreenViewer extends StatefulWidget {
   final List<Exposure> exposures;
@@ -243,7 +510,7 @@ class _FullscreenViewerState extends State<_FullscreenViewer> {
     if (!file.existsSync()) return;
     await Share.shareXFiles(
       [XFile(exposure.imagePath)],
-      text: 'Frame ${exposure.order}',
+      subject: 'Frame ${exposure.order}',
     );
   }
 
@@ -283,9 +550,7 @@ class _FullscreenViewerState extends State<_FullscreenViewer> {
             );
           }
           return InteractiveViewer(
-            child: Center(
-              child: Image.file(file, fit: BoxFit.contain),
-            ),
+            child: Center(child: Image.file(file, fit: BoxFit.contain)),
           );
         },
       ),
