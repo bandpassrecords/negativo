@@ -31,6 +31,24 @@ class FilmRoll extends HiveObject {
   @HiveField(8)
   String? filmStockId;
 
+  @HiveField(9)
+  List<String> revealedExposureIds;
+
+  @HiveField(10)
+  List<String> thumbnailExposureIds;
+
+  @HiveField(11)
+  String? albumColor; // hex like '#EF5350'
+
+  @HiveField(12)
+  String? albumPattern; // 'dots' | 'stripes' | 'diagonal' | 'crosshatch' | null
+
+  @HiveField(13)
+  String? filmEffect; // serialized FilmEffect applied to every photo in this roll
+
+  @HiveField(14)
+  bool effectEnabled; // user can toggle the effect off per-album
+
   FilmRoll({
     required this.id,
     required this.name,
@@ -41,7 +59,15 @@ class FilmRoll extends HiveObject {
     this.developmentDurationHours = 48,
     List<String>? exposureIds,
     this.filmStockId,
-  }) : exposureIds = exposureIds ?? [];
+    List<String>? revealedExposureIds,
+    List<String>? thumbnailExposureIds,
+    this.albumColor,
+    this.albumPattern,
+    this.filmEffect,
+    this.effectEnabled = true,
+  }) : exposureIds = exposureIds ?? [],
+       revealedExposureIds = revealedExposureIds ?? [],
+       thumbnailExposureIds = thumbnailExposureIds ?? [];
 
   int get exposureCount => exposureIds.length;
   int get remainingFrames => capacity - exposureIds.length;

@@ -50,6 +50,9 @@ class AppSettings extends HiveObject {
   @HiveField(14)
   bool developmentNotificationsEnabled;
 
+  @HiveField(15)
+  bool albumRevealEnabled;
+
   AppSettings({
     this.notificationHour = 20,
     this.notificationMinute = 0,
@@ -66,6 +69,7 @@ class AppSettings extends HiveObject {
     this.dateFormat = 'dd/MM/yyyy',
     this.developmentDurationHours = 48,
     this.developmentNotificationsEnabled = true,
+    this.albumRevealEnabled = true,
   });
 
   // Getter para lastCalendarScrollPosition com valor padrão

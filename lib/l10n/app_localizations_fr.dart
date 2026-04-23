@@ -456,6 +456,116 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsTotalRolls => 'Total de pellicules';
 
   @override
+  String get revealSkipAll => 'Tout ignorer';
+
+  @override
+  String get revealTapToDevelop => 'Appuyer pour développer';
+
+  @override
+  String get revealSwipeForNext => 'Balayer pour la suivante';
+
+  @override
+  String get revealAllDeveloped => 'Toutes les images développées';
+
+  @override
+  String get revealTapToOpenGallery => 'Appuyer pour ouvrir la galerie';
+
+  @override
+  String get albumCustomizeColor => 'Couleur';
+
+  @override
+  String get albumCustomizePattern => 'Motif';
+
+  @override
+  String get albumEditThumbnail => 'Modifier les photos de vignette';
+
+  @override
+  String get albumEditThumbnailSub =>
+      'Choisissez jusqu\'à 4 photos pour la couverture de l\'album';
+
+  @override
+  String get albumEffectSub =>
+      'Afficher l\'effet pellicule sur toutes les photos de cet album';
+
+  @override
+  String get galleryEditThumbnail => 'Modifier la vignette';
+
+  @override
+  String get gallerySharePhotos => 'Partager des photos';
+
+  @override
+  String get gallerySelectThumbnail => 'Sélectionner la vignette';
+
+  @override
+  String get galleryMaxThumbnail => 'Maximum 4 photos pour la vignette';
+
+  @override
+  String get galleryThumbnailUpdated => 'Vignette mise à jour';
+
+  @override
+  String get gallerySelectPhotos => 'Sélectionner des photos';
+
+  @override
+  String gallerySelectedCount(int count) {
+    return '$count sélectionné(s)';
+  }
+
+  @override
+  String get gallerySelectAll => 'Tout sélectionner';
+
+  @override
+  String get galleryDeselectAll => 'Tout désélectionner';
+
+  @override
+  String galleryShareCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Partager $count photos',
+      one: 'Partager 1 photo',
+      zero: 'Partager',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsAlbumReveal => 'Révélation d\'album';
+
+  @override
+  String get settingsAlbumRevealSub =>
+      'Afficher le négatif du film avant de révéler chaque photo';
+
+  @override
+  String get photoInfoTitle => 'Infos photo';
+
+  @override
+  String get photoInfoDate => 'Date';
+
+  @override
+  String get photoInfoRoll => 'Pellicule';
+
+  @override
+  String get photoInfoFilmStock => 'Type de film';
+
+  @override
+  String get photoInfoSize => 'Taille';
+
+  @override
+  String get photoInfoFrame => 'Image';
+
+  @override
+  String get photoInfoEffect => 'Effet Pellicule';
+
+  @override
+  String effectFound(String name) {
+    return '🎞 Effet $name sur cette image !';
+  }
+
+  @override
+  String get effectShinyFound =>
+      '🌈 Effet Shiny ultra-rare ! Partagez celui-ci !';
+
+  @override
   String get notifDevReadyTitle => 'Film développé !';
 
   @override

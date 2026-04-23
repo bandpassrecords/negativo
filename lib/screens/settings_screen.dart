@@ -90,6 +90,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _save();
             },
           ),
+          SwitchListTile(
+            title: Text(l.settingsAlbumReveal),
+            subtitle: Text(l.settingsAlbumRevealSub),
+            value: _settings.albumRevealEnabled,
+            onChanged: (v) {
+              setState(() => _settings.albumRevealEnabled = v);
+              _save();
+            },
+          ),
 
           const Divider(height: 32),
 

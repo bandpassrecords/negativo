@@ -274,6 +274,58 @@
   "settingsTotalPhotos": "Total de fotos tomadas",
   "settingsTotalRolls": "Total de rollos",
 
+  "revealSkipAll": "Saltar todo",
+  "revealTapToDevelop": "Toca para revelar",
+  "revealSwipeForNext": "Desliza al siguiente fotograma",
+  "revealAllDeveloped": "Todos los fotogramas revelados",
+  "revealTapToOpenGallery": "Toca para abrir la galería",
+
+  "albumCustomizeColor": "Color",
+  "albumCustomizePattern": "Patrón",
+  "albumEditThumbnail": "Editar fotos de miniatura",
+  "albumEditThumbnailSub": "Elige hasta 4 fotos para la portada del álbum",
+  "albumEffectSub": "Mostrar efecto de película en todas las fotos de este álbum",
+
+  "galleryEditThumbnail": "Editar miniatura",
+  "gallerySharePhotos": "Compartir fotos",
+  "gallerySelectThumbnail": "Seleccionar miniatura",
+  "galleryMaxThumbnail": "Máximo 4 fotos para la miniatura",
+  "galleryThumbnailUpdated": "Miniatura actualizada",
+  "gallerySelectPhotos": "Seleccionar fotos",
+  "gallerySelectedCount": "{count} seleccionado(s)",
+  "@gallerySelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "gallerySelectAll": "Seleccionar todo",
+  "galleryDeselectAll": "Deseleccionar todo",
+  "galleryShareCount": "{count, plural, =0{Compartir} one{Compartir 1 foto} other{Compartir {count} fotos}}",
+  "@galleryShareCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "settingsAlbumReveal": "Revelado de álbum",
+  "settingsAlbumRevealSub": "Mostrar negativo de película antes de revelar cada foto",
+
+  "photoInfoTitle": "Info de foto",
+  "photoInfoDate": "Fecha",
+  "photoInfoRoll": "Rollo",
+  "photoInfoFilmStock": "Tipo de película",
+  "photoInfoSize": "Tamaño",
+  "photoInfoFrame": "Fotograma",
+  "photoInfoEffect": "Efecto de Película",
+
+  "effectFound": "🎞 ¡Efecto {name} en este fotograma!",
+  "@effectFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "effectShinyFound": "🌈 ¡Efecto Shiny ultra-raro! ¡Comparte este!",
+
   "notifDevReadyTitle": "¡Película revelada!",
   "notifDevReadyBody": "Tu rollo \"{name}\" está listo para recoger.",
   "@notifDevReadyBody": {

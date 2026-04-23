@@ -450,6 +450,114 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTotalRolls => 'Total rolls';
 
   @override
+  String get revealSkipAll => 'Skip all';
+
+  @override
+  String get revealTapToDevelop => 'Tap to develop';
+
+  @override
+  String get revealSwipeForNext => 'Swipe for next frame';
+
+  @override
+  String get revealAllDeveloped => 'All frames developed';
+
+  @override
+  String get revealTapToOpenGallery => 'Tap to open gallery';
+
+  @override
+  String get albumCustomizeColor => 'Color';
+
+  @override
+  String get albumCustomizePattern => 'Pattern';
+
+  @override
+  String get albumEditThumbnail => 'Edit thumbnail photos';
+
+  @override
+  String get albumEditThumbnailSub =>
+      'Choose up to 4 photos for the album cover';
+
+  @override
+  String get albumEffectSub => 'Show film effect on all photos in this album';
+
+  @override
+  String get galleryEditThumbnail => 'Edit thumbnail';
+
+  @override
+  String get gallerySharePhotos => 'Share photos';
+
+  @override
+  String get gallerySelectThumbnail => 'Select thumbnail';
+
+  @override
+  String get galleryMaxThumbnail => 'Maximum 4 photos for the thumbnail';
+
+  @override
+  String get galleryThumbnailUpdated => 'Thumbnail updated';
+
+  @override
+  String get gallerySelectPhotos => 'Select photos';
+
+  @override
+  String gallerySelectedCount(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get gallerySelectAll => 'Select all';
+
+  @override
+  String get galleryDeselectAll => 'Deselect all';
+
+  @override
+  String galleryShareCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Share $count photos',
+      one: 'Share 1 photo',
+      zero: 'Share',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsAlbumReveal => 'Album reveal';
+
+  @override
+  String get settingsAlbumRevealSub =>
+      'Show film negative before revealing each photo';
+
+  @override
+  String get photoInfoTitle => 'Photo info';
+
+  @override
+  String get photoInfoDate => 'Date';
+
+  @override
+  String get photoInfoRoll => 'Roll';
+
+  @override
+  String get photoInfoFilmStock => 'Film stock';
+
+  @override
+  String get photoInfoSize => 'Size';
+
+  @override
+  String get photoInfoFrame => 'Frame';
+
+  @override
+  String get photoInfoEffect => 'Film Effect';
+
+  @override
+  String effectFound(String name) {
+    return '🎞 $name effect on this frame!';
+  }
+
+  @override
+  String get effectShinyFound => '🌈 Ultra-rare Shiny effect! Share this one!';
+
+  @override
   String get notifDevReadyTitle => 'Film developed!';
 
   @override

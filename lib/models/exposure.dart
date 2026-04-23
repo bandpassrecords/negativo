@@ -19,11 +19,15 @@ class Exposure extends HiveObject {
   @HiveField(4)
   DateTime capturedAt;
 
+  @HiveField(5)
+  String? filmEffect; // serialized FilmEffect, e.g. "lightLeak:2"
+
   Exposure({
     required this.id,
     required this.filmRollId,
     required this.order,
     required this.imagePath,
     required this.capturedAt,
+    this.filmEffect,
   });
 }

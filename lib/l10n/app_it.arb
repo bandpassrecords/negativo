@@ -274,6 +274,58 @@
   "settingsTotalPhotos": "Totale foto scattate",
   "settingsTotalRolls": "Totale rullini",
 
+  "revealSkipAll": "Salta tutto",
+  "revealTapToDevelop": "Tocca per sviluppare",
+  "revealSwipeForNext": "Scorri per il fotogramma successivo",
+  "revealAllDeveloped": "Tutti i fotogrammi sviluppati",
+  "revealTapToOpenGallery": "Tocca per aprire la galleria",
+
+  "albumCustomizeColor": "Colore",
+  "albumCustomizePattern": "Motivo",
+  "albumEditThumbnail": "Modifica foto miniatura",
+  "albumEditThumbnailSub": "Scegli fino a 4 foto per la copertina dell'album",
+  "albumEffectSub": "Mostra l'effetto pellicola su tutte le foto di questo album",
+
+  "galleryEditThumbnail": "Modifica miniatura",
+  "gallerySharePhotos": "Condividi foto",
+  "gallerySelectThumbnail": "Seleziona miniatura",
+  "galleryMaxThumbnail": "Massimo 4 foto per la miniatura",
+  "galleryThumbnailUpdated": "Miniatura aggiornata",
+  "gallerySelectPhotos": "Seleziona foto",
+  "gallerySelectedCount": "{count} selezionato/i",
+  "@gallerySelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "gallerySelectAll": "Seleziona tutto",
+  "galleryDeselectAll": "Deseleziona tutto",
+  "galleryShareCount": "{count, plural, =0{Condividi} one{Condividi 1 foto} other{Condividi {count} foto}}",
+  "@galleryShareCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "settingsAlbumReveal": "Rivelazione album",
+  "settingsAlbumRevealSub": "Mostra il negativo del film prima di rivelare ogni foto",
+
+  "photoInfoTitle": "Info foto",
+  "photoInfoDate": "Data",
+  "photoInfoRoll": "Rullino",
+  "photoInfoFilmStock": "Tipo di pellicola",
+  "photoInfoSize": "Dimensione",
+  "photoInfoFrame": "Fotogramma",
+  "photoInfoEffect": "Effetto Pellicola",
+
+  "effectFound": "🎞 Effetto {name} su questo fotogramma!",
+  "@effectFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "effectShinyFound": "🌈 Effetto Shiny ultra-raro! Condividi questo!",
+
   "notifDevReadyTitle": "Pellicola sviluppata!",
   "notifDevReadyBody": "Il tuo rullino \"{name}\" è pronto da ritirare.",
   "@notifDevReadyBody": {
