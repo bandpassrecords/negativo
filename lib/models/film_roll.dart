@@ -43,6 +43,12 @@ class FilmRoll extends HiveObject {
   @HiveField(12)
   String? albumPattern; // 'dots' | 'stripes' | 'diagonal' | 'crosshatch' | null
 
+  @HiveField(13)
+  String? filmEffect; // serialized FilmEffect applied to every photo in this roll
+
+  @HiveField(14)
+  bool effectEnabled; // user can toggle the effect off per-album
+
   FilmRoll({
     required this.id,
     required this.name,
@@ -57,6 +63,8 @@ class FilmRoll extends HiveObject {
     List<String>? thumbnailExposureIds,
     this.albumColor,
     this.albumPattern,
+    this.filmEffect,
+    this.effectEnabled = true,
   }) : exposureIds = exposureIds ?? [],
        revealedExposureIds = revealedExposureIds ?? [],
        thumbnailExposureIds = thumbnailExposureIds ?? [];

@@ -284,6 +284,7 @@
   "albumCustomizePattern": "Motif",
   "albumEditThumbnail": "Modifier les photos de vignette",
   "albumEditThumbnailSub": "Choisissez jusqu'à 4 photos pour la couverture de l'album",
+  "albumEffectSub": "Afficher l'effet pellicule sur toutes les photos de cet album",
 
   "galleryEditThumbnail": "Modifier la vignette",
   "gallerySharePhotos": "Partager des photos",
@@ -315,6 +316,15 @@
   "photoInfoFilmStock": "Type de film",
   "photoInfoSize": "Taille",
   "photoInfoFrame": "Image",
+  "photoInfoEffect": "Effet Pellicule",
+
+  "effectFound": "🎞 Effet {name} sur cette image !",
+  "@effectFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "effectShinyFound": "🌈 Effet Shiny ultra-rare ! Partagez celui-ci !",
 
   "notifDevReadyTitle": "Film développé !",
   "notifDevReadyBody": "Votre pellicule \"{name}\" est prête à être récupérée.",

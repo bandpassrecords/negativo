@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:share_plus/share_plus.dart';
+import '../effects/film_effect.dart';
 import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/film_stock.dart';
@@ -193,6 +194,10 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
 
     switch (_mode) {
       case _SelectMode.none:
+        final effect = FilmEffect.fromString(exposure.filmEffect) ??
+            (widget.filmRoll.effectEnabled
+                ? FilmEffect.fromString(widget.filmRoll.filmEffect)
+                : null);
         return GestureDetector(
           onTap: () => _openPhoto(i),
           onLongPress: _enterShareSelect,
@@ -200,11 +205,26 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
             fit: StackFit.expand,
             children: [
               _PhotoTile(imagePath: exposure.imagePath),
+              if (effect != null) effect.buildTileOverlay(),
               Positioned(
                 bottom: 4,
                 left: 4,
                 child: _FrameBadge(label: '${exposure.order}'),
               ),
+              if (effect != null)
+                Positioned(
+                  top: 5,
+                  right: 5,
+                  child: Icon(
+                    effect.isRare
+                        ? Icons.auto_awesome
+                        : Icons.auto_awesome_outlined,
+                    size: 14,
+                    color: effect.isRare
+                        ? Colors.amber
+                        : Colors.white70,
+                  ),
+                ),
             ],
           ),
         );
@@ -612,6 +632,29 @@ class _FullscreenViewerState extends State<_FullscreenViewer>
                     maxScale: PhotoViewComputedScale.contained,
                   );
                 }
+                final effect = FilmEffect.fromString(exp.filmEffect) ??
+                    (widget.filmRoll.effectEnabled
+                        ? FilmEffect.fromString(widget.filmRoll.filmEffect)
+                        : null);
+                if (effect != null) {
+                  final imageWidget =
+                      Image.file(file, fit: BoxFit.contain);
+                  return PhotoViewGalleryPageOptions.customChild(
+                    child: GestureDetector(
+                      onTap: _toggleBars,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          effect.wrapImage(imageWidget),
+                          effect.buildOverlay(),
+                        ],
+                      ),
+                    ),
+                    minScale: PhotoViewComputedScale.contained,
+                    maxScale: 4.0,
+                    initialScale: PhotoViewComputedScale.contained,
+                  );
+                }
                 return PhotoViewGalleryPageOptions(
                   imageProvider: FileImage(file),
                   minScale: PhotoViewComputedScale.contained,
@@ -681,6 +724,10 @@ class _PhotoInfoSheet extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final stock = FilmStock.fromId(filmRoll.filmStockId);
+    final effect = FilmEffect.fromString(exposure.filmEffect) ??
+        (filmRoll.effectEnabled
+            ? FilmEffect.fromString(filmRoll.filmEffect)
+            : null);
     final dateStr = DateFormat('EEEE, MMMM d, yyyy  ·  HH:mm').format(
       exposure.capturedAt.toLocal(),
     );
@@ -752,6 +799,20 @@ class _PhotoInfoSheet extends StatelessWidget {
               value: _formatFileSize(exposure.imagePath),
               cs: cs,
             ),
+            if (effect != null) ...[
+              const SizedBox(height: 14),
+              _InfoRow(
+                icon: effect.isRare
+                    ? Icons.auto_awesome
+                    : Icons.auto_awesome_outlined,
+                label: l.photoInfoEffect,
+                value: effect.displayName,
+                cs: cs,
+                accentColor: effect.isRare
+                    ? Colors.amber
+                    : cs.primary,
+              ),
+            ],
           ],
         ),
       ),

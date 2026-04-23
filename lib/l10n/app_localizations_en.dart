@@ -478,6 +478,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose up to 4 photos for the album cover';
 
   @override
+  String get albumEffectSub => 'Show film effect on all photos in this album';
+
+  @override
   String get galleryEditThumbnail => 'Edit thumbnail';
 
   @override
@@ -542,6 +545,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get photoInfoFrame => 'Frame';
+
+  @override
+  String get photoInfoEffect => 'Film Effect';
+
+  @override
+  String effectFound(String name) {
+    return '🎞 $name effect on this frame!';
+  }
+
+  @override
+  String get effectShinyFound => '🌈 Ultra-rare Shiny effect! Share this one!';
 
   @override
   String get notifDevReadyTitle => 'Film developed!';

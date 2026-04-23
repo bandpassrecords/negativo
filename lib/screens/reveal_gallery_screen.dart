@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../effects/film_effect.dart';
 import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/exposure.dart';
@@ -56,6 +57,17 @@ class _RevealGalleryScreenState extends State<RevealGalleryScreen> {
     widget.filmRoll.revealedExposureIds = _revealedSet.toList();
     await HiveService.saveFilmRoll(widget.filmRoll);
     if (mounted) _openGallery();
+  }
+
+  void _showShinySnackbar(FilmEffect shiny) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.effectShinyFound),
+        backgroundColor: const Color(0xFF6A0DAD),
+        duration: const Duration(seconds: 5),
+      ),
+    );
   }
 
   void _openGallery() {
@@ -121,6 +133,7 @@ class _RevealGalleryScreenState extends State<RevealGalleryScreen> {
             hasNext: !isLast,
             onRevealed: () => _onFrameRevealed(exposure.id),
             onNext: _goNext,
+            onShiny: _showShinySnackbar,
           ),
         ),
       ),
@@ -136,6 +149,7 @@ class _RevealFrame extends StatefulWidget {
   final bool hasNext;
   final VoidCallback onRevealed;
   final VoidCallback onNext;
+  final void Function(FilmEffect shiny)? onShiny;
 
   const _RevealFrame({
     super.key,
@@ -144,6 +158,7 @@ class _RevealFrame extends StatefulWidget {
     required this.hasNext,
     required this.onRevealed,
     required this.onNext,
+    this.onShiny,
   });
 
   @override
@@ -178,6 +193,12 @@ class _RevealFrameState extends State<_RevealFrame>
         if (status == AnimationStatus.completed) {
           setState(() => _expanded = true);
           widget.onRevealed();
+          final shiny = FilmEffect.rollPhotoShiny();
+          if (shiny != null) {
+            widget.exposure.filmEffect = shiny.serialized;
+            HiveService.saveExposure(widget.exposure);
+            widget.onShiny?.call(shiny);
+          }
         }
       });
     }

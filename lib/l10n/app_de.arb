@@ -284,6 +284,7 @@
   "albumCustomizePattern": "Muster",
   "albumEditThumbnail": "Vorschaubilder bearbeiten",
   "albumEditThumbnailSub": "Bis zu 4 Fotos für das Albumcover auswählen",
+  "albumEffectSub": "Filmeffekt auf allen Fotos dieses Albums anzeigen",
 
   "galleryEditThumbnail": "Vorschau bearbeiten",
   "gallerySharePhotos": "Fotos teilen",
@@ -315,6 +316,15 @@
   "photoInfoFilmStock": "Filmtyp",
   "photoInfoSize": "Größe",
   "photoInfoFrame": "Aufnahme",
+  "photoInfoEffect": "Filmeffekt",
+
+  "effectFound": "🎞 Effekt {name} auf dieser Aufnahme!",
+  "@effectFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "effectShinyFound": "🌈 Ultra-seltener Shiny-Effekt! Teile diesen!",
 
   "notifDevReadyTitle": "Film entwickelt!",
   "notifDevReadyBody": "Dein Film \"{name}\" ist zur Abholung bereit.",

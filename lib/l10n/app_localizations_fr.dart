@@ -484,6 +484,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Choisissez jusqu\'à 4 photos pour la couverture de l\'album';
 
   @override
+  String get albumEffectSub =>
+      'Afficher l\'effet pellicule sur toutes les photos de cet album';
+
+  @override
   String get galleryEditThumbnail => 'Modifier la vignette';
 
   @override
@@ -548,6 +552,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get photoInfoFrame => 'Image';
+
+  @override
+  String get photoInfoEffect => 'Effet Pellicule';
+
+  @override
+  String effectFound(String name) {
+    return '🎞 Effet $name sur cette image !';
+  }
+
+  @override
+  String get effectShinyFound =>
+      '🌈 Effet Shiny ultra-rare ! Partagez celui-ci !';
 
   @override
   String get notifDevReadyTitle => 'Film développé !';

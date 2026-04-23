@@ -286,6 +286,7 @@
   "albumCustomizePattern": "Pattern",
   "albumEditThumbnail": "Edit thumbnail photos",
   "albumEditThumbnailSub": "Choose up to 4 photos for the album cover",
+  "albumEffectSub": "Show film effect on all photos in this album",
 
   "galleryEditThumbnail": "Edit thumbnail",
   "gallerySharePhotos": "Share photos",
@@ -317,6 +318,15 @@
   "photoInfoFilmStock": "Film stock",
   "photoInfoSize": "Size",
   "photoInfoFrame": "Frame",
+  "photoInfoEffect": "Film Effect",
+
+  "effectFound": "🎞 {name} effect on this frame!",
+  "@effectFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "effectShinyFound": "🌈 Ultra-rare Shiny effect! Share this one!",
 
   "notifDevReadyTitle": "Film developed!",
   "notifDevReadyBody": "Your roll \"{name}\" is ready to be picked up.",

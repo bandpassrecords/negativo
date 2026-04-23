@@ -844,6 +844,12 @@ abstract class AppLocalizations {
   /// **'Choose up to 4 photos for the album cover'**
   String get albumEditThumbnailSub;
 
+  /// No description provided for @albumEffectSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Show film effect on all photos in this album'**
+  String get albumEffectSub;
+
   /// No description provided for @galleryEditThumbnail.
   ///
   /// In en, this message translates to:
@@ -951,6 +957,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Frame'**
   String get photoInfoFrame;
+
+  /// No description provided for @photoInfoEffect.
+  ///
+  /// In en, this message translates to:
+  /// **'Film Effect'**
+  String get photoInfoEffect;
+
+  /// No description provided for @effectFound.
+  ///
+  /// In en, this message translates to:
+  /// **'🎞 {name} effect on this frame!'**
+  String effectFound(String name);
+
+  /// No description provided for @effectShinyFound.
+  ///
+  /// In en, this message translates to:
+  /// **'🌈 Ultra-rare Shiny effect! Share this one!'**
+  String get effectShinyFound;
 
   /// No description provided for @notifDevReadyTitle.
   ///

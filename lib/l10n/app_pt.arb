@@ -284,6 +284,7 @@
   "albumCustomizePattern": "Padrão",
   "albumEditThumbnail": "Editar fotos da miniatura",
   "albumEditThumbnailSub": "Escolha até 4 fotos para a capa do álbum",
+  "albumEffectSub": "Mostrar efeito de filme em todas as fotos deste álbum",
 
   "galleryEditThumbnail": "Editar miniatura",
   "gallerySharePhotos": "Compartilhar fotos",
@@ -315,6 +316,15 @@
   "photoInfoFilmStock": "Tipo de filme",
   "photoInfoSize": "Tamanho",
   "photoInfoFrame": "Quadro",
+  "photoInfoEffect": "Efeito de Filme",
+
+  "effectFound": "🎞 Efeito {name} neste frame!",
+  "@effectFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "effectShinyFound": "🌈 Efeito Shiny ultra-raro! Compartilhe este!",
 
   "notifDevReadyTitle": "Filme revelado!",
   "notifDevReadyBody": "Seu rolo \"{name}\" está pronto para ser retirado.",

@@ -284,6 +284,7 @@
   "albumCustomizePattern": "Motivo",
   "albumEditThumbnail": "Modifica foto miniatura",
   "albumEditThumbnailSub": "Scegli fino a 4 foto per la copertina dell'album",
+  "albumEffectSub": "Mostra l'effetto pellicola su tutte le foto di questo album",
 
   "galleryEditThumbnail": "Modifica miniatura",
   "gallerySharePhotos": "Condividi foto",
@@ -315,6 +316,15 @@
   "photoInfoFilmStock": "Tipo di pellicola",
   "photoInfoSize": "Dimensione",
   "photoInfoFrame": "Fotogramma",
+  "photoInfoEffect": "Effetto Pellicola",
+
+  "effectFound": "🎞 Effetto {name} su questo fotogramma!",
+  "@effectFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "effectShinyFound": "🌈 Effetto Shiny ultra-raro! Condividi questo!",
 
   "notifDevReadyTitle": "Pellicola sviluppata!",
   "notifDevReadyBody": "Il tuo rullino \"{name}\" è pronto da ritirare.",

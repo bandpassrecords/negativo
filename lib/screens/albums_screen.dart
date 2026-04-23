@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../effects/film_effect.dart';
 import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/film_stock.dart';
@@ -720,6 +721,28 @@ class _CustomizationSheetState extends State<_CustomizationSheet> {
                 ).then((_) => widget.onChanged());
               },
             ),
+
+            // Film effect toggle — only shown when this roll has an effect
+            if (FilmEffect.fromString(widget.roll.filmEffect) != null) ...[
+              const Divider(),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                secondary: Icon(
+                  Icons.auto_awesome_outlined,
+                  color: cs.primary,
+                ),
+                title: Text(
+                  FilmEffect.fromString(widget.roll.filmEffect)!.displayName,
+                ),
+                subtitle: Text(AppLocalizations.of(context)!.albumEffectSub),
+                value: widget.roll.effectEnabled,
+                onChanged: (val) async {
+                  setState(() => widget.roll.effectEnabled = val);
+                  await HiveService.saveFilmRoll(widget.roll);
+                  widget.onChanged();
+                },
+              ),
+            ],
           ],
         ),
       ),

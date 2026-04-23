@@ -284,6 +284,7 @@
   "albumCustomizePattern": "Patrón",
   "albumEditThumbnail": "Editar fotos de miniatura",
   "albumEditThumbnailSub": "Elige hasta 4 fotos para la portada del álbum",
+  "albumEffectSub": "Mostrar efecto de película en todas las fotos de este álbum",
 
   "galleryEditThumbnail": "Editar miniatura",
   "gallerySharePhotos": "Compartir fotos",
@@ -315,6 +316,15 @@
   "photoInfoFilmStock": "Tipo de película",
   "photoInfoSize": "Tamaño",
   "photoInfoFrame": "Fotograma",
+  "photoInfoEffect": "Efecto de Película",
+
+  "effectFound": "🎞 ¡Efecto {name} en este fotograma!",
+  "@effectFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "effectShinyFound": "🌈 ¡Efecto Shiny ultra-raro! ¡Comparte este!",
 
   "notifDevReadyTitle": "¡Película revelada!",
   "notifDevReadyBody": "Tu rollo \"{name}\" está listo para recoger.",

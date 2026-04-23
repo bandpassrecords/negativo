@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
+import '../effects/film_effect.dart';
 import '../models/film_roll.dart';
 import '../models/exposure.dart';
 import 'hive_service.dart';
@@ -60,6 +61,7 @@ class FilmService {
   static Future<void> startDevelopment(FilmRoll roll) async {
     roll.status = 'developing';
     roll.developmentStartedAt = DateTime.now();
+    roll.filmEffect = FilmEffect.roll()?.serialized;
     await HiveService.saveFilmRoll(roll);
 
     await ScoringService.addPoints(ScoringService.ptsStartDev);
