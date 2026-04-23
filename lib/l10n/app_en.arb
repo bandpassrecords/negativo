@@ -276,6 +276,48 @@
   "settingsTotalPhotos": "Total photos taken",
   "settingsTotalRolls": "Total rolls",
 
+  "revealSkipAll": "Skip all",
+  "revealTapToDevelop": "Tap to develop",
+  "revealSwipeForNext": "Swipe for next frame",
+  "revealAllDeveloped": "All frames developed",
+  "revealTapToOpenGallery": "Tap to open gallery",
+
+  "albumCustomizeColor": "Color",
+  "albumCustomizePattern": "Pattern",
+  "albumEditThumbnail": "Edit thumbnail photos",
+  "albumEditThumbnailSub": "Choose up to 4 photos for the album cover",
+
+  "galleryEditThumbnail": "Edit thumbnail",
+  "gallerySharePhotos": "Share photos",
+  "gallerySelectThumbnail": "Select thumbnail",
+  "galleryMaxThumbnail": "Maximum 4 photos for the thumbnail",
+  "galleryThumbnailUpdated": "Thumbnail updated",
+  "gallerySelectPhotos": "Select photos",
+  "gallerySelectedCount": "{count} selected",
+  "@gallerySelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "gallerySelectAll": "Select all",
+  "galleryDeselectAll": "Deselect all",
+  "galleryShareCount": "{count, plural, =0{Share} one{Share 1 photo} other{Share {count} photos}}",
+  "@galleryShareCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "settingsAlbumReveal": "Album reveal",
+  "settingsAlbumRevealSub": "Show film negative before revealing each photo",
+
+  "photoInfoTitle": "Photo info",
+  "photoInfoDate": "Date",
+  "photoInfoRoll": "Roll",
+  "photoInfoFilmStock": "Film stock",
+  "photoInfoSize": "Size",
+  "photoInfoFrame": "Frame",
+
   "notifDevReadyTitle": "Film developed!",
   "notifDevReadyBody": "Your roll \"{name}\" is ready to be picked up.",
   "@notifDevReadyBody": {

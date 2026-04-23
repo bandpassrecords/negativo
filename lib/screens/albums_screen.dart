@@ -594,7 +594,7 @@ class _CustomizationSheetState extends State<_CustomizationSheet> {
             const SizedBox(height: 20),
 
             // Color picker
-            Text('Color',
+            Text(AppLocalizations.of(context)!.albumCustomizeColor,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: cs.outline,
                       letterSpacing: 1.2,
@@ -642,7 +642,7 @@ class _CustomizationSheetState extends State<_CustomizationSheet> {
             const SizedBox(height: 20),
 
             // Pattern picker
-            Text('Pattern',
+            Text(AppLocalizations.of(context)!.albumCustomizePattern,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: cs.outline,
                       letterSpacing: 1.2,
@@ -704,8 +704,8 @@ class _CustomizationSheetState extends State<_CustomizationSheet> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Icon(Icons.grid_view_outlined, color: cs.primary),
-              title: const Text('Edit thumbnail photos'),
-              subtitle: const Text('Choose up to 4 photos for the album cover'),
+              title: Text(AppLocalizations.of(context)!.albumEditThumbnail),
+              subtitle: Text(AppLocalizations.of(context)!.albumEditThumbnailSub),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.pop(context);

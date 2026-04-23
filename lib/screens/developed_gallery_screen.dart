@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:share_plus/share_plus.dart';
 import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
+import '../models/film_stock.dart';
 import '../models/exposure.dart';
 import '../services/hive_service.dart';
 
@@ -53,6 +57,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
         builder: (_) => _FullscreenViewer(
           exposures: _exposures,
           initialIndex: index,
+          filmRoll: widget.filmRoll,
         ),
       ),
     );
@@ -75,9 +80,9 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
         _selectedThumbnailIds.add(exposureId);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Maximum 4 photos for the thumbnail'),
-            duration: Duration(seconds: 2),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.galleryMaxThumbnail),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
@@ -93,9 +98,9 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
     if (mounted) {
       setState(() => _mode = _SelectMode.none);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Thumbnail updated'),
-            duration: Duration(seconds: 2)),
+        SnackBar(
+            content: Text(AppLocalizations.of(context)!.galleryThumbnailUpdated),
+            duration: const Duration(seconds: 2)),
       );
     }
   }
@@ -265,12 +270,12 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
         if (_exposures.isNotEmpty) ...[
           IconButton(
             icon: const Icon(Icons.grid_view_outlined),
-            tooltip: 'Edit thumbnail',
+            tooltip: l.galleryEditThumbnail,
             onPressed: _enterThumbnailSelect,
           ),
           IconButton(
             icon: const Icon(Icons.share_outlined),
-            tooltip: 'Share photos',
+            tooltip: l.gallerySharePhotos,
             onPressed: _enterShareSelect,
           ),
         ],
@@ -291,22 +296,24 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
   }
 
   AppBar _buildThumbnailAppBar() {
+    final l = AppLocalizations.of(context)!;
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.close),
         onPressed: () => setState(() => _mode = _SelectMode.none),
       ),
-      title: const Text('Select thumbnail'),
+      title: Text(l.gallerySelectThumbnail),
       actions: [
         TextButton(
           onPressed: _saveThumbnailSelection,
-          child: const Text('Done'),
+          child: Text(l.galleryShare),
         ),
       ],
     );
   }
 
   AppBar _buildShareAppBar() {
+    final l = AppLocalizations.of(context)!;
     final allSelected = _selectedShareIds.length == _exposures.length;
     return AppBar(
       leading: IconButton(
@@ -315,24 +322,25 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
       ),
       title: Text(
         _selectedShareIds.isEmpty
-            ? 'Select photos'
-            : '${_selectedShareIds.length} selected',
+            ? l.gallerySelectPhotos
+            : l.gallerySelectedCount(_selectedShareIds.length),
       ),
       actions: [
         TextButton(
           onPressed: _selectAllForShare,
-          child: Text(allSelected ? 'Deselect all' : 'Select all'),
+          child: Text(allSelected ? l.galleryDeselectAll : l.gallerySelectAll),
         ),
       ],
     );
   }
 
   Widget _buildThumbnailBottomBar() {
+    final l = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
         child: Text(
-          '${_selectedThumbnailIds.length}/4 selected  ·  Tap photos to select',
+          '${l.gallerySelectedCount(_selectedThumbnailIds.length)}/4  ·  ${l.gallerySelectThumbnail}',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
@@ -357,13 +365,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
                       strokeWidth: 2, color: Colors.white),
                 )
               : const Icon(Icons.share_outlined),
-          label: Text(
-            count == 0
-                ? 'Share'
-                : count == 1
-                    ? 'Share 1 photo'
-                    : 'Share $count photos',
-          ),
+          label: Text(AppLocalizations.of(context)!.galleryShareCount(count)),
         ),
       ),
     );
@@ -477,31 +479,51 @@ class _PhotoTile extends StatelessWidget {
 class _FullscreenViewer extends StatefulWidget {
   final List<Exposure> exposures;
   final int initialIndex;
+  final FilmRoll filmRoll;
 
   const _FullscreenViewer({
     required this.exposures,
     required this.initialIndex,
+    required this.filmRoll,
   });
 
   @override
   State<_FullscreenViewer> createState() => _FullscreenViewerState();
 }
 
-class _FullscreenViewerState extends State<_FullscreenViewer> {
+class _FullscreenViewerState extends State<_FullscreenViewer>
+    with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late int _currentIndex;
+  bool _barsVisible = true;
+  late AnimationController _barsAnimation;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: widget.initialIndex);
+    _barsAnimation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+      value: 1.0,
+    );
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _barsAnimation.dispose();
     super.dispose();
+  }
+
+  void _toggleBars() {
+    setState(() => _barsVisible = !_barsVisible);
+    if (_barsVisible) {
+      _barsAnimation.forward();
+    } else {
+      _barsAnimation.reverse();
+    }
   }
 
   Future<void> _share() async {
@@ -514,6 +536,21 @@ class _FullscreenViewerState extends State<_FullscreenViewer> {
     );
   }
 
+  void _showInfo(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => _PhotoInfoSheet(
+        exposure: widget.exposures[_currentIndex],
+        filmRoll: widget.filmRoll,
+        totalFrames: widget.exposures.length,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -521,39 +558,254 @@ class _FullscreenViewerState extends State<_FullscreenViewer> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        title: Text(
-          l.galleryFrameOf(exposure.order, widget.exposures.length),
-          style: const TextStyle(color: Colors.white70, fontSize: 14),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share_outlined, color: Colors.white),
-            onPressed: _share,
-            tooltip: l.galleryShare,
+      extendBodyBehindAppBar: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: FadeTransition(
+          opacity: _barsAnimation,
+          child: AppBar(
+            backgroundColor: Colors.black54,
+            foregroundColor: Colors.white,
+            title: Text(
+              l.galleryFrameOf(exposure.order, widget.exposures.length),
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.info_outline, color: Colors.white),
+                onPressed: () => _showInfo(context),
+                tooltip: l.photoInfoTitle,
+              ),
+              IconButton(
+                icon: const Icon(Icons.share_outlined, color: Colors.white),
+                onPressed: _share,
+                tooltip: l.galleryShare,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: widget.exposures.length,
-        onPageChanged: (i) => setState(() => _currentIndex = i),
-        itemBuilder: (context, i) {
-          final exp = widget.exposures[i];
-          final file = File(exp.imagePath);
-          if (!file.existsSync()) {
-            return const Center(
-              child: Icon(Icons.broken_image_outlined,
-                  color: Colors.white38, size: 64),
-            );
-          }
-          return InteractiveViewer(
-            child: Center(child: Image.file(file, fit: BoxFit.contain)),
-          );
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onVerticalDragEnd: (details) {
+          final velocity = details.primaryVelocity ?? 0;
+          if (velocity < -400) _showInfo(context);
         },
+        child: Stack(
+          children: [
+            PhotoViewGallery.builder(
+              scrollPhysics: const BouncingScrollPhysics(),
+              pageController: _pageController,
+              onPageChanged: (i) => setState(() => _currentIndex = i),
+              itemCount: widget.exposures.length,
+              builder: (context, i) {
+                final exp = widget.exposures[i];
+                final file = File(exp.imagePath);
+                if (!file.existsSync()) {
+                  return PhotoViewGalleryPageOptions.customChild(
+                    child: const Center(
+                      child: Icon(Icons.broken_image_outlined,
+                          color: Colors.white38, size: 64),
+                    ),
+                    childSize: const Size(64, 64),
+                    minScale: PhotoViewComputedScale.contained,
+                    maxScale: PhotoViewComputedScale.contained,
+                  );
+                }
+                return PhotoViewGalleryPageOptions(
+                  imageProvider: FileImage(file),
+                  minScale: PhotoViewComputedScale.contained,
+                  maxScale: 4.0,
+                  initialScale: PhotoViewComputedScale.contained,
+                  basePosition: Alignment.center,
+                  gestureDetectorBehavior: HitTestBehavior.opaque,
+                  onTapUp: (_, __, ___) => _toggleBars(),
+                );
+              },
+              backgroundDecoration: const BoxDecoration(color: Colors.black),
+            ),
+            // Swipe-up hint at the bottom
+            Positioned(
+              bottom: 20,
+              left: 0,
+              right: 0,
+              child: FadeTransition(
+                opacity: _barsAnimation,
+                child: Column(
+                  children: [
+                    const Icon(Icons.keyboard_arrow_up,
+                        color: Colors.white54, size: 20),
+                    Text(
+                      AppLocalizations.of(context)!.photoInfoTitle,
+                      style: const TextStyle(
+                          color: Colors.white38,
+                          fontSize: 11,
+                          letterSpacing: 0.5),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+// ─── Photo info sheet ─────────────────────────────────────────────────────────
+
+class _PhotoInfoSheet extends StatelessWidget {
+  final Exposure exposure;
+  final FilmRoll filmRoll;
+  final int totalFrames;
+
+  const _PhotoInfoSheet({
+    required this.exposure,
+    required this.filmRoll,
+    required this.totalFrames,
+  });
+
+  String _formatFileSize(String path) {
+    final file = File(path);
+    if (!file.existsSync()) return '—';
+    final bytes = file.lengthSync();
+    if (bytes < 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(0)} KB';
+    }
+    return '${(bytes / 1024 / 1024).toStringAsFixed(1)} MB';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
+    final stock = FilmStock.fromId(filmRoll.filmStockId);
+    final dateStr = DateFormat('EEEE, MMMM d, yyyy  ·  HH:mm').format(
+      exposure.capturedAt.toLocal(),
+    );
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle
+            Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: cs.outline.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Title
+            Text(
+              l.photoInfoTitle,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 20),
+
+            _InfoRow(
+              icon: Icons.photo_camera_outlined,
+              label: l.photoInfoFrame,
+              value: '${exposure.order} / $totalFrames',
+              cs: cs,
+            ),
+            const SizedBox(height: 14),
+            _InfoRow(
+              icon: Icons.calendar_today_outlined,
+              label: l.photoInfoDate,
+              value: dateStr,
+              cs: cs,
+            ),
+            const SizedBox(height: 14),
+            _InfoRow(
+              icon: Icons.photo_library_outlined,
+              label: l.photoInfoRoll,
+              value: filmRoll.name,
+              cs: cs,
+            ),
+            if (stock != null) ...[
+              const SizedBox(height: 14),
+              _InfoRow(
+                icon: Icons.lens_outlined,
+                label: l.photoInfoFilmStock,
+                value: '${stock.brand}  ${stock.name}',
+                cs: cs,
+                accentColor: stock.accentColor,
+              ),
+            ],
+            const SizedBox(height: 14),
+            _InfoRow(
+              icon: Icons.sd_card_outlined,
+              label: l.photoInfoSize,
+              value: _formatFileSize(exposure.imagePath),
+              cs: cs,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final ColorScheme cs;
+  final Color? accentColor;
+
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.cs,
+    this.accentColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = accentColor ?? cs.primary;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: cs.outline,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

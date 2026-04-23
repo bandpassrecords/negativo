@@ -452,6 +452,100 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsTotalRolls => 'Filme insgesamt';
 
   @override
+  String get revealSkipAll => 'Alle überspringen';
+
+  @override
+  String get revealTapToDevelop => 'Tippen zum Entwickeln';
+
+  @override
+  String get revealSwipeForNext => 'Wischen für nächsten Frame';
+
+  @override
+  String get revealAllDeveloped => 'Alle Aufnahmen entwickelt';
+
+  @override
+  String get revealTapToOpenGallery => 'Tippen zum Öffnen der Galerie';
+
+  @override
+  String get albumCustomizeColor => 'Farbe';
+
+  @override
+  String get albumCustomizePattern => 'Muster';
+
+  @override
+  String get albumEditThumbnail => 'Vorschaubilder bearbeiten';
+
+  @override
+  String get albumEditThumbnailSub =>
+      'Bis zu 4 Fotos für das Albumcover auswählen';
+
+  @override
+  String get galleryEditThumbnail => 'Vorschau bearbeiten';
+
+  @override
+  String get gallerySharePhotos => 'Fotos teilen';
+
+  @override
+  String get gallerySelectThumbnail => 'Vorschau auswählen';
+
+  @override
+  String get galleryMaxThumbnail => 'Maximal 4 Fotos für das Vorschaubild';
+
+  @override
+  String get galleryThumbnailUpdated => 'Vorschau aktualisiert';
+
+  @override
+  String get gallerySelectPhotos => 'Fotos auswählen';
+
+  @override
+  String gallerySelectedCount(int count) {
+    return '$count ausgewählt';
+  }
+
+  @override
+  String get gallerySelectAll => 'Alle auswählen';
+
+  @override
+  String get galleryDeselectAll => 'Auswahl aufheben';
+
+  @override
+  String galleryShareCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Fotos teilen',
+      one: '1 Foto teilen',
+      zero: 'Teilen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsAlbumReveal => 'Album-Enthüllung';
+
+  @override
+  String get settingsAlbumRevealSub =>
+      'Filmnegativ vor dem Enthüllen jedes Fotos anzeigen';
+
+  @override
+  String get photoInfoTitle => 'Foto-Info';
+
+  @override
+  String get photoInfoDate => 'Datum';
+
+  @override
+  String get photoInfoRoll => 'Film';
+
+  @override
+  String get photoInfoFilmStock => 'Filmtyp';
+
+  @override
+  String get photoInfoSize => 'Größe';
+
+  @override
+  String get photoInfoFrame => 'Aufnahme';
+
+  @override
   String get notifDevReadyTitle => 'Film entwickelt!';
 
   @override

@@ -790,6 +790,168 @@ abstract class AppLocalizations {
   /// **'Total rolls'**
   String get settingsTotalRolls;
 
+  /// No description provided for @revealSkipAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip all'**
+  String get revealSkipAll;
+
+  /// No description provided for @revealTapToDevelop.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to develop'**
+  String get revealTapToDevelop;
+
+  /// No description provided for @revealSwipeForNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe for next frame'**
+  String get revealSwipeForNext;
+
+  /// No description provided for @revealAllDeveloped.
+  ///
+  /// In en, this message translates to:
+  /// **'All frames developed'**
+  String get revealAllDeveloped;
+
+  /// No description provided for @revealTapToOpenGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to open gallery'**
+  String get revealTapToOpenGallery;
+
+  /// No description provided for @albumCustomizeColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get albumCustomizeColor;
+
+  /// No description provided for @albumCustomizePattern.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern'**
+  String get albumCustomizePattern;
+
+  /// No description provided for @albumEditThumbnail.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit thumbnail photos'**
+  String get albumEditThumbnail;
+
+  /// No description provided for @albumEditThumbnailSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose up to 4 photos for the album cover'**
+  String get albumEditThumbnailSub;
+
+  /// No description provided for @galleryEditThumbnail.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit thumbnail'**
+  String get galleryEditThumbnail;
+
+  /// No description provided for @gallerySharePhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Share photos'**
+  String get gallerySharePhotos;
+
+  /// No description provided for @gallerySelectThumbnail.
+  ///
+  /// In en, this message translates to:
+  /// **'Select thumbnail'**
+  String get gallerySelectThumbnail;
+
+  /// No description provided for @galleryMaxThumbnail.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 4 photos for the thumbnail'**
+  String get galleryMaxThumbnail;
+
+  /// No description provided for @galleryThumbnailUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbnail updated'**
+  String get galleryThumbnailUpdated;
+
+  /// No description provided for @gallerySelectPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Select photos'**
+  String get gallerySelectPhotos;
+
+  /// No description provided for @gallerySelectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String gallerySelectedCount(int count);
+
+  /// No description provided for @gallerySelectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get gallerySelectAll;
+
+  /// No description provided for @galleryDeselectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect all'**
+  String get galleryDeselectAll;
+
+  /// No description provided for @galleryShareCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Share} one{Share 1 photo} other{Share {count} photos}}'**
+  String galleryShareCount(int count);
+
+  /// No description provided for @settingsAlbumReveal.
+  ///
+  /// In en, this message translates to:
+  /// **'Album reveal'**
+  String get settingsAlbumReveal;
+
+  /// No description provided for @settingsAlbumRevealSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Show film negative before revealing each photo'**
+  String get settingsAlbumRevealSub;
+
+  /// No description provided for @photoInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo info'**
+  String get photoInfoTitle;
+
+  /// No description provided for @photoInfoDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get photoInfoDate;
+
+  /// No description provided for @photoInfoRoll.
+  ///
+  /// In en, this message translates to:
+  /// **'Roll'**
+  String get photoInfoRoll;
+
+  /// No description provided for @photoInfoFilmStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Film stock'**
+  String get photoInfoFilmStock;
+
+  /// No description provided for @photoInfoSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get photoInfoSize;
+
+  /// No description provided for @photoInfoFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Frame'**
+  String get photoInfoFrame;
+
   /// No description provided for @notifDevReadyTitle.
   ///
   /// In en, this message translates to:

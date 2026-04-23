@@ -274,6 +274,48 @@
   "settingsTotalPhotos": "Total de photos prises",
   "settingsTotalRolls": "Total de pellicules",
 
+  "revealSkipAll": "Tout ignorer",
+  "revealTapToDevelop": "Appuyer pour développer",
+  "revealSwipeForNext": "Balayer pour la suivante",
+  "revealAllDeveloped": "Toutes les images développées",
+  "revealTapToOpenGallery": "Appuyer pour ouvrir la galerie",
+
+  "albumCustomizeColor": "Couleur",
+  "albumCustomizePattern": "Motif",
+  "albumEditThumbnail": "Modifier les photos de vignette",
+  "albumEditThumbnailSub": "Choisissez jusqu'à 4 photos pour la couverture de l'album",
+
+  "galleryEditThumbnail": "Modifier la vignette",
+  "gallerySharePhotos": "Partager des photos",
+  "gallerySelectThumbnail": "Sélectionner la vignette",
+  "galleryMaxThumbnail": "Maximum 4 photos pour la vignette",
+  "galleryThumbnailUpdated": "Vignette mise à jour",
+  "gallerySelectPhotos": "Sélectionner des photos",
+  "gallerySelectedCount": "{count} sélectionné(s)",
+  "@gallerySelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "gallerySelectAll": "Tout sélectionner",
+  "galleryDeselectAll": "Tout désélectionner",
+  "galleryShareCount": "{count, plural, =0{Partager} one{Partager 1 photo} other{Partager {count} photos}}",
+  "@galleryShareCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "settingsAlbumReveal": "Révélation d'album",
+  "settingsAlbumRevealSub": "Afficher le négatif du film avant de révéler chaque photo",
+
+  "photoInfoTitle": "Infos photo",
+  "photoInfoDate": "Date",
+  "photoInfoRoll": "Pellicule",
+  "photoInfoFilmStock": "Type de film",
+  "photoInfoSize": "Taille",
+  "photoInfoFrame": "Image",
+
   "notifDevReadyTitle": "Film développé !",
   "notifDevReadyBody": "Votre pellicule \"{name}\" est prête à être récupérée.",
   "@notifDevReadyBody": {

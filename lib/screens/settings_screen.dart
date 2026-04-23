@@ -91,8 +91,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           SwitchListTile(
-            title: const Text('Album reveal'),
-            subtitle: const Text('Show film negative before revealing each photo'),
+            title: Text(l.settingsAlbumReveal),
+            subtitle: Text(l.settingsAlbumRevealSub),
             value: _settings.albumRevealEnabled,
             onChanged: (v) {
               setState(() => _settings.albumRevealEnabled = v);

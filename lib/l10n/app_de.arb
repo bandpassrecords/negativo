@@ -274,6 +274,48 @@
   "settingsTotalPhotos": "Aufnahmen insgesamt",
   "settingsTotalRolls": "Filme insgesamt",
 
+  "revealSkipAll": "Alle überspringen",
+  "revealTapToDevelop": "Tippen zum Entwickeln",
+  "revealSwipeForNext": "Wischen für nächsten Frame",
+  "revealAllDeveloped": "Alle Aufnahmen entwickelt",
+  "revealTapToOpenGallery": "Tippen zum Öffnen der Galerie",
+
+  "albumCustomizeColor": "Farbe",
+  "albumCustomizePattern": "Muster",
+  "albumEditThumbnail": "Vorschaubilder bearbeiten",
+  "albumEditThumbnailSub": "Bis zu 4 Fotos für das Albumcover auswählen",
+
+  "galleryEditThumbnail": "Vorschau bearbeiten",
+  "gallerySharePhotos": "Fotos teilen",
+  "gallerySelectThumbnail": "Vorschau auswählen",
+  "galleryMaxThumbnail": "Maximal 4 Fotos für das Vorschaubild",
+  "galleryThumbnailUpdated": "Vorschau aktualisiert",
+  "gallerySelectPhotos": "Fotos auswählen",
+  "gallerySelectedCount": "{count} ausgewählt",
+  "@gallerySelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "gallerySelectAll": "Alle auswählen",
+  "galleryDeselectAll": "Auswahl aufheben",
+  "galleryShareCount": "{count, plural, =0{Teilen} one{1 Foto teilen} other{{count} Fotos teilen}}",
+  "@galleryShareCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "settingsAlbumReveal": "Album-Enthüllung",
+  "settingsAlbumRevealSub": "Filmnegativ vor dem Enthüllen jedes Fotos anzeigen",
+
+  "photoInfoTitle": "Foto-Info",
+  "photoInfoDate": "Datum",
+  "photoInfoRoll": "Film",
+  "photoInfoFilmStock": "Filmtyp",
+  "photoInfoSize": "Größe",
+  "photoInfoFrame": "Aufnahme",
+
   "notifDevReadyTitle": "Film entwickelt!",
   "notifDevReadyBody": "Dein Film \"{name}\" ist zur Abholung bereit.",
   "@notifDevReadyBody": {

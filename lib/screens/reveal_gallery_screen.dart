@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/exposure.dart';
 import '../services/hive_service.dart';
@@ -87,15 +88,15 @@ class _RevealGalleryScreenState extends State<RevealGalleryScreen> {
         foregroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          '${exposure.order} / ${_exposures.length}',
+          AppLocalizations.of(context)!.galleryFrameOf(exposure.order, _exposures.length),
           style: const TextStyle(color: Colors.white54, fontSize: 14),
         ),
         actions: [
           TextButton(
             onPressed: _skipAll,
-            child: const Text(
-              'Skip all',
-              style: TextStyle(color: Color(0xFFD4A853)),
+            child: Text(
+              AppLocalizations.of(context)!.revealSkipAll,
+              style: const TextStyle(color: Color(0xFFD4A853)),
             ),
           ),
         ],
@@ -288,6 +289,7 @@ class _RevealFrameState extends State<_RevealFrame>
   }
 
   Widget _buildTapHint(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Positioned(
       bottom: 52,
       left: 0,
@@ -295,14 +297,14 @@ class _RevealFrameState extends State<_RevealFrame>
       child: Column(
         children: [
           Text(
-            'Frame ${widget.exposure.order}',
+            l.galleryFrameLabel(widget.exposure.order),
             textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white30, fontSize: 11),
           ),
           const SizedBox(height: 8),
-          const _PulsingText(
-            text: 'Tap to develop',
-            style: TextStyle(
+          _PulsingText(
+            text: l.revealTapToDevelop,
+            style: const TextStyle(
               color: Color(0xFFD4A853),
               fontSize: 15,
               letterSpacing: 1.8,
@@ -315,6 +317,7 @@ class _RevealFrameState extends State<_RevealFrame>
   }
 
   Widget _buildBottomHint(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     if (widget.hasNext) {
       return Positioned(
         bottom: 36,
@@ -322,14 +325,14 @@ class _RevealFrameState extends State<_RevealFrame>
         right: 0,
         child: GestureDetector(
           onTap: widget.onNext,
-          child: const Column(
+          child: Column(
             children: [
-              Icon(Icons.arrow_forward_ios, color: Colors.white30, size: 16),
-              SizedBox(height: 4),
+              const Icon(Icons.arrow_forward_ios, color: Colors.white30, size: 16),
+              const SizedBox(height: 4),
               Text(
-                'Swipe for next frame',
+                l.revealSwipeForNext,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white30, fontSize: 12),
+                style: const TextStyle(color: Colors.white30, fontSize: 12),
               ),
             ],
           ),
@@ -342,24 +345,24 @@ class _RevealFrameState extends State<_RevealFrame>
       right: 0,
       child: GestureDetector(
         onTap: widget.onNext,
-        child: const Column(
+        child: Column(
           children: [
-            Icon(Icons.check_circle_outline,
+            const Icon(Icons.check_circle_outline,
                 color: Color(0xFFD4A853), size: 22),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             Text(
-              'All frames developed',
+              l.revealAllDeveloped,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Color(0xFFD4A853),
                   fontSize: 13,
                   letterSpacing: 0.5),
             ),
-            SizedBox(height: 2),
+            const SizedBox(height: 2),
             Text(
-              'Tap to open gallery',
+              l.revealTapToOpenGallery,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white30, fontSize: 11),
+              style: const TextStyle(color: Colors.white30, fontSize: 11),
             ),
           ],
         ),
