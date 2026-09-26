@@ -523,6 +523,24 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get galleryGooglePhotos => 'Google Fotos';
+
+  @override
+  String get galleryGooglePhotosUploading => 'Enviando para o Google Fotos…';
+
+  @override
+  String get galleryGooglePhotosDone =>
+      'Álbum criado no Google Fotos. Abra-o para compartilhar.';
+
+  @override
+  String get galleryGooglePhotosOpen => 'Abrir';
+
+  @override
+  String galleryGooglePhotosFailed(String error) {
+    return 'Falha ao enviar para o Google Fotos: $error';
+  }
+
+  @override
   String get settingsAlbumReveal => 'Revelação de álbum';
 
   @override
@@ -557,7 +575,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get effectShinyFound =>
-      '🌈 Efeito Shiny ultra-raro! Compartilhe este!';
+      '🌈 Quadro foil! Incline o celular para vê-lo brilhar.';
 
   @override
   String get notifDevReadyTitle => 'Filme revelado!';
@@ -566,4 +584,38 @@ class AppLocalizationsPt extends AppLocalizations {
   String notifDevReadyBody(String name) {
     return 'Seu rolo \"$name\" está pronto para ser retirado.';
   }
+
+  @override
+  String get negativesTitle => 'Negativos';
+
+  @override
+  String get negativesHint =>
+      'Toque em um quadro para vê-lo contra a luz. Quadros foil brilham quando você inclina o celular.';
+
+  @override
+  String get negativesSave => 'Salvar negativos na galeria';
+
+  @override
+  String get negativesSaved => 'Negativos salvos na sua galeria';
+
+  @override
+  String negativesSaveFailed(String error) {
+    return 'Não foi possível salvar os negativos: $error';
+  }
+
+  @override
+  String get negativesNegative => 'Negativo';
+
+  @override
+  String get negativesPrint => 'Cópia';
+
+  @override
+  String get negativesFoilHint => '✨ Quadro foil — incline o celular';
+
+  @override
+  String get albumFoil => 'Quadros foil';
+
+  @override
+  String get albumFoilSub =>
+      'Brilho holográfico nas fotos Shiny, na tela e ao compartilhar';
 }

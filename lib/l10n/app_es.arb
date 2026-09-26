@@ -306,6 +306,11 @@
       "count": { "type": "int" }
     }
   },
+  "galleryGooglePhotos": "Google Fotos",
+  "galleryGooglePhotosUploading": "Subiendo a Google Fotos…",
+  "galleryGooglePhotosDone": "Álbum creado en Google Fotos. Ábrelo para compartirlo.",
+  "galleryGooglePhotosOpen": "Abrir",
+  "galleryGooglePhotosFailed": "Error al subir a Google Fotos: {error}",
 
   "settingsAlbumReveal": "Revelado de álbum",
   "settingsAlbumRevealSub": "Mostrar negativo de película antes de revelar cada foto",
@@ -324,7 +329,7 @@
       "name": { "type": "String" }
     }
   },
-  "effectShinyFound": "🌈 ¡Efecto Shiny ultra-raro! ¡Comparte este!",
+  "effectShinyFound": "🌈 ¡Fotograma foil! Inclina tu teléfono para verlo brillar.",
 
   "notifDevReadyTitle": "¡Película revelada!",
   "notifDevReadyBody": "Tu rollo \"{name}\" está listo para recoger.",
@@ -332,5 +337,16 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
+
+  "negativesTitle": "Negativos",
+  "negativesHint": "Toca un fotograma para verlo a contraluz. Los fotogramas foil brillan al inclinar el teléfono.",
+  "negativesSave": "Guardar negativos en la galería",
+  "negativesSaved": "Negativos guardados en tu galería",
+  "negativesSaveFailed": "No se pudieron guardar los negativos: {error}",
+  "negativesNegative": "Negativo",
+  "negativesPrint": "Copia",
+  "negativesFoilHint": "✨ Fotograma foil — inclina tu teléfono",
+  "albumFoil": "Fotogramas foil",
+  "albumFoilSub": "Brillo holográfico en las fotos Shiny, en pantalla y al compartir"
 }

@@ -306,6 +306,11 @@
       "count": { "type": "int" }
     }
   },
+  "galleryGooglePhotos": "Google Fotos",
+  "galleryGooglePhotosUploading": "Wird zu Google Fotos hochgeladen…",
+  "galleryGooglePhotosDone": "Album in Google Fotos erstellt. Öffne es, um es zu teilen.",
+  "galleryGooglePhotosOpen": "Öffnen",
+  "galleryGooglePhotosFailed": "Upload zu Google Fotos fehlgeschlagen: {error}",
 
   "settingsAlbumReveal": "Album-Enthüllung",
   "settingsAlbumRevealSub": "Filmnegativ vor dem Enthüllen jedes Fotos anzeigen",
@@ -324,7 +329,7 @@
       "name": { "type": "String" }
     }
   },
-  "effectShinyFound": "🌈 Ultra-seltener Shiny-Effekt! Teile diesen!",
+  "effectShinyFound": "🌈 Folienbild! Neige dein Handy, um es glänzen zu sehen.",
 
   "notifDevReadyTitle": "Film entwickelt!",
   "notifDevReadyBody": "Dein Film \"{name}\" ist zur Abholung bereit.",
@@ -332,5 +337,16 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
+
+  "negativesTitle": "Negative",
+  "negativesHint": "Tippe auf ein Bild, um es gegen das Licht zu halten. Folienbilder glänzen, wenn du dein Handy neigst.",
+  "negativesSave": "Negative in der Galerie speichern",
+  "negativesSaved": "Negative in deiner Galerie gespeichert",
+  "negativesSaveFailed": "Negative konnten nicht gespeichert werden: {error}",
+  "negativesNegative": "Negativ",
+  "negativesPrint": "Abzug",
+  "negativesFoilHint": "✨ Folienbild — neige dein Handy",
+  "albumFoil": "Folienbilder",
+  "albumFoilSub": "Holografischer Glanz auf Shiny-Fotos, am Bildschirm und beim Teilen"
 }

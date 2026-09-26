@@ -306,6 +306,11 @@
       "count": { "type": "int" }
     }
   },
+  "galleryGooglePhotos": "Google Photos",
+  "galleryGooglePhotosUploading": "Envoi vers Google Photos…",
+  "galleryGooglePhotosDone": "Album créé dans Google Photos. Ouvrez-le pour le partager.",
+  "galleryGooglePhotosOpen": "Ouvrir",
+  "galleryGooglePhotosFailed": "Échec de l'envoi vers Google Photos : {error}",
 
   "settingsAlbumReveal": "Révélation d'album",
   "settingsAlbumRevealSub": "Afficher le négatif du film avant de révéler chaque photo",
@@ -324,7 +329,7 @@
       "name": { "type": "String" }
     }
   },
-  "effectShinyFound": "🌈 Effet Shiny ultra-rare ! Partagez celui-ci !",
+  "effectShinyFound": "🌈 Image holographique ! Inclinez votre téléphone pour la voir briller.",
 
   "notifDevReadyTitle": "Film développé !",
   "notifDevReadyBody": "Votre pellicule \"{name}\" est prête à être récupérée.",
@@ -332,5 +337,16 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
+
+  "negativesTitle": "Négatifs",
+  "negativesHint": "Touchez une image pour la regarder à contre-jour. Les images holographiques brillent quand vous inclinez le téléphone.",
+  "negativesSave": "Enregistrer les négatifs dans la galerie",
+  "negativesSaved": "Négatifs enregistrés dans votre galerie",
+  "negativesSaveFailed": "Impossible d'enregistrer les négatifs : {error}",
+  "negativesNegative": "Négatif",
+  "negativesPrint": "Tirage",
+  "negativesFoilHint": "✨ Image holographique — inclinez votre téléphone",
+  "albumFoil": "Images holographiques",
+  "albumFoilSub": "Reflet holographique sur les photos Shiny, à l'écran et au partage"
 }

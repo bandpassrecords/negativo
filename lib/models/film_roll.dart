@@ -49,6 +49,9 @@ class FilmRoll extends HiveObject {
   @HiveField(14)
   bool effectEnabled; // user can toggle the effect off per-album
 
+  @HiveField(15)
+  bool foilEnabled; // user can turn off the Shiny foil per-album
+
   FilmRoll({
     required this.id,
     required this.name,
@@ -65,6 +68,7 @@ class FilmRoll extends HiveObject {
     this.albumPattern,
     this.filmEffect,
     this.effectEnabled = true,
+    this.foilEnabled = true,
   }) : exposureIds = exposureIds ?? [],
        revealedExposureIds = revealedExposureIds ?? [],
        thumbnailExposureIds = thumbnailExposureIds ?? [];

@@ -743,6 +743,24 @@ class _CustomizationSheetState extends State<_CustomizationSheet> {
                 },
               ),
             ],
+
+            // Foil toggle — only shown when this roll has Shiny photos
+            if (HiveService.getExposuresForRoll(widget.roll.id).any(
+                (e) => FilmEffect.fromString(e.filmEffect)?.isRare ?? false)) ...[
+              const Divider(),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                secondary: const Icon(Icons.auto_awesome, color: Colors.amber),
+                title: Text(AppLocalizations.of(context)!.albumFoil),
+                subtitle: Text(AppLocalizations.of(context)!.albumFoilSub),
+                value: widget.roll.foilEnabled,
+                onChanged: (val) async {
+                  setState(() => widget.roll.foilEnabled = val);
+                  await HiveService.saveFilmRoll(widget.roll);
+                  widget.onChanged();
+                },
+              ),
+            ],
           ],
         ),
       ),

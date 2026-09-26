@@ -1,5 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../models/exposure.dart';
+import '../models/film_roll.dart';
+import 'foil.dart';
 
 enum FilmEffectType {
   lightLeak,
@@ -7,7 +10,7 @@ enum FilmEffectType {
   heavyVignette,
   scratch,
   blownHighlights,
-  shiny, // 1/8000
+  shiny, // 1/150 per photo
 }
 
 class FilmEffect {
@@ -17,6 +20,9 @@ class FilmEffect {
   const FilmEffect({required this.type, required this.variant});
 
   // ── Probabilities ─────────────────────────────────────────────────────────
+
+  /// Per-photo odds of a Shiny (foil) frame: 1 in [shinyOdds].
+  static const shinyOdds = 150;
 
   // Per-roll: ~1 in 10 rolls gets one of the 5 degradation effects (equal chance).
   // Shiny is excluded — it is photo-specific and rolled separately.
@@ -34,11 +40,19 @@ class FilmEffect {
     return FilmEffect(type: type, variant: rng.nextInt(20));
   }
 
-  // Per-photo: 1/8000 chance of Shiny, rolled individually at reveal time.
+  // Per-photo: 1/[shinyOdds] chance of Shiny, rolled individually at reveal time.
   static FilmEffect? rollPhotoShiny() {
     final rng = Random();
-    if (rng.nextInt(8000) != 0) return null;
+    if (rng.nextInt(shinyOdds) != 0) return null;
     return FilmEffect(type: FilmEffectType.shiny, variant: rng.nextInt(20));
+  }
+
+  /// The effect shown on [exposure]: its own Shiny foil wins, otherwise the
+  /// roll's effect — each only if the user hasn't turned it off for the album.
+  static FilmEffect? forExposure(Exposure exposure, FilmRoll roll) {
+    final own = fromString(exposure.filmEffect);
+    if (own != null && (!own.isRare || roll.foilEnabled)) return own;
+    return roll.effectEnabled ? fromString(roll.filmEffect) : null;
   }
 
   String get serialized => '${type.name}:$variant';
@@ -59,51 +73,113 @@ class FilmEffect {
   bool get isRare => type == FilmEffectType.shiny;
 
   String get displayName => switch (type) {
-    FilmEffectType.lightLeak => 'Light Leak',
-    FilmEffectType.coldShift => 'Cold Shift',
-    FilmEffectType.heavyVignette => 'Heavy Vignette',
-    FilmEffectType.scratch => 'Film Scratch',
-    FilmEffectType.blownHighlights => 'Blown Highlights',
-    FilmEffectType.shiny => 'Shiny ✨',
-  };
+        FilmEffectType.lightLeak => 'Light Leak',
+        FilmEffectType.coldShift => 'Cold Shift',
+        FilmEffectType.heavyVignette => 'Heavy Vignette',
+        FilmEffectType.scratch => 'Film Scratch',
+        FilmEffectType.blownHighlights => 'Blown Highlights',
+        FilmEffectType.shiny => 'Shiny ✨',
+      };
 
   // ── Rendering ─────────────────────────────────────────────────────────────
 
-  // For shiny, the image itself must be wrapped with ShaderMask.
-  // For all others, this is a no-op passthrough.
-  Widget wrapImage(Widget imageWidget) {
-    if (type != FilmEffectType.shiny) return imageWidget;
-    return ShaderMask(
-      shaderCallback: (bounds) => const LinearGradient(
-        colors: [
-          Color(0xFFFF0000),
-          Color(0xFFFF7F00),
-          Color(0xFFFFFF00),
-          Color(0xFF00FF88),
-          Color(0xFF0088FF),
-          Color(0xFF8800FF),
-          Color(0xFFFF0088),
-          Color(0xFFFF0000),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ).createShader(bounds),
-      blendMode: BlendMode.color,
-      child: imageWidget,
-    );
+  /// Paints this effect over a photo already drawn into [rect] on [canvas].
+  ///
+  /// All sizes are relative to [rect], so the same call renders the on-screen
+  /// preview, a film-strip frame and the full-resolution exported JPEG.
+  /// [tilt] (each axis −1…1) only affects the Shiny foil. The foil blends with
+  /// the pixels underneath, so paint it into the same layer as the photo.
+  void paint(Canvas canvas, Rect rect, {Offset tilt = Offset.zero}) {
+    switch (type) {
+      case FilmEffectType.lightLeak:
+        const corners = [
+          Alignment.topLeft,
+          Alignment.topRight,
+          Alignment.bottomLeft,
+          Alignment.bottomRight,
+        ];
+        canvas.drawRect(
+          rect,
+          Paint()
+            ..shader = RadialGradient(
+              center: corners[variant % 4],
+              radius: 1.4,
+              colors: const [
+                Color(0x99FF7500),
+                Color(0x66FF3300),
+                Color(0x33FF0080),
+                Colors.transparent,
+              ],
+              stops: const [0.0, 0.25, 0.55, 0.85],
+            ).createShader(rect),
+        );
+      case FilmEffectType.coldShift:
+        const colors = [
+          Color(0x330044FF),
+          Color(0x2800C8C0),
+          Color(0x308800CC),
+        ];
+        canvas.drawRect(rect, Paint()..color = colors[variant % 3]);
+      case FilmEffectType.heavyVignette:
+        canvas.drawRect(
+          rect,
+          Paint()
+            ..shader = const RadialGradient(
+              radius: 1.1,
+              colors: [
+                Colors.transparent,
+                Colors.transparent,
+                Color(0x88000000),
+                Color(0xCC000000),
+              ],
+              stops: [0.0, 0.45, 0.75, 1.0],
+            ).createShader(rect),
+        );
+      case FilmEffectType.scratch:
+        final rng = Random(variant);
+        final count = 1 + (variant % 3);
+        for (int i = 0; i < count; i++) {
+          final x = rect.left + rect.width * (0.1 + rng.nextDouble() * 0.8);
+          final wobble = rect.width * (rng.nextDouble() * 0.015 - 0.0075);
+          final paint = Paint()
+            ..color =
+                Colors.white.withValues(alpha: 0.25 + rng.nextDouble() * 0.35)
+            ..strokeWidth = rect.width * (0.001 + rng.nextDouble() * 0.002)
+            ..style = PaintingStyle.stroke;
+          canvas.drawLine(
+            Offset(x, rect.top),
+            Offset(x + wobble, rect.bottom),
+            paint,
+          );
+        }
+      case FilmEffectType.blownHighlights:
+        const pairs = [
+          [Alignment.topLeft, Alignment.bottomRight],
+          [Alignment.topRight, Alignment.bottomLeft],
+          [Alignment.bottomLeft, Alignment.topRight],
+          [Alignment.bottomRight, Alignment.topLeft],
+        ];
+        final pair = pairs[variant % 4];
+        canvas.drawRect(
+          rect,
+          Paint()
+            ..shader = LinearGradient(
+              begin: pair[0],
+              end: pair[1],
+              colors: const [
+                Color(0x88FFFFFF),
+                Color(0x33FFFFFF),
+                Colors.transparent,
+              ],
+              stops: const [0.0, 0.22, 0.55],
+            ).createShader(rect),
+        );
+      case FilmEffectType.shiny:
+        paintFoil(canvas, rect, variant: variant, tilt: tilt);
+    }
   }
 
-  // Overlay widget drawn on top of the (possibly wrapped) image.
-  Widget buildOverlay() => switch (type) {
-    FilmEffectType.lightLeak => _LightLeakOverlay(variant: variant),
-    FilmEffectType.coldShift => _ColdShiftOverlay(variant: variant),
-    FilmEffectType.heavyVignette => const _HeavyVignetteOverlay(),
-    FilmEffectType.scratch => _ScratchOverlay(variant: variant),
-    FilmEffectType.blownHighlights => _BlownHighlightsOverlay(variant: variant),
-    FilmEffectType.shiny => _ShinySparkleOverlay(variant: variant),
-  };
-
-  // Simpler overlay for small grid tiles (no ShaderMask for performance).
+  // Cheap static overlay for small grid tiles (no blending, no motion).
   Widget buildTileOverlay() {
     if (type == FilmEffectType.shiny) {
       return Container(
@@ -123,196 +199,24 @@ class FilmEffect {
         ),
       );
     }
-    return buildOverlay();
-  }
-}
-
-// ─── Effect overlays ──────────────────────────────────────────────────────────
-
-class _LightLeakOverlay extends StatelessWidget {
-  final int variant;
-  const _LightLeakOverlay({required this.variant});
-
-  static const _corners = [
-    Alignment.topLeft,
-    Alignment.topRight,
-    Alignment.bottomLeft,
-    Alignment.bottomRight,
-  ];
-
-  @override
-  Widget build(BuildContext context) {
     return IgnorePointer(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            center: _corners[variant % 4],
-            radius: 1.4,
-            colors: const [
-              Color(0x99FF7500),
-              Color(0x66FF3300),
-              Color(0x33FF0080),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.25, 0.55, 0.85],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ColdShiftOverlay extends StatelessWidget {
-  final int variant;
-  const _ColdShiftOverlay({required this.variant});
-
-  static const _colors = [
-    Color(0x330044FF),
-    Color(0x2800C8C0),
-    Color(0x308800CC),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: ColoredBox(color: _colors[variant % 3]),
-    );
-  }
-}
-
-class _HeavyVignetteOverlay extends StatelessWidget {
-  const _HeavyVignetteOverlay();
-
-  @override
-  Widget build(BuildContext context) {
-    return const IgnorePointer(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment.center,
-            radius: 1.1,
-            colors: [
-              Colors.transparent,
-              Colors.transparent,
-              Color(0x88000000),
-              Color(0xCC000000),
-            ],
-            stops: [0.0, 0.45, 0.75, 1.0],
-          ),
-        ),
-        child: SizedBox.expand(),
-      ),
-    );
-  }
-}
-
-class _ScratchOverlay extends StatelessWidget {
-  final int variant;
-  const _ScratchOverlay({required this.variant});
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: CustomPaint(painter: _ScratchPainter(variant)),
-    );
-  }
-}
-
-class _ScratchPainter extends CustomPainter {
-  final int variant;
-  const _ScratchPainter(this.variant);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rng = Random(variant);
-    final count = 1 + (variant % 3);
-    for (int i = 0; i < count; i++) {
-      final x = size.width * (0.1 + rng.nextDouble() * 0.8);
-      final wobble = rng.nextDouble() * 6 - 3;
-      final paint = Paint()
-        ..color = Colors.white.withValues(
-            alpha: 0.25 + rng.nextDouble() * 0.35)
-        ..strokeWidth = 0.4 + rng.nextDouble() * 0.8
-        ..style = PaintingStyle.stroke;
-      canvas.drawLine(Offset(x, 0), Offset(x + wobble, size.height), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_ScratchPainter old) => old.variant != variant;
-}
-
-class _BlownHighlightsOverlay extends StatelessWidget {
-  final int variant;
-  const _BlownHighlightsOverlay({required this.variant});
-
-  static const _pairs = [
-    [Alignment.topLeft, Alignment.bottomRight],
-    [Alignment.topRight, Alignment.bottomLeft],
-    [Alignment.bottomLeft, Alignment.topRight],
-    [Alignment.bottomRight, Alignment.topLeft],
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final pair = _pairs[variant % 4];
-    return IgnorePointer(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: pair[0],
-            end: pair[1],
-            colors: const [
-              Color(0x88FFFFFF),
-              Color(0x33FFFFFF),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.22, 0.55],
-          ),
-        ),
+      child: CustomPaint(
+        painter: _EffectOverlayPainter(this),
         child: const SizedBox.expand(),
       ),
     );
   }
 }
 
-class _ShinySparkleOverlay extends StatelessWidget {
-  final int variant;
-  const _ShinySparkleOverlay({required this.variant});
+class _EffectOverlayPainter extends CustomPainter {
+  final FilmEffect effect;
+  const _EffectOverlayPainter(this.effect);
 
   @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: CustomPaint(painter: _SparklePainter(variant)),
-    );
-  }
-}
-
-class _SparklePainter extends CustomPainter {
-  final int variant;
-  const _SparklePainter(this.variant);
+  void paint(Canvas canvas, Size size) =>
+      effect.paint(canvas, Offset.zero & size);
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final rng = Random(variant + 1337);
-    for (int i = 0; i < 12; i++) {
-      final x = rng.nextDouble() * size.width;
-      final y = rng.nextDouble() * size.height;
-      final r = 1.5 + rng.nextDouble() * 3.5;
-      final alpha = 0.5 + rng.nextDouble() * 0.5;
-      final hue = rng.nextDouble() * 360;
-
-      final glow = Paint()
-        ..color = HSLColor.fromAHSL(alpha * 0.4, hue, 1.0, 0.8).toColor()
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-      canvas.drawCircle(Offset(x, y), r * 2, glow);
-
-      final core = Paint()
-        ..color = HSLColor.fromAHSL(alpha, hue, 1.0, 0.95).toColor();
-      canvas.drawCircle(Offset(x, y), r, core);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_SparklePainter old) => old.variant != variant;
+  bool shouldRepaint(_EffectOverlayPainter old) =>
+      old.effect.serialized != effect.serialized;
 }

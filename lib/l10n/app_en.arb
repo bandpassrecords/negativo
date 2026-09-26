@@ -308,6 +308,16 @@
       "count": { "type": "int" }
     }
   },
+  "galleryGooglePhotos": "Google Photos",
+  "galleryGooglePhotosUploading": "Uploading to Google Photos…",
+  "galleryGooglePhotosDone": "Album created in Google Photos. Open it to share.",
+  "galleryGooglePhotosOpen": "Open",
+  "galleryGooglePhotosFailed": "Google Photos upload failed: {error}",
+  "@galleryGooglePhotosFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
 
   "settingsAlbumReveal": "Album reveal",
   "settingsAlbumRevealSub": "Show film negative before revealing each photo",
@@ -326,7 +336,7 @@
       "name": { "type": "String" }
     }
   },
-  "effectShinyFound": "🌈 Ultra-rare Shiny effect! Share this one!",
+  "effectShinyFound": "🌈 Foil frame! Tilt your phone to see it shine.",
 
   "notifDevReadyTitle": "Film developed!",
   "notifDevReadyBody": "Your roll \"{name}\" is ready to be picked up.",
@@ -334,5 +344,21 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
+
+  "negativesTitle": "Negatives",
+  "negativesHint": "Tap a frame to hold it up to the light. Foil frames shine when you tilt your phone.",
+  "negativesSave": "Save negatives to gallery",
+  "negativesSaved": "Negatives saved to your gallery",
+  "negativesSaveFailed": "Couldn't save negatives: {error}",
+  "@negativesSaveFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "negativesNegative": "Negative",
+  "negativesPrint": "Print",
+  "negativesFoilHint": "✨ Foil frame — tilt your phone",
+  "albumFoil": "Foil frames",
+  "albumFoilSub": "Holographic shine on Shiny photos, on screen and when shared"
 }

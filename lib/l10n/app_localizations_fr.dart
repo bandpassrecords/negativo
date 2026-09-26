@@ -529,6 +529,24 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get galleryGooglePhotos => 'Google Photos';
+
+  @override
+  String get galleryGooglePhotosUploading => 'Envoi vers Google Photos…';
+
+  @override
+  String get galleryGooglePhotosDone =>
+      'Album créé dans Google Photos. Ouvrez-le pour le partager.';
+
+  @override
+  String get galleryGooglePhotosOpen => 'Ouvrir';
+
+  @override
+  String galleryGooglePhotosFailed(String error) {
+    return 'Échec de l\'envoi vers Google Photos : $error';
+  }
+
+  @override
   String get settingsAlbumReveal => 'Révélation d\'album';
 
   @override
@@ -563,7 +581,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get effectShinyFound =>
-      '🌈 Effet Shiny ultra-rare ! Partagez celui-ci !';
+      '🌈 Image holographique ! Inclinez votre téléphone pour la voir briller.';
 
   @override
   String get notifDevReadyTitle => 'Film développé !';
@@ -572,4 +590,39 @@ class AppLocalizationsFr extends AppLocalizations {
   String notifDevReadyBody(String name) {
     return 'Votre pellicule \"$name\" est prête à être récupérée.';
   }
+
+  @override
+  String get negativesTitle => 'Négatifs';
+
+  @override
+  String get negativesHint =>
+      'Touchez une image pour la regarder à contre-jour. Les images holographiques brillent quand vous inclinez le téléphone.';
+
+  @override
+  String get negativesSave => 'Enregistrer les négatifs dans la galerie';
+
+  @override
+  String get negativesSaved => 'Négatifs enregistrés dans votre galerie';
+
+  @override
+  String negativesSaveFailed(String error) {
+    return 'Impossible d\'enregistrer les négatifs : $error';
+  }
+
+  @override
+  String get negativesNegative => 'Négatif';
+
+  @override
+  String get negativesPrint => 'Tirage';
+
+  @override
+  String get negativesFoilHint =>
+      '✨ Image holographique — inclinez votre téléphone';
+
+  @override
+  String get albumFoil => 'Images holographiques';
+
+  @override
+  String get albumFoilSub =>
+      'Reflet holographique sur les photos Shiny, à l\'écran et au partage';
 }

@@ -522,6 +522,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get galleryGooglePhotos => 'Google Photos';
+
+  @override
+  String get galleryGooglePhotosUploading => 'Uploading to Google Photos…';
+
+  @override
+  String get galleryGooglePhotosDone =>
+      'Album created in Google Photos. Open it to share.';
+
+  @override
+  String get galleryGooglePhotosOpen => 'Open';
+
+  @override
+  String galleryGooglePhotosFailed(String error) {
+    return 'Google Photos upload failed: $error';
+  }
+
+  @override
   String get settingsAlbumReveal => 'Album reveal';
 
   @override
@@ -555,7 +573,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get effectShinyFound => '🌈 Ultra-rare Shiny effect! Share this one!';
+  String get effectShinyFound =>
+      '🌈 Foil frame! Tilt your phone to see it shine.';
 
   @override
   String get notifDevReadyTitle => 'Film developed!';
@@ -564,4 +583,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String notifDevReadyBody(String name) {
     return 'Your roll \"$name\" is ready to be picked up.';
   }
+
+  @override
+  String get negativesTitle => 'Negatives';
+
+  @override
+  String get negativesHint =>
+      'Tap a frame to hold it up to the light. Foil frames shine when you tilt your phone.';
+
+  @override
+  String get negativesSave => 'Save negatives to gallery';
+
+  @override
+  String get negativesSaved => 'Negatives saved to your gallery';
+
+  @override
+  String negativesSaveFailed(String error) {
+    return 'Couldn\'t save negatives: $error';
+  }
+
+  @override
+  String get negativesNegative => 'Negative';
+
+  @override
+  String get negativesPrint => 'Print';
+
+  @override
+  String get negativesFoilHint => '✨ Foil frame — tilt your phone';
+
+  @override
+  String get albumFoil => 'Foil frames';
+
+  @override
+  String get albumFoilSub =>
+      'Holographic shine on Shiny photos, on screen and when shared';
 }

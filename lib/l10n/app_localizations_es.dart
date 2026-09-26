@@ -524,6 +524,24 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get galleryGooglePhotos => 'Google Fotos';
+
+  @override
+  String get galleryGooglePhotosUploading => 'Subiendo a Google Fotos…';
+
+  @override
+  String get galleryGooglePhotosDone =>
+      'Álbum creado en Google Fotos. Ábrelo para compartirlo.';
+
+  @override
+  String get galleryGooglePhotosOpen => 'Abrir';
+
+  @override
+  String galleryGooglePhotosFailed(String error) {
+    return 'Error al subir a Google Fotos: $error';
+  }
+
+  @override
   String get settingsAlbumReveal => 'Revelado de álbum';
 
   @override
@@ -557,7 +575,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get effectShinyFound => '🌈 ¡Efecto Shiny ultra-raro! ¡Comparte este!';
+  String get effectShinyFound =>
+      '🌈 ¡Fotograma foil! Inclina tu teléfono para verlo brillar.';
 
   @override
   String get notifDevReadyTitle => '¡Película revelada!';
@@ -566,4 +585,38 @@ class AppLocalizationsEs extends AppLocalizations {
   String notifDevReadyBody(String name) {
     return 'Tu rollo \"$name\" está listo para recoger.';
   }
+
+  @override
+  String get negativesTitle => 'Negativos';
+
+  @override
+  String get negativesHint =>
+      'Toca un fotograma para verlo a contraluz. Los fotogramas foil brillan al inclinar el teléfono.';
+
+  @override
+  String get negativesSave => 'Guardar negativos en la galería';
+
+  @override
+  String get negativesSaved => 'Negativos guardados en tu galería';
+
+  @override
+  String negativesSaveFailed(String error) {
+    return 'No se pudieron guardar los negativos: $error';
+  }
+
+  @override
+  String get negativesNegative => 'Negativo';
+
+  @override
+  String get negativesPrint => 'Copia';
+
+  @override
+  String get negativesFoilHint => '✨ Fotograma foil — inclina tu teléfono';
+
+  @override
+  String get albumFoil => 'Fotogramas foil';
+
+  @override
+  String get albumFoilSub =>
+      'Brillo holográfico en las fotos Shiny, en pantalla y al compartir';
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../effects/effect_photo.dart';
 import '../effects/film_effect.dart';
 import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
@@ -129,6 +130,7 @@ class _RevealGalleryScreenState extends State<RevealGalleryScreen> {
           child: _RevealFrame(
             key: ValueKey(exposure.id),
             exposure: exposure,
+            filmRoll: widget.filmRoll,
             initiallyRevealed: _revealedSet.contains(exposure.id),
             hasNext: !isLast,
             onRevealed: () => _onFrameRevealed(exposure.id),
@@ -145,6 +147,7 @@ class _RevealGalleryScreenState extends State<RevealGalleryScreen> {
 
 class _RevealFrame extends StatefulWidget {
   final Exposure exposure;
+  final FilmRoll filmRoll;
   final bool initiallyRevealed;
   final bool hasNext;
   final VoidCallback onRevealed;
@@ -154,6 +157,7 @@ class _RevealFrame extends StatefulWidget {
   const _RevealFrame({
     super.key,
     required this.exposure,
+    required this.filmRoll,
     required this.initiallyRevealed,
     required this.hasNext,
     required this.onRevealed,
@@ -306,7 +310,10 @@ class _RevealFrameState extends State<_RevealFrame>
         ),
       );
     }
-    return Image.file(file, fit: BoxFit.contain);
+    return EffectPhoto(
+      imagePath: widget.exposure.imagePath,
+      effect: FilmEffect.forExposure(widget.exposure, widget.filmRoll),
+    );
   }
 
   Widget _buildTapHint(BuildContext context) {

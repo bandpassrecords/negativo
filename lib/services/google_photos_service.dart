@@ -10,35 +10,32 @@ class GooglePhotosService {
 
   static final GooglePhotosService instance = GooglePhotosService._();
 
+  static const String _serverClientId =
+      '1007563150643-s6qhvitnn4urjtb07cd6j3in9nvt6acm.apps.googleusercontent.com';
+
+  // Since 2025-03-31 the Library API only accepts the app-created-data scopes.
+  // `photoslibrary` and `photoslibrary.sharing` return 403, and albums can no
+  // longer be shared through the API — the user shares from Google Photos.
   static const List<String> _scopes = [
-    'https://www.googleapis.com/auth/photoslibrary',
-    'https://www.googleapis.com/auth/photoslibrary.sharing',
+    'https://www.googleapis.com/auth/photoslibrary.appendonly',
   ];
 
-  bool _isInitialized = false;
+  Future<void>? _initFuture;
   GoogleSignInAccount? _currentUser;
   StreamSubscription<GoogleSignInAuthenticationEvent>? _authSubscription;
-  static bool _sessionInitialized = false;
 
   GoogleSignInAccount? get currentUser => _currentUser;
 
-  void initialize({required String serverClientId}) {
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    unawaited(
-      GoogleSignIn.instance
-          .initialize(serverClientId: serverClientId)
-          .then((_) {
-        _authSubscription ??= GoogleSignIn.instance.authenticationEvents
-            .listen(_onAuthEvent, onError: _onAuthError);
-
-        if (!_sessionInitialized) {
-          _sessionInitialized = true;
-          GoogleSignIn.instance.attemptLightweightAuthentication();
-        }
-      }),
-    );
+  Future<void> _ensureInitialized() {
+    return _initFuture ??= GoogleSignIn.instance
+        .initialize(serverClientId: _serverClientId)
+        .then((_) {
+      _authSubscription ??= GoogleSignIn.instance.authenticationEvents
+          .listen(_onAuthEvent, onError: _onAuthError);
+    }).catchError((Object e) {
+      _initFuture = null;
+      throw e;
+    });
   }
 
   Future<void> _onAuthEvent(GoogleSignInAuthenticationEvent event) async {
@@ -67,24 +64,22 @@ class GooglePhotosService {
   }
 
   /// Authenticates the user and returns authorization headers for Photos API calls.
-  /// Matches the reference pattern: get authHeaders fresh, pass to every request.
   /// Uses promptIfNecessary: true so authorization is requested automatically if not yet granted.
   Future<Map<String, String>> _getAuthHeaders() async {
+    await _ensureInitialized();
     if (!GoogleSignIn.instance.supportsAuthenticate()) {
       throw Exception('Google Sign-In is not supported on this platform');
     }
 
-    // Authenticate (identity). scopeHint tells Credential Manager which scopes we'll need.
-    await GoogleSignIn.instance.authenticate(scopeHint: _scopes);
-
-    // Give the authenticationEvents stream time to update _currentUser.
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-
-    if (_currentUser == null) throw Exception('Sign-in cancelled');
+    // Reuse the signed-in account; otherwise authenticate (identity).
+    // scopeHint tells Credential Manager which scopes we'll need.
+    final account = _currentUser ??
+        await GoogleSignIn.instance.attemptLightweightAuthentication() ??
+        await GoogleSignIn.instance.authenticate(scopeHint: _scopes);
+    _currentUser = account;
 
     // Get auth headers — prompts for Photos scope authorization if not already granted.
-    // This is the 7.x equivalent of the reference's account.authHeaders.
-    final headers = await _currentUser!.authorizationClient.authorizationHeaders(
+    final headers = await account.authorizationClient.authorizationHeaders(
       _scopes,
       promptIfNecessary: true,
     );
@@ -104,7 +99,7 @@ class GooglePhotosService {
   /// [imagePaths] to it.
   ///
   /// Calls [onProgress] with values 0.0–1.0 as files are uploaded.
-  /// Returns the album URL on success, throws on failure.
+  /// Returns the album's Google Photos URL on success, throws on failure.
   Future<String> createAlbumWithPhotos({
     required String albumTitle,
     required List<String> imagePaths,
@@ -120,7 +115,7 @@ class GooglePhotosService {
       throw Exception('Google sign-in failed (${e.code}): ${e.description}');
     }
 
-    final albumId = await _createAlbum(headers, albumTitle);
+    final album = await _createAlbum(headers, albumTitle);
 
     final uploadTokens = <String>[];
     for (var i = 0; i < imagePaths.length; i++) {
@@ -136,24 +131,31 @@ class GooglePhotosService {
         i,
         (i + batchSize).clamp(0, uploadTokens.length),
       );
-      await _batchCreateMedia(headers, albumId, batch);
+      await _batchCreateMedia(headers, album.id, batch);
     }
 
     onProgress?.call(1.0);
-    return 'https://photos.google.com/album/$albumId';
+    return album.productUrl;
   }
 
-  Future<String> _createAlbum(Map<String, String> headers, String title) async {
+  Future<({String id, String productUrl})> _createAlbum(
+    Map<String, String> headers,
+    String title,
+  ) async {
     final response = await http.post(
       Uri.parse('https://photoslibrary.googleapis.com/v1/albums'),
       headers: {...headers, 'Content-Type': 'application/json'},
-      body: jsonEncode({'album': {'title': title}}),
+      body: jsonEncode({
+        'album': {'title': title}
+      }),
     );
     _checkStatus(response, 'create album');
-    return (jsonDecode(response.body) as Map<String, dynamic>)['id'] as String;
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    return (id: json['id'] as String, productUrl: json['productUrl'] as String);
   }
 
-  Future<String> _uploadBytes(Map<String, String> headers, String filePath) async {
+  Future<String> _uploadBytes(
+      Map<String, String> headers, String filePath) async {
     final file = File(filePath);
     final bytes = await file.readAsBytes();
     final fileName = file.path.split('/').last;
@@ -179,17 +181,36 @@ class GooglePhotosService {
     List<String> uploadTokens,
   ) async {
     final response = await http.post(
-      Uri.parse('https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate'),
+      Uri.parse(
+          'https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate'),
       headers: {...headers, 'Content-Type': 'application/json'},
       body: jsonEncode({
         'albumId': albumId,
         'albumPosition': {'position': 'LAST_IN_ALBUM'},
         'newMediaItems': uploadTokens
-            .map((t) => {'simpleMediaItem': {'uploadToken': t}})
+            .map((t) => {
+                  'simpleMediaItem': {'uploadToken': t}
+                })
             .toList(),
       }),
     );
     _checkStatus(response, 'add photos to album');
+
+    // batchCreate returns 200 even when individual items fail.
+    final results = (jsonDecode(response.body)
+            as Map<String, dynamic>)['newMediaItemResults'] as List? ??
+        const [];
+    final failures = results
+        .map((r) =>
+            (r as Map<String, dynamic>)['status'] as Map<String, dynamic>?)
+        .where((status) => (status?['code'] as int? ?? 0) != 0)
+        .toList();
+    if (failures.isNotEmpty) {
+      throw Exception(
+        'Google Photos rejected ${failures.length} of ${results.length} photos: '
+        '${failures.first!['message']}',
+      );
+    }
   }
 
   void _checkStatus(http.Response response, String operation) {

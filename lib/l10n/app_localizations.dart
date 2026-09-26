@@ -910,6 +910,36 @@ abstract class AppLocalizations {
   /// **'{count, plural, =0{Share} one{Share 1 photo} other{Share {count} photos}}'**
   String galleryShareCount(int count);
 
+  /// No description provided for @galleryGooglePhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Photos'**
+  String get galleryGooglePhotos;
+
+  /// No description provided for @galleryGooglePhotosUploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading to Google Photos…'**
+  String get galleryGooglePhotosUploading;
+
+  /// No description provided for @galleryGooglePhotosDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Album created in Google Photos. Open it to share.'**
+  String get galleryGooglePhotosDone;
+
+  /// No description provided for @galleryGooglePhotosOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get galleryGooglePhotosOpen;
+
+  /// No description provided for @galleryGooglePhotosFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Photos upload failed: {error}'**
+  String galleryGooglePhotosFailed(String error);
+
   /// No description provided for @settingsAlbumReveal.
   ///
   /// In en, this message translates to:
@@ -973,7 +1003,7 @@ abstract class AppLocalizations {
   /// No description provided for @effectShinyFound.
   ///
   /// In en, this message translates to:
-  /// **'🌈 Ultra-rare Shiny effect! Share this one!'**
+  /// **'🌈 Foil frame! Tilt your phone to see it shine.'**
   String get effectShinyFound;
 
   /// No description provided for @notifDevReadyTitle.
@@ -987,6 +1017,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your roll \"{name}\" is ready to be picked up.'**
   String notifDevReadyBody(String name);
+
+  /// No description provided for @negativesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Negatives'**
+  String get negativesTitle;
+
+  /// No description provided for @negativesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a frame to hold it up to the light. Foil frames shine when you tilt your phone.'**
+  String get negativesHint;
+
+  /// No description provided for @negativesSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save negatives to gallery'**
+  String get negativesSave;
+
+  /// No description provided for @negativesSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Negatives saved to your gallery'**
+  String get negativesSaved;
+
+  /// No description provided for @negativesSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save negatives: {error}'**
+  String negativesSaveFailed(String error);
+
+  /// No description provided for @negativesNegative.
+  ///
+  /// In en, this message translates to:
+  /// **'Negative'**
+  String get negativesNegative;
+
+  /// No description provided for @negativesPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Print'**
+  String get negativesPrint;
+
+  /// No description provided for @negativesFoilHint.
+  ///
+  /// In en, this message translates to:
+  /// **'✨ Foil frame — tilt your phone'**
+  String get negativesFoilHint;
+
+  /// No description provided for @albumFoil.
+  ///
+  /// In en, this message translates to:
+  /// **'Foil frames'**
+  String get albumFoil;
+
+  /// No description provided for @albumFoilSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Holographic shine on Shiny photos, on screen and when shared'**
+  String get albumFoilSub;
 }
 
 class _AppLocalizationsDelegate

@@ -525,6 +525,25 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get galleryGooglePhotos => 'Google Fotos';
+
+  @override
+  String get galleryGooglePhotosUploading =>
+      'Wird zu Google Fotos hochgeladen…';
+
+  @override
+  String get galleryGooglePhotosDone =>
+      'Album in Google Fotos erstellt. Öffne es, um es zu teilen.';
+
+  @override
+  String get galleryGooglePhotosOpen => 'Öffnen';
+
+  @override
+  String galleryGooglePhotosFailed(String error) {
+    return 'Upload zu Google Fotos fehlgeschlagen: $error';
+  }
+
+  @override
   String get settingsAlbumReveal => 'Album-Enthüllung';
 
   @override
@@ -559,7 +578,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get effectShinyFound =>
-      '🌈 Ultra-seltener Shiny-Effekt! Teile diesen!';
+      '🌈 Folienbild! Neige dein Handy, um es glänzen zu sehen.';
 
   @override
   String get notifDevReadyTitle => 'Film entwickelt!';
@@ -568,4 +587,38 @@ class AppLocalizationsDe extends AppLocalizations {
   String notifDevReadyBody(String name) {
     return 'Dein Film \"$name\" ist zur Abholung bereit.';
   }
+
+  @override
+  String get negativesTitle => 'Negative';
+
+  @override
+  String get negativesHint =>
+      'Tippe auf ein Bild, um es gegen das Licht zu halten. Folienbilder glänzen, wenn du dein Handy neigst.';
+
+  @override
+  String get negativesSave => 'Negative in der Galerie speichern';
+
+  @override
+  String get negativesSaved => 'Negative in deiner Galerie gespeichert';
+
+  @override
+  String negativesSaveFailed(String error) {
+    return 'Negative konnten nicht gespeichert werden: $error';
+  }
+
+  @override
+  String get negativesNegative => 'Negativ';
+
+  @override
+  String get negativesPrint => 'Abzug';
+
+  @override
+  String get negativesFoilHint => '✨ Folienbild — neige dein Handy';
+
+  @override
+  String get albumFoil => 'Folienbilder';
+
+  @override
+  String get albumFoilSub =>
+      'Holografischer Glanz auf Shiny-Fotos, am Bildschirm und beim Teilen';
 }

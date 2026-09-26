@@ -4,12 +4,17 @@ import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../effects/effect_photo.dart';
 import '../effects/film_effect.dart';
 import '../l10n/app_localizations.dart';
 import '../models/film_roll.dart';
 import '../models/film_stock.dart';
 import '../models/exposure.dart';
+import '../services/export_service.dart';
+import '../services/google_photos_service.dart';
 import '../services/hive_service.dart';
+import 'negatives_screen.dart';
 
 enum _SelectMode { none, thumbnail, share }
 
@@ -24,8 +29,7 @@ class DevelopedGalleryScreen extends StatefulWidget {
   });
 
   @override
-  State<DevelopedGalleryScreen> createState() =>
-      _DevelopedGalleryScreenState();
+  State<DevelopedGalleryScreen> createState() => _DevelopedGalleryScreenState();
 }
 
 class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
@@ -34,6 +38,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
   late Set<String> _selectedThumbnailIds;
   final Set<String> _selectedShareIds = {};
   bool _sharing = false;
+  double? _googlePhotosProgress;
 
   @override
   void initState() {
@@ -59,6 +64,18 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
           exposures: _exposures,
           initialIndex: index,
           filmRoll: widget.filmRoll,
+        ),
+      ),
+    );
+  }
+
+  void _openNegatives() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => NegativesScreen(
+          filmRoll: widget.filmRoll,
+          exposures: _exposures,
         ),
       ),
     );
@@ -100,7 +117,8 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
       setState(() => _mode = _SelectMode.none);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(AppLocalizations.of(context)!.galleryThumbnailUpdated),
+            content:
+                Text(AppLocalizations.of(context)!.galleryThumbnailUpdated),
             duration: const Duration(seconds: 2)),
       );
     }
@@ -136,23 +154,69 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
   }
 
   Future<void> _shareSelected() async {
-    final files = _exposures
+    final selected = _exposures
         .where((e) => _selectedShareIds.contains(e.id))
-        .map((e) => e.imagePath)
-        .where((p) => File(p).existsSync())
-        .map((p) => XFile(p))
-        .toList();
+        .where((e) => File(e.imagePath).existsSync());
 
-    if (files.isEmpty) return;
+    if (selected.isEmpty) return;
 
     setState(() => _sharing = true);
     try {
+      final paths = await ExportService.photoPaths(selected, widget.filmRoll);
+      final files = paths.map((p) => XFile(p)).toList();
       await Share.shareXFiles(
         files,
         subject: widget.filmRoll.name,
       );
     } finally {
       if (mounted) setState(() => _sharing = false);
+    }
+  }
+
+  Future<void> _exportSelectedToGooglePhotos() async {
+    final l = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final selected = _exposures
+        .where((e) => _selectedShareIds.contains(e.id))
+        .where((e) => File(e.imagePath).existsSync());
+
+    if (selected.isEmpty) return;
+
+    setState(() => _googlePhotosProgress = 0);
+    try {
+      final paths = await ExportService.photoPaths(selected, widget.filmRoll);
+      final url = await GooglePhotosService.instance.createAlbumWithPhotos(
+        albumTitle: widget.filmRoll.name,
+        imagePaths: paths,
+        onProgress: (p) {
+          if (mounted) setState(() => _googlePhotosProgress = p);
+        },
+      );
+      if (!mounted) return;
+      setState(() => _mode = _SelectMode.none);
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l.galleryGooglePhotosDone),
+          duration: const Duration(seconds: 8),
+          action: SnackBarAction(
+            label: l.galleryGooglePhotosOpen,
+            onPressed: () => launchUrl(
+              Uri.parse(url),
+              mode: LaunchMode.externalApplication,
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l.galleryGooglePhotosFailed(
+              e.toString().replaceFirst('Exception: ', ''))),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _googlePhotosProgress = null);
     }
   }
 
@@ -172,8 +236,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
           ? _buildEmpty(l)
           : GridView.builder(
               padding: const EdgeInsets.all(4),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 3,
                 mainAxisSpacing: 3,
@@ -194,10 +257,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
 
     switch (_mode) {
       case _SelectMode.none:
-        final effect = FilmEffect.fromString(exposure.filmEffect) ??
-            (widget.filmRoll.effectEnabled
-                ? FilmEffect.fromString(widget.filmRoll.filmEffect)
-                : null);
+        final effect = FilmEffect.forExposure(exposure, widget.filmRoll);
         return GestureDetector(
           onTap: () => _openPhoto(i),
           onLongPress: _enterShareSelect,
@@ -220,9 +280,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
                         ? Icons.auto_awesome
                         : Icons.auto_awesome_outlined,
                     size: 14,
-                    color: effect.isRare
-                        ? Colors.amber
-                        : Colors.white70,
+                    color: effect.isRare ? Colors.amber : Colors.white70,
                   ),
                 ),
             ],
@@ -288,6 +346,11 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
       title: Text(widget.filmRoll.name),
       actions: [
         if (_exposures.isNotEmpty) ...[
+          IconButton(
+            icon: const Icon(Icons.theaters_outlined),
+            tooltip: l.negativesTitle,
+            onPressed: _openNegatives,
+          ),
           IconButton(
             icon: const Icon(Icons.grid_view_outlined),
             tooltip: l.galleryEditThumbnail,
@@ -371,21 +434,56 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
   }
 
   Widget _buildShareBottomBar() {
+    final l = AppLocalizations.of(context)!;
     final count = _selectedShareIds.length;
+    final uploading = _googlePhotosProgress != null;
+    final busy = _sharing || uploading;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
-        child: FilledButton.icon(
-          onPressed: count == 0 || _sharing ? null : _shareSelected,
-          icon: _sharing
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white),
-                )
-              : const Icon(Icons.share_outlined),
-          label: Text(AppLocalizations.of(context)!.galleryShareCount(count)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (uploading) ...[
+              Text(l.galleryGooglePhotosUploading,
+                  style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: 6),
+              LinearProgressIndicator(
+                value:
+                    _googlePhotosProgress! > 0 ? _googlePhotosProgress : null,
+              ),
+              const SizedBox(height: 10),
+            ],
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: count == 0 || busy
+                        ? null
+                        : _exportSelectedToGooglePhotos,
+                    icon: const Icon(Icons.cloud_upload_outlined),
+                    label: Text(l.galleryGooglePhotos),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: count == 0 || busy ? null : _shareSelected,
+                    icon: _sharing
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: Colors.white),
+                          )
+                        : const Icon(Icons.share_outlined),
+                    label: Text(l.galleryShareCount(count)),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -550,8 +648,9 @@ class _FullscreenViewerState extends State<_FullscreenViewer>
     final exposure = widget.exposures[_currentIndex];
     final file = File(exposure.imagePath);
     if (!file.existsSync()) return;
+    final path = await ExportService.photoPath(exposure, widget.filmRoll);
     await Share.shareXFiles(
-      [XFile(exposure.imagePath)],
+      [XFile(path)],
       subject: 'Frame ${exposure.order}',
     );
   }
@@ -632,22 +731,14 @@ class _FullscreenViewerState extends State<_FullscreenViewer>
                     maxScale: PhotoViewComputedScale.contained,
                   );
                 }
-                final effect = FilmEffect.fromString(exp.filmEffect) ??
-                    (widget.filmRoll.effectEnabled
-                        ? FilmEffect.fromString(widget.filmRoll.filmEffect)
-                        : null);
+                final effect = FilmEffect.forExposure(exp, widget.filmRoll);
                 if (effect != null) {
-                  final imageWidget =
-                      Image.file(file, fit: BoxFit.contain);
                   return PhotoViewGalleryPageOptions.customChild(
                     child: GestureDetector(
                       onTap: _toggleBars,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          effect.wrapImage(imageWidget),
-                          effect.buildOverlay(),
-                        ],
+                      child: EffectPhoto(
+                        imagePath: exp.imagePath,
+                        effect: effect,
                       ),
                     ),
                     minScale: PhotoViewComputedScale.contained,
@@ -724,10 +815,7 @@ class _PhotoInfoSheet extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final stock = FilmStock.fromId(filmRoll.filmStockId);
-    final effect = FilmEffect.fromString(exposure.filmEffect) ??
-        (filmRoll.effectEnabled
-            ? FilmEffect.fromString(filmRoll.filmEffect)
-            : null);
+    final effect = FilmEffect.forExposure(exposure, filmRoll);
     final dateStr = DateFormat('EEEE, MMMM d, yyyy  ·  HH:mm').format(
       exposure.capturedAt.toLocal(),
     );
@@ -808,9 +896,7 @@ class _PhotoInfoSheet extends StatelessWidget {
                 label: l.photoInfoEffect,
                 value: effect.displayName,
                 cs: cs,
-                accentColor: effect.isRare
-                    ? Colors.amber
-                    : cs.primary,
+                accentColor: effect.isRare ? Colors.amber : cs.primary,
               ),
             ],
           ],

@@ -523,6 +523,24 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get galleryGooglePhotos => 'Google Foto';
+
+  @override
+  String get galleryGooglePhotosUploading => 'Caricamento su Google Foto…';
+
+  @override
+  String get galleryGooglePhotosDone =>
+      'Album creato in Google Foto. Aprilo per condividerlo.';
+
+  @override
+  String get galleryGooglePhotosOpen => 'Apri';
+
+  @override
+  String galleryGooglePhotosFailed(String error) {
+    return 'Caricamento su Google Foto non riuscito: $error';
+  }
+
+  @override
   String get settingsAlbumReveal => 'Rivelazione album';
 
   @override
@@ -557,7 +575,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get effectShinyFound =>
-      '🌈 Effetto Shiny ultra-raro! Condividi questo!';
+      '🌈 Fotogramma foil! Inclina il telefono per vederlo brillare.';
 
   @override
   String get notifDevReadyTitle => 'Pellicola sviluppata!';
@@ -566,4 +584,38 @@ class AppLocalizationsIt extends AppLocalizations {
   String notifDevReadyBody(String name) {
     return 'Il tuo rullino \"$name\" è pronto da ritirare.';
   }
+
+  @override
+  String get negativesTitle => 'Negativi';
+
+  @override
+  String get negativesHint =>
+      'Tocca un fotogramma per guardarlo in controluce. I fotogrammi foil brillano quando inclini il telefono.';
+
+  @override
+  String get negativesSave => 'Salva i negativi nella galleria';
+
+  @override
+  String get negativesSaved => 'Negativi salvati nella tua galleria';
+
+  @override
+  String negativesSaveFailed(String error) {
+    return 'Impossibile salvare i negativi: $error';
+  }
+
+  @override
+  String get negativesNegative => 'Negativo';
+
+  @override
+  String get negativesPrint => 'Stampa';
+
+  @override
+  String get negativesFoilHint => '✨ Fotogramma foil — inclina il telefono';
+
+  @override
+  String get albumFoil => 'Fotogrammi foil';
+
+  @override
+  String get albumFoilSub =>
+      'Riflesso olografico sulle foto Shiny, sullo schermo e quando condividi';
 }

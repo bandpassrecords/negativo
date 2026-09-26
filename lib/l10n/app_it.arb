@@ -306,6 +306,11 @@
       "count": { "type": "int" }
     }
   },
+  "galleryGooglePhotos": "Google Foto",
+  "galleryGooglePhotosUploading": "Caricamento su Google Foto…",
+  "galleryGooglePhotosDone": "Album creato in Google Foto. Aprilo per condividerlo.",
+  "galleryGooglePhotosOpen": "Apri",
+  "galleryGooglePhotosFailed": "Caricamento su Google Foto non riuscito: {error}",
 
   "settingsAlbumReveal": "Rivelazione album",
   "settingsAlbumRevealSub": "Mostra il negativo del film prima di rivelare ogni foto",
@@ -324,7 +329,7 @@
       "name": { "type": "String" }
     }
   },
-  "effectShinyFound": "🌈 Effetto Shiny ultra-raro! Condividi questo!",
+  "effectShinyFound": "🌈 Fotogramma foil! Inclina il telefono per vederlo brillare.",
 
   "notifDevReadyTitle": "Pellicola sviluppata!",
   "notifDevReadyBody": "Il tuo rullino \"{name}\" è pronto da ritirare.",
@@ -332,5 +337,16 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
+
+  "negativesTitle": "Negativi",
+  "negativesHint": "Tocca un fotogramma per guardarlo in controluce. I fotogrammi foil brillano quando inclini il telefono.",
+  "negativesSave": "Salva i negativi nella galleria",
+  "negativesSaved": "Negativi salvati nella tua galleria",
+  "negativesSaveFailed": "Impossibile salvare i negativi: {error}",
+  "negativesNegative": "Negativo",
+  "negativesPrint": "Stampa",
+  "negativesFoilHint": "✨ Fotogramma foil — inclina il telefono",
+  "albumFoil": "Fotogrammi foil",
+  "albumFoilSub": "Riflesso olografico sulle foto Shiny, sullo schermo e quando condividi"
 }
