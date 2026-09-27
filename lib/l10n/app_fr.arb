@@ -370,5 +370,9 @@
   "widgetReadyInDays": "Prêt dans {days} j {hours} h",
   "widgetReadyInHours": "Prêt dans {hours} h {minutes} min",
   "widgetReady": "Prêt à développer",
-  "widgetFull": "Pellicule pleine. Envoyez-la au développement"
+  "widgetFull": "Pellicule pleine. Envoyez-la au développement",
+  "developedDialogTitle": "Pellicule développée",
+  "developedDialogBody": "{roll} est prête. L’ouvrir maintenant pour voir vos photos ?",
+  "developedDialogLater": "Plus tard",
+  "developedDialogOpen": "Ouvrir"
 }

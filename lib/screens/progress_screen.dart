@@ -6,6 +6,7 @@ import '../services/scoring_service.dart';
 import '../services/film_service.dart';
 import '../services/hive_service.dart';
 import '../services/notification_service.dart';
+import '../widgets/roll_developed_dialog.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -69,8 +70,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
       }
     }
     await _reload();
-    if (mounted) {
-      _showSnack(instant ? l.progressDevComplete : l.progressHalfTime);
+    if (!mounted) return;
+    if (instant) {
+      await showRollDevelopedDialog(context, roll);
+      await _reload();
+    } else {
+      _showSnack(l.progressHalfTime);
     }
   }
 

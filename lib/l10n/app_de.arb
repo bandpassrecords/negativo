@@ -370,5 +370,9 @@
   "widgetReadyInDays": "Fertig in {days} T. {hours} Std.",
   "widgetReadyInHours": "Fertig in {hours} Std. {minutes} Min.",
   "widgetReady": "Bereit zum Entwickeln",
-  "widgetFull": "Rolle voll. Zum Entwickeln schicken"
+  "widgetFull": "Rolle voll. Zum Entwickeln schicken",
+  "developedDialogTitle": "Film entwickelt",
+  "developedDialogBody": "{roll} ist fertig. Jetzt öffnen und die Fotos ansehen?",
+  "developedDialogLater": "Später",
+  "developedDialogOpen": "Öffnen"
 }

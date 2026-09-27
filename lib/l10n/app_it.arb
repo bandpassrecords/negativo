@@ -370,5 +370,9 @@
   "widgetReadyInDays": "Pronto tra {days}g {hours}h",
   "widgetReadyInHours": "Pronto tra {hours}h {minutes}m",
   "widgetReady": "Pronto da sviluppare",
-  "widgetFull": "Rullino pieno. Mandalo a sviluppare"
+  "widgetFull": "Rullino pieno. Mandalo a sviluppare",
+  "developedDialogTitle": "Rullino sviluppato",
+  "developedDialogBody": "{roll} è pronto. Aprirlo ora per vedere le foto?",
+  "developedDialogLater": "Più tardi",
+  "developedDialogOpen": "Apri"
 }

@@ -1209,6 +1209,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Roll full. Send it to develop'**
   String get widgetFull;
+
+  /// No description provided for @developedDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Roll developed'**
+  String get developedDialogTitle;
+
+  /// Asked after a roll is developed instantly (DEV NOW or the instant boost): open it now?
+  ///
+  /// In en, this message translates to:
+  /// **'{roll} is ready. Open it now to see your photos?'**
+  String developedDialogBody(String roll);
+
+  /// No description provided for @developedDialogLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get developedDialogLater;
+
+  /// No description provided for @developedDialogOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get developedDialogOpen;
 }
 
 class _AppLocalizationsDelegate

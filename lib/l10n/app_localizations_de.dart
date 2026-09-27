@@ -704,4 +704,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get widgetFull => 'Rolle voll. Zum Entwickeln schicken';
+
+  @override
+  String get developedDialogTitle => 'Film entwickelt';
+
+  @override
+  String developedDialogBody(String roll) {
+    return '$roll ist fertig. Jetzt öffnen und die Fotos ansehen?';
+  }
+
+  @override
+  String get developedDialogLater => 'Später';
+
+  @override
+  String get developedDialogOpen => 'Öffnen';
 }

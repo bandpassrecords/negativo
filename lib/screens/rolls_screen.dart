@@ -5,6 +5,7 @@ import '../models/film_stock.dart';
 import '../services/hive_service.dart';
 import '../services/film_service.dart';
 import '../services/scoring_service.dart';
+import '../widgets/roll_developed_dialog.dart';
 import 'new_roll_screen.dart';
 import 'viewfinder_screen.dart';
 import 'film_roll_detail_screen.dart';
@@ -343,6 +344,9 @@ class _RollsScreenState extends State<RollsScreen> with WidgetsBindingObserver {
                     GestureDetector(
                       onTap: () async {
                         await FilmService.instantDevelop(roll);
+                        _loadRolls();
+                        if (!mounted) return;
+                        await showRollDevelopedDialog(context, roll);
                         _loadRolls();
                       },
                       child: Container(

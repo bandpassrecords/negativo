@@ -370,5 +370,9 @@
   "widgetReadyInDays": "Listo en {days}d {hours}h",
   "widgetReadyInHours": "Listo en {hours}h {minutes}min",
   "widgetReady": "Listo para revelar",
-  "widgetFull": "Rollo lleno. Mándalo a revelar"
+  "widgetFull": "Rollo lleno. Mándalo a revelar",
+  "developedDialogTitle": "Rollo revelado",
+  "developedDialogBody": "{roll} está listo. ¿Abrirlo ahora para ver tus fotos?",
+  "developedDialogLater": "Más tarde",
+  "developedDialogOpen": "Abrir"
 }

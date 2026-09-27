@@ -709,4 +709,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get widgetFull => 'Pellicule pleine. Envoyez-la au développement';
+
+  @override
+  String get developedDialogTitle => 'Pellicule développée';
+
+  @override
+  String developedDialogBody(String roll) {
+    return '$roll est prête. L’ouvrir maintenant pour voir vos photos ?';
+  }
+
+  @override
+  String get developedDialogLater => 'Plus tard';
+
+  @override
+  String get developedDialogOpen => 'Ouvrir';
 }

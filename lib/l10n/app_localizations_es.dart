@@ -702,4 +702,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get widgetFull => 'Rollo lleno. Mándalo a revelar';
+
+  @override
+  String get developedDialogTitle => 'Rollo revelado';
+
+  @override
+  String developedDialogBody(String roll) {
+    return '$roll está listo. ¿Abrirlo ahora para ver tus fotos?';
+  }
+
+  @override
+  String get developedDialogLater => 'Más tarde';
+
+  @override
+  String get developedDialogOpen => 'Abrir';
 }

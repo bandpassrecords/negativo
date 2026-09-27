@@ -446,5 +446,17 @@
     }
   },
   "widgetReady": "Ready to reveal",
-  "widgetFull": "Roll full. Send it to develop"
+  "widgetFull": "Roll full. Send it to develop",
+  "developedDialogTitle": "Roll developed",
+  "developedDialogBody": "{roll} is ready. Open it now to see your photos?",
+  "@developedDialogBody": {
+    "description": "Asked after a roll is developed instantly (DEV NOW or the instant boost): open it now?",
+    "placeholders": {
+      "roll": {
+        "type": "String"
+      }
+    }
+  },
+  "developedDialogLater": "Later",
+  "developedDialogOpen": "Open"
 }
