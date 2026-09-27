@@ -42,10 +42,13 @@ class FilmEffect {
 
   // Per-photo: 1/[shinyOdds] chance of Shiny, rolled individually at reveal time.
   static FilmEffect? rollPhotoShiny() {
-    final rng = Random();
-    if (rng.nextInt(shinyOdds) != 0) return null;
-    return FilmEffect(type: FilmEffectType.shiny, variant: rng.nextInt(20));
+    if (Random().nextInt(shinyOdds) != 0) return null;
+    return shiny();
   }
+
+  /// A Shiny foil in one of its variants — what [rollPhotoShiny] hands out.
+  static FilmEffect shiny() =>
+      FilmEffect(type: FilmEffectType.shiny, variant: Random().nextInt(20));
 
   /// The effect shown on [exposure]: its own Shiny foil wins, otherwise the
   /// roll's effect — each only if the user hasn't turned it off. The foil can

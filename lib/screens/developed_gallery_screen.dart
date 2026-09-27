@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gal/gal.dart';
 import 'package:intl/intl.dart';
@@ -765,6 +766,22 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen>
     await HiveService.saveExposure(exposure);
   }
 
+  /// Debug builds only: gives this photo a Shiny foil, to try the foil
+  /// without waiting on the 1-in-150 odds at reveal.
+  Future<void> _makeShiny(Exposure exposure) async {
+    setState(() {
+      exposure.filmEffect = FilmEffect.shiny().serialized;
+      exposure.foilEnabled = true;
+    });
+    await HiveService.saveExposure(exposure);
+    if (!mounted || widget.filmRoll.foilEnabled) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.photoFoilAlbumOff),
+      ),
+    );
+  }
+
   void _showInfo(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -800,6 +817,12 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen>
               style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
             actions: [
+              if (kDebugMode && !FilmEffect.hasFoil(exposure))
+                IconButton(
+                  icon: const Icon(Icons.science_outlined, color: Colors.white),
+                  tooltip: 'Make Shiny (debug)',
+                  onPressed: () => _makeShiny(exposure),
+                ),
               // Only a photo that came out Shiny has a foil to switch.
               if (FilmEffect.hasFoil(exposure))
                 IconButton(
