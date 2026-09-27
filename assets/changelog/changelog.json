@@ -15,6 +15,36 @@
   ],
   "releases": [
     {
+      "version": "0.3.2",
+      "date": "2026-09-27",
+      "highlights": {
+        "en": [
+          "After an update, a \"What's new\" summary shows what changed since you last opened Negativo.",
+          "Settings has a new About section with the app version and the changes in every release."
+        ],
+        "pt": [
+          "Depois de uma atualização, um resumo de \"Novidades\" mostra o que mudou desde a última vez que você abriu o Negativo.",
+          "Os Ajustes ganharam uma seção Sobre, com a versão do app e as mudanças de cada versão."
+        ],
+        "es": [
+          "Tras una actualización, un resumen de \"Novedades\" muestra lo que ha cambiado desde la última vez que abriste Negativo.",
+          "Ajustes tiene una nueva sección Acerca de, con la versión de la app y los cambios de cada versión."
+        ],
+        "fr": [
+          "Après une mise à jour, un résumé des « Nouveautés » montre ce qui a changé depuis la dernière ouverture de Negativo.",
+          "Les Réglages ont une nouvelle section À propos, avec la version de l'app et les changements de chaque version."
+        ],
+        "de": [
+          "Nach einem Update zeigt eine Übersicht „Neuigkeiten“, was sich seit dem letzten Öffnen von Negativo geändert hat.",
+          "Die Einstellungen haben einen neuen Bereich „Über“ mit der App-Version und den Änderungen jeder Version."
+        ],
+        "it": [
+          "Dopo un aggiornamento, un riepilogo delle \"Novità\" mostra cosa è cambiato dall'ultima volta che hai aperto Negativo.",
+          "Le Impostazioni hanno una nuova sezione Informazioni, con la versione dell'app e le modifiche di ogni versione."
+        ]
+      }
+    },
+    {
       "version": "0.3.1",
       "date": "2026-09-27",
       "highlights": {
