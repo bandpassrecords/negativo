@@ -5,6 +5,56 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
+/// Why signing in to Google Photos didn't work.
+enum GooglePhotosSignInProblem {
+  /// The person closed the sign-in sheet.
+  canceled,
+
+  /// This build of the app isn't registered with Google: no Android OAuth
+  /// client matches its package name and signing-key SHA-1 (Google's error
+  /// 28444, "Developer console is not set up correctly"), or the consent
+  /// screen won't let this account in. Android's Credential Manager often
+  /// reports this as a plain "canceled", which is why it looked like the
+  /// person had cancelled when they hadn't.
+  notConfigured,
+
+  /// Anything else — network, no Google account on the device, etc.
+  failed,
+}
+
+/// Sorts a Google sign-in error into what the person needs to be told.
+GooglePhotosSignInProblem classifySignInError(
+  GoogleSignInExceptionCode code,
+  String? description,
+) {
+  final text = (description ?? '').toLowerCase();
+  final misconfigured = text.contains('28444') ||
+      text.contains('developer console') ||
+      // Play services' DEVELOPER_ERROR, as "ApiException: 10: ..."
+      text.contains('apiexception: 10:') ||
+      text.contains('developer_error') ||
+      code == GoogleSignInExceptionCode.clientConfigurationError ||
+      code == GoogleSignInExceptionCode.providerConfigurationError;
+  if (misconfigured) return GooglePhotosSignInProblem.notConfigured;
+  if (code == GoogleSignInExceptionCode.canceled) {
+    return GooglePhotosSignInProblem.canceled;
+  }
+  return GooglePhotosSignInProblem.failed;
+}
+
+/// Signing in to Google Photos didn't work; [problem] says why.
+class GooglePhotosSignInException implements Exception {
+  const GooglePhotosSignInException(this.problem, [this.detail]);
+
+  final GooglePhotosSignInProblem problem;
+
+  /// Google's own wording, for anyone who needs to fix the setup.
+  final String? detail;
+
+  @override
+  String toString() => 'GooglePhotosSignInException($problem, $detail)';
+}
+
 class GooglePhotosService {
   GooglePhotosService._();
 
@@ -109,10 +159,13 @@ class GooglePhotosService {
     try {
       headers = await _getAuthHeaders();
     } on GoogleSignInException catch (e) {
-      if (e.code == GoogleSignInExceptionCode.canceled) {
-        throw Exception('Sign-in cancelled');
+      if (kDebugMode) {
+        debugPrint('GooglePhotos sign-in error: ${e.code}: ${e.description}');
       }
-      throw Exception('Google sign-in failed (${e.code}): ${e.description}');
+      throw GooglePhotosSignInException(
+        classifySignInError(e.code, e.description),
+        '${e.code.name}: ${e.description ?? ''}',
+      );
     }
 
     final album = await _createAlbum(headers, albumTitle);

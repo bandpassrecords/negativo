@@ -618,4 +618,63 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get albumFoilSub =>
       'Riflesso olografico sulle foto Shiny, sullo schermo e quando condividi';
+
+  @override
+  String get photoFoilTurnOff => 'Disattiva il foil per questa foto';
+
+  @override
+  String get photoFoilTurnOn => 'Attiva il foil per questa foto';
+
+  @override
+  String get photoFoilAlbumOff =>
+      'Il foil è disattivato per tutto l\'album. Riattivalo nelle impostazioni dell\'album.';
+
+  @override
+  String shortcutShootOnRoll(String roll) {
+    return 'Scatta su $roll';
+  }
+
+  @override
+  String get shortcutChooseRoll => 'Scegli un rullino';
+
+  @override
+  String get shortcutChooseRollTitle => 'Quale rullino?';
+
+  @override
+  String revealProgress(int developed, int total) {
+    return '$developed di $total sviluppati';
+  }
+
+  @override
+  String get revealStripHint =>
+      'Scorri la pellicola e tocca ogni negativo per svilupparlo.';
+
+  @override
+  String get revealOpenGallery => 'Apri la galleria';
+
+  @override
+  String get googlePhotosSignInCanceled =>
+      'L\'accesso a Google è stato annullato.';
+
+  @override
+  String get googlePhotosNotConfigured =>
+      'L\'accesso a Google Foto non è configurato per questa versione dell\'app, quindi Google l\'ha rifiutato.';
+
+  @override
+  String get shareAnotherWayTitle => 'Condividi l\'album in un altro modo';
+
+  @override
+  String get shareAnotherWayBody =>
+      'Invia le foto a qualsiasi app (Google Foto compresa) o salvale sul telefono come un album di cui Google Foto fa il backup e che può condividere.';
+
+  @override
+  String get galleryShareWithApp => 'Condividi con un\'app';
+
+  @override
+  String get gallerySaveToPhoneAlbum => 'Salva sul telefono come album';
+
+  @override
+  String gallerySavedToPhoneAlbum(String album) {
+    return 'Salvato nell\'album \"$album\" del telefono. Google Foto può farne il backup e condividerlo da lì.';
+  }
 }

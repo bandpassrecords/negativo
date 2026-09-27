@@ -8,6 +8,7 @@ import 'services/notification_service.dart';
 import 'services/hive_service.dart';
 import 'services/film_service.dart';
 import 'services/scoring_service.dart';
+import 'services/camera_shortcut_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,10 @@ void main() async {
 
   // Check if any developing rolls have completed
   await FilmService.checkDevelopmentCompletions();
+
+  // Home-screen shortcuts straight into the camera. A shortcut tapped on a
+  // cold start is opened once the first screen exists (see _MyAppState).
+  await CameraShortcutService.init();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -53,6 +58,10 @@ class _MyAppState extends State<MyApp> {
     _loadSettings();
     MyApp.updateLanguageCallback = _loadSettings;
     MyApp.updateThemeCallback = _loadSettings;
+    // A shortcut tapped before the app was running is opened here.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => CameraShortcutService.openPending(),
+    );
   }
 
   @override
@@ -64,6 +73,8 @@ class _MyAppState extends State<MyApp> {
 
   void _loadSettings() {
     final settings = HiveService.getSettings();
+    // The shortcut titles are localised, so follow a language change.
+    CameraShortcutService.refresh();
     setState(() {
       _locale = Locale(settings.language);
       switch (settings.themeMode) {
@@ -82,6 +93,7 @@ class _MyAppState extends State<MyApp> {
     const seed = Color(0xFFB8860B); // dark goldenrod — analog amber
 
     return MaterialApp(
+      navigatorKey: CameraShortcutService.navigatorKey,
       title: 'Negativo',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [

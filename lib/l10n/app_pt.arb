@@ -348,5 +348,21 @@
   "negativesPrint": "Cópia",
   "negativesFoilHint": "✨ Quadro foil — incline o celular",
   "albumFoil": "Quadros foil",
-  "albumFoilSub": "Brilho holográfico nas fotos Shiny, na tela e ao compartilhar"
+  "albumFoilSub": "Brilho holográfico nas fotos Shiny, na tela e ao compartilhar",
+  "photoFoilTurnOff": "Desligar o foil desta foto",
+  "photoFoilTurnOn": "Ligar o foil desta foto",
+  "photoFoilAlbumOff": "O foil está desligado para o álbum inteiro. Ligue de novo nas configurações do álbum.",
+  "shortcutShootOnRoll": "Fotografar em {roll}",
+  "shortcutChooseRoll": "Escolher um rolo",
+  "shortcutChooseRollTitle": "Qual rolo?",
+  "revealProgress": "{developed} de {total} revelados",
+  "revealStripHint": "Role pelo filme e toque em cada negativo para revelá-lo.",
+  "revealOpenGallery": "Abrir a galeria",
+  "googlePhotosSignInCanceled": "O login do Google foi cancelado.",
+  "googlePhotosNotConfigured": "O login do Google Fotos não está configurado para esta versão do app, então o Google recusou.",
+  "shareAnotherWayTitle": "Compartilhe o álbum de outro jeito",
+  "shareAnotherWayBody": "Envie as fotos para qualquer app (inclusive o Google Fotos) ou salve no celular como um álbum que o Google Fotos faz backup e pode compartilhar.",
+  "galleryShareWithApp": "Compartilhar com um app",
+  "gallerySaveToPhoneAlbum": "Salvar no celular como álbum",
+  "gallerySavedToPhoneAlbum": "Salvo no álbum \"{album}\" do celular. O Google Fotos pode fazer backup e compartilhar de lá."
 }

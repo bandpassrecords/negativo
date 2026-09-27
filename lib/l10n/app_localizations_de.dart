@@ -621,4 +621,63 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get albumFoilSub =>
       'Holografischer Glanz auf Shiny-Fotos, am Bildschirm und beim Teilen';
+
+  @override
+  String get photoFoilTurnOff => 'Folie für dieses Foto ausschalten';
+
+  @override
+  String get photoFoilTurnOn => 'Folie für dieses Foto einschalten';
+
+  @override
+  String get photoFoilAlbumOff =>
+      'Die Folie ist für das ganze Album aus. Schalte sie in den Albumeinstellungen wieder ein.';
+
+  @override
+  String shortcutShootOnRoll(String roll) {
+    return 'Auf $roll fotografieren';
+  }
+
+  @override
+  String get shortcutChooseRoll => 'Film auswählen';
+
+  @override
+  String get shortcutChooseRollTitle => 'Welcher Film?';
+
+  @override
+  String revealProgress(int developed, int total) {
+    return '$developed von $total entwickelt';
+  }
+
+  @override
+  String get revealStripHint =>
+      'Scrolle durch deinen Film und tippe auf jedes Negativ, um es zu entwickeln.';
+
+  @override
+  String get revealOpenGallery => 'Galerie öffnen';
+
+  @override
+  String get googlePhotosSignInCanceled =>
+      'Die Google-Anmeldung wurde abgebrochen.';
+
+  @override
+  String get googlePhotosNotConfigured =>
+      'Die Google-Fotos-Anmeldung ist für diese Version der App nicht eingerichtet, daher hat Google sie abgelehnt.';
+
+  @override
+  String get shareAnotherWayTitle => 'Album anders teilen';
+
+  @override
+  String get shareAnotherWayBody =>
+      'Sende die Fotos an eine beliebige App (auch Google Fotos) oder speichere sie als Album auf dem Handy, das Google Fotos sichert und teilen kann.';
+
+  @override
+  String get galleryShareWithApp => 'Mit einer App teilen';
+
+  @override
+  String get gallerySaveToPhoneAlbum => 'Als Album aufs Handy speichern';
+
+  @override
+  String gallerySavedToPhoneAlbum(String album) {
+    return 'Im Album „$album“ auf dem Handy gespeichert. Google Fotos kann es von dort sichern und teilen.';
+  }
 }

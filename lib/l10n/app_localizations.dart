@@ -1077,6 +1077,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Holographic shine on Shiny photos, on screen and when shared'**
   String get albumFoilSub;
+
+  /// No description provided for @photoFoilTurnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn foil off for this photo'**
+  String get photoFoilTurnOff;
+
+  /// No description provided for @photoFoilTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn foil on for this photo'**
+  String get photoFoilTurnOn;
+
+  /// No description provided for @photoFoilAlbumOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Foil is off for this whole album. Turn it back on in the album\'s settings.'**
+  String get photoFoilAlbumOff;
+
+  /// Home-screen app shortcut that opens the camera on the last-used roll
+  ///
+  /// In en, this message translates to:
+  /// **'Shoot on {roll}'**
+  String shortcutShootOnRoll(String roll);
+
+  /// Home-screen app shortcut that asks which loaded roll to shoot on
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a roll'**
+  String get shortcutChooseRoll;
+
+  /// No description provided for @shortcutChooseRollTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which roll?'**
+  String get shortcutChooseRollTitle;
+
+  /// No description provided for @revealProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{developed} of {total} developed'**
+  String revealProgress(int developed, int total);
+
+  /// No description provided for @revealStripHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll through your film and tap each negative to develop it.'**
+  String get revealStripHint;
+
+  /// No description provided for @revealOpenGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the gallery'**
+  String get revealOpenGallery;
+
+  /// No description provided for @googlePhotosSignInCanceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in was cancelled.'**
+  String get googlePhotosSignInCanceled;
+
+  /// No description provided for @googlePhotosNotConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Photos sign-in isn\'t set up for this version of the app, so Google turned it down.'**
+  String get googlePhotosNotConfigured;
+
+  /// No description provided for @shareAnotherWayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share the album another way'**
+  String get shareAnotherWayTitle;
+
+  /// No description provided for @shareAnotherWayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Send the photos to any app (Google Photos included), or save them to your phone as an album that Google Photos backs up and can share.'**
+  String get shareAnotherWayBody;
+
+  /// No description provided for @galleryShareWithApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with an app'**
+  String get galleryShareWithApp;
+
+  /// No description provided for @gallerySaveToPhoneAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to phone as an album'**
+  String get gallerySaveToPhoneAlbum;
+
+  /// No description provided for @gallerySavedToPhoneAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to the \"{album}\" album on your phone. Google Photos can back it up and share it from there.'**
+  String gallerySavedToPhoneAlbum(String album);
 }
 
 class _AppLocalizationsDelegate

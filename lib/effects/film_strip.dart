@@ -65,6 +65,10 @@ Rect filmFrameRect(Rect segment, Axis axis) {
 /// Paints frame [index] (0-based) of a developed roll as a stretch of
 /// negative film lying on a light table: film base, perforations, edge
 /// printing and the inverted picture with its effect.
+///
+/// With [developed] the picture is drawn as the print instead of the
+/// negative — the reveal flips each frame over to this as it is developed,
+/// so the roll fills up with prints as you work down it.
 void paintFilmSegment(
   Canvas canvas,
   Rect segment, {
@@ -74,6 +78,7 @@ void paintFilmSegment(
   ui.Image? image,
   FilmEffect? effect,
   Offset tilt = Offset.zero,
+  bool developed = false,
 }) {
   final s =
       (axis == Axis.horizontal ? segment.height : segment.width) / kFilmWidthMm;
@@ -131,7 +136,7 @@ void paintFilmSegment(
       frame,
       image,
       effect: effect,
-      negative: true,
+      negative: !developed,
       negativeBase: style.base,
       rotateToFit: true,
       tilt: tilt,

@@ -86,6 +86,14 @@ class HiveService {
 
   static int getTotalExposures() => _exposuresBox!.length;
 
+  static List<Exposure> getAllExposures() => _exposuresBox!.values.toList();
+
+  /// Fires whenever a roll is saved or deleted.
+  static Stream<BoxEvent> watchFilmRolls() => _filmRollsBox!.watch();
+
+  /// Fires whenever an exposure is saved or deleted.
+  static Stream<BoxEvent> watchExposures() => _exposuresBox!.watch();
+
   // ========== Settings ==========
 
   static AppSettings getSettings() {

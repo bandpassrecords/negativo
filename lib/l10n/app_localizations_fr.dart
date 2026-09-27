@@ -625,4 +625,64 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get albumFoilSub =>
       'Reflet holographique sur les photos Shiny, à l\'écran et au partage';
+
+  @override
+  String get photoFoilTurnOff =>
+      'Désactiver l\'effet holographique de cette photo';
+
+  @override
+  String get photoFoilTurnOn => 'Activer l\'effet holographique de cette photo';
+
+  @override
+  String get photoFoilAlbumOff =>
+      'L\'effet holographique est désactivé pour tout l\'album. Réactivez-le dans les réglages de l\'album.';
+
+  @override
+  String shortcutShootOnRoll(String roll) {
+    return 'Photographier sur $roll';
+  }
+
+  @override
+  String get shortcutChooseRoll => 'Choisir une pellicule';
+
+  @override
+  String get shortcutChooseRollTitle => 'Quelle pellicule ?';
+
+  @override
+  String revealProgress(int developed, int total) {
+    return '$developed sur $total développées';
+  }
+
+  @override
+  String get revealStripHint =>
+      'Faites défiler la pellicule et touchez chaque négatif pour le développer.';
+
+  @override
+  String get revealOpenGallery => 'Ouvrir la galerie';
+
+  @override
+  String get googlePhotosSignInCanceled => 'La connexion Google a été annulée.';
+
+  @override
+  String get googlePhotosNotConfigured =>
+      'La connexion à Google Photos n\'est pas configurée pour cette version de l\'app, Google l\'a donc refusée.';
+
+  @override
+  String get shareAnotherWayTitle => 'Partager l\'album autrement';
+
+  @override
+  String get shareAnotherWayBody =>
+      'Envoyez les photos vers n\'importe quelle app (Google Photos compris), ou enregistrez-les sur le téléphone dans un album que Google Photos sauvegarde et peut partager.';
+
+  @override
+  String get galleryShareWithApp => 'Partager avec une app';
+
+  @override
+  String get gallerySaveToPhoneAlbum =>
+      'Enregistrer sur le téléphone comme album';
+
+  @override
+  String gallerySavedToPhoneAlbum(String album) {
+    return 'Enregistré dans l\'album « $album » du téléphone. Google Photos peut le sauvegarder et le partager depuis là.';
+  }
 }

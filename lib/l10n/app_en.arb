@@ -360,5 +360,49 @@
   "negativesPrint": "Print",
   "negativesFoilHint": "✨ Foil frame — tilt your phone",
   "albumFoil": "Foil frames",
-  "albumFoilSub": "Holographic shine on Shiny photos, on screen and when shared"
+  "albumFoilSub": "Holographic shine on Shiny photos, on screen and when shared",
+  "photoFoilTurnOff": "Turn foil off for this photo",
+  "photoFoilTurnOn": "Turn foil on for this photo",
+  "photoFoilAlbumOff": "Foil is off for this whole album. Turn it back on in the album's settings.",
+  "shortcutShootOnRoll": "Shoot on {roll}",
+  "@shortcutShootOnRoll": {
+    "description": "Home-screen app shortcut that opens the camera on the last-used roll",
+    "placeholders": {
+      "roll": {
+        "type": "String"
+      }
+    }
+  },
+  "shortcutChooseRoll": "Choose a roll",
+  "@shortcutChooseRoll": {
+    "description": "Home-screen app shortcut that asks which loaded roll to shoot on"
+  },
+  "shortcutChooseRollTitle": "Which roll?",
+  "revealProgress": "{developed} of {total} developed",
+  "@revealProgress": {
+    "placeholders": {
+      "developed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "revealStripHint": "Scroll through your film and tap each negative to develop it.",
+  "revealOpenGallery": "Open the gallery",
+  "googlePhotosSignInCanceled": "Google sign-in was cancelled.",
+  "googlePhotosNotConfigured": "Google Photos sign-in isn't set up for this version of the app, so Google turned it down.",
+  "shareAnotherWayTitle": "Share the album another way",
+  "shareAnotherWayBody": "Send the photos to any app (Google Photos included), or save them to your phone as an album that Google Photos backs up and can share.",
+  "galleryShareWithApp": "Share with an app",
+  "gallerySaveToPhoneAlbum": "Save to phone as an album",
+  "gallerySavedToPhoneAlbum": "Saved to the \"{album}\" album on your phone. Google Photos can back it up and share it from there.",
+  "@gallerySavedToPhoneAlbum": {
+    "placeholders": {
+      "album": {
+        "type": "String"
+      }
+    }
+  }
 }

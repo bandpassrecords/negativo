@@ -1,0 +1,125 @@
+name: iOS Build (unsigned, for sideloading)
+
+# Builds an UNSIGNED .ipa. Apple only lets signed apps run, so this can't be
+# installed as-is: sideloading tools re-sign it on the way in with the
+# installer's own Apple ID —
+#   - AltStore / SideStore / Sideloadly: free Apple ID, app expires after 7
+#     days and must be refreshed, at most 3 sideloaded apps at a time;
+#   - TrollStore: permanent, but only on the iOS versions it supports.
+# A paid Apple Developer account would allow a properly signed build instead
+# (ad hoc or TestFlight); that needs signing secrets this workflow doesn't use.
+
+permissions:
+  contents: write
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize, reopened ]
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+  workflow_dispatch:
+
+env:
+  FLUTTER_BASE_VERSION: 3.41.4
+
+jobs:
+  build-ios:
+    name: Build iOS (unsigned .ipa)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter ${{ env.FLUTTER_BASE_VERSION }} (Stable)
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_BASE_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate Localizations
+        run: flutter gen-l10n
+
+      - name: Generate Hive Adapters
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Version from tag (Release only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          VERSION_NAME="${GITHUB_REF#refs/tags/v}"
+          VERSION_CODE=$(echo "${VERSION_NAME}" | tr -d '.' | cut -c1-9)
+          sed -i '' "s/^version: .*/version: ${VERSION_NAME}+${VERSION_CODE}/" pubspec.yaml
+          echo "Building ${VERSION_NAME}+${VERSION_CODE}"
+
+      - name: Build iOS app (no code signing)
+        run: flutter build ios --release --no-codesign
+
+      # An .ipa is just the .app inside a Payload/ folder, zipped.
+      - name: Package unsigned .ipa
+        id: ipa
+        run: |
+          NAME="Negativo_iOS_unsigned_${GITHUB_REF_NAME//\//-}.ipa"
+          rm -rf build/ipa && mkdir -p build/ipa/Payload
+          cp -R build/ios/iphoneos/Runner.app build/ipa/Payload/
+          (cd build/ipa && zip -qry "../${NAME}" Payload)
+          echo "path=build/${NAME}" >> "$GITHUB_OUTPUT"
+          echo "name=${NAME}" >> "$GITHUB_OUTPUT"
+          ls -lh "build/${NAME}"
+
+      - name: Upload .ipa artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-ipa
+          path: ${{ steps.ipa.outputs.path }}
+          retention-days: ${{ startsWith(github.ref, 'refs/tags/v') && 90 || 7 }}
+
+      - name: Find Existing Release URL
+        if: startsWith(github.ref, 'refs/tags/v')
+        id: find_release
+        uses: actions/github-script@v7
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        with:
+          script: |
+            try {
+              const { data: release } = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag: process.env.RELEASE_TAG,
+              });
+              core.setOutput('upload_url', release.upload_url);
+            } catch (error) {
+              core.setFailed(`Release with tag ${process.env.RELEASE_TAG} not found. Create the GitHub release for this tag first.`);
+            }
+
+      - name: Upload .ipa to Release
+        if: startsWith(github.ref, 'refs/tags/v') && steps.find_release.outputs.upload_url != ''
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.find_release.outputs.upload_url }}
+          asset_path: ${{ steps.ipa.outputs.path }}
+          asset_name: ${{ steps.ipa.outputs.name }}
+          asset_content_type: application/octet-stream
+
+      - name: Summary
+        run: |
+          {
+            echo "## iOS build (unsigned)"
+            echo ""
+            echo "**${{ steps.ipa.outputs.name }}** is attached to this run."
+            echo ""
+            echo "Install it with AltStore, SideStore or Sideloadly, which re-sign it"
+            echo "with your Apple ID (free accounts: renew every 7 days, up to 3 apps)."
+            echo ""
+            echo "Google sign-in (Google Photos export) is tied to the bundle id"
+            echo "com.bandpassrecords.negativo; a sideloading tool that changes the"
+            echo "bundle id will break it — use Share / Save to phone instead."
+          } >> "$GITHUB_STEP_SUMMARY"

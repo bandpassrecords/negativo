@@ -12,6 +12,7 @@ import '../l10n/app_localizations.dart';
 import '../models/exposure.dart';
 import '../models/film_roll.dart';
 import '../services/export_service.dart';
+import '../utils/rotatable_screen.dart';
 
 /// A developed roll as a strip of negatives on a light table.
 class NegativesScreen extends StatefulWidget {
@@ -265,7 +266,7 @@ class _NegativeLoupe extends StatefulWidget {
   State<_NegativeLoupe> createState() => _NegativeLoupeState();
 }
 
-class _NegativeLoupeState extends State<_NegativeLoupe> {
+class _NegativeLoupeState extends State<_NegativeLoupe> with RotatableScreen {
   late final PageController _pages =
       PageController(initialPage: widget.initialIndex);
   late int _index = widget.initialIndex;

@@ -348,5 +348,21 @@
   "negativesPrint": "Abzug",
   "negativesFoilHint": "✨ Folienbild — neige dein Handy",
   "albumFoil": "Folienbilder",
-  "albumFoilSub": "Holografischer Glanz auf Shiny-Fotos, am Bildschirm und beim Teilen"
+  "albumFoilSub": "Holografischer Glanz auf Shiny-Fotos, am Bildschirm und beim Teilen",
+  "photoFoilTurnOff": "Folie für dieses Foto ausschalten",
+  "photoFoilTurnOn": "Folie für dieses Foto einschalten",
+  "photoFoilAlbumOff": "Die Folie ist für das ganze Album aus. Schalte sie in den Albumeinstellungen wieder ein.",
+  "shortcutShootOnRoll": "Auf {roll} fotografieren",
+  "shortcutChooseRoll": "Film auswählen",
+  "shortcutChooseRollTitle": "Welcher Film?",
+  "revealProgress": "{developed} von {total} entwickelt",
+  "revealStripHint": "Scrolle durch deinen Film und tippe auf jedes Negativ, um es zu entwickeln.",
+  "revealOpenGallery": "Galerie öffnen",
+  "googlePhotosSignInCanceled": "Die Google-Anmeldung wurde abgebrochen.",
+  "googlePhotosNotConfigured": "Die Google-Fotos-Anmeldung ist für diese Version der App nicht eingerichtet, daher hat Google sie abgelehnt.",
+  "shareAnotherWayTitle": "Album anders teilen",
+  "shareAnotherWayBody": "Sende die Fotos an eine beliebige App (auch Google Fotos) oder speichere sie als Album auf dem Handy, das Google Fotos sichert und teilen kann.",
+  "galleryShareWithApp": "Mit einer App teilen",
+  "gallerySaveToPhoneAlbum": "Als Album aufs Handy speichern",
+  "gallerySavedToPhoneAlbum": "Im Album „{album}“ auf dem Handy gespeichert. Google Fotos kann es von dort sichern und teilen."
 }

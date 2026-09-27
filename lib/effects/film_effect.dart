@@ -48,12 +48,25 @@ class FilmEffect {
   }
 
   /// The effect shown on [exposure]: its own Shiny foil wins, otherwise the
-  /// roll's effect — each only if the user hasn't turned it off for the album.
+  /// roll's effect — each only if the user hasn't turned it off. The foil can
+  /// be turned off for the whole album or for this one photo.
   static FilmEffect? forExposure(Exposure exposure, FilmRoll roll) {
     final own = fromString(exposure.filmEffect);
-    if (own != null && (!own.isRare || roll.foilEnabled)) return own;
+    if (own != null && (!own.isRare || hasFoilShown(exposure, roll))) {
+      return own;
+    }
     return roll.effectEnabled ? fromString(roll.filmEffect) : null;
   }
+
+  /// Whether [exposure] has a Shiny foil at all, switched on or not — what
+  /// decides if a per-photo foil switch is worth offering.
+  static bool hasFoil(Exposure exposure) =>
+      fromString(exposure.filmEffect)?.isRare ?? false;
+
+  /// Whether [exposure]'s foil is showing: it has one, and neither the album
+  /// nor the photo has it switched off.
+  static bool hasFoilShown(Exposure exposure, FilmRoll roll) =>
+      hasFoil(exposure) && roll.foilEnabled && exposure.foilEnabled;
 
   String get serialized => '${type.name}:$variant';
 

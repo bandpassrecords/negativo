@@ -348,5 +348,21 @@
   "negativesPrint": "Tirage",
   "negativesFoilHint": "✨ Image holographique — inclinez votre téléphone",
   "albumFoil": "Images holographiques",
-  "albumFoilSub": "Reflet holographique sur les photos Shiny, à l'écran et au partage"
+  "albumFoilSub": "Reflet holographique sur les photos Shiny, à l'écran et au partage",
+  "photoFoilTurnOff": "Désactiver l'effet holographique de cette photo",
+  "photoFoilTurnOn": "Activer l'effet holographique de cette photo",
+  "photoFoilAlbumOff": "L'effet holographique est désactivé pour tout l'album. Réactivez-le dans les réglages de l'album.",
+  "shortcutShootOnRoll": "Photographier sur {roll}",
+  "shortcutChooseRoll": "Choisir une pellicule",
+  "shortcutChooseRollTitle": "Quelle pellicule ?",
+  "revealProgress": "{developed} sur {total} développées",
+  "revealStripHint": "Faites défiler la pellicule et touchez chaque négatif pour le développer.",
+  "revealOpenGallery": "Ouvrir la galerie",
+  "googlePhotosSignInCanceled": "La connexion Google a été annulée.",
+  "googlePhotosNotConfigured": "La connexion à Google Photos n'est pas configurée pour cette version de l'app, Google l'a donc refusée.",
+  "shareAnotherWayTitle": "Partager l'album autrement",
+  "shareAnotherWayBody": "Envoyez les photos vers n'importe quelle app (Google Photos compris), ou enregistrez-les sur le téléphone dans un album que Google Photos sauvegarde et peut partager.",
+  "galleryShareWithApp": "Partager avec une app",
+  "gallerySaveToPhoneAlbum": "Enregistrer sur le téléphone comme album",
+  "gallerySavedToPhoneAlbum": "Enregistré dans l'album « {album} » du téléphone. Google Photos peut le sauvegarder et le partager depuis là."
 }

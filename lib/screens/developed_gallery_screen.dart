@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gal/gal.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -14,6 +15,8 @@ import '../models/exposure.dart';
 import '../services/export_service.dart';
 import '../services/google_photos_service.dart';
 import '../services/hive_service.dart';
+import '../utils/phone_album.dart';
+import '../utils/rotatable_screen.dart';
 import 'negatives_screen.dart';
 
 enum _SelectMode { none, thumbnail, share }
@@ -60,7 +63,7 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => _FullscreenViewer(
+        builder: (_) => PhotoViewerScreen(
           exposures: _exposures,
           initialIndex: index,
           filmRoll: widget.filmRoll,
@@ -207,16 +210,96 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
           ),
         ),
       );
+    } on GooglePhotosSignInException catch (e) {
+      if (!mounted) return;
+      setState(() => _googlePhotosProgress = null);
+      await _offerOtherWaysToShare(switch (e.problem) {
+        GooglePhotosSignInProblem.canceled => l.googlePhotosSignInCanceled,
+        GooglePhotosSignInProblem.notConfigured =>
+          l.googlePhotosNotConfigured,
+        GooglePhotosSignInProblem.failed =>
+          l.galleryGooglePhotosFailed(e.detail ?? ''),
+      });
     } catch (e) {
       if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text(l.galleryGooglePhotosFailed(
-              e.toString().replaceFirst('Exception: ', ''))),
-        ),
-      );
+      setState(() => _googlePhotosProgress = null);
+      await _offerOtherWaysToShare(l.galleryGooglePhotosFailed(
+          e.toString().replaceFirst('Exception: ', '')));
     } finally {
       if (mounted) setState(() => _googlePhotosProgress = null);
+    }
+  }
+
+  /// When Google Photos can't be used, say why and offer the two ways that
+  /// need no Google sign-in: the share sheet (Google Photos' own app is one
+  /// of the targets), or an album on the phone that Google Photos backs up.
+  Future<void> _offerOtherWaysToShare(String reason) async {
+    final l = AppLocalizations.of(context)!;
+    final choice = await showDialog<_OtherShare>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l.shareAnotherWayTitle),
+        content: Text('$reason\n\n${l.shareAnotherWayBody}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, _OtherShare.phoneAlbum),
+            child: Text(l.gallerySaveToPhoneAlbum),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, _OtherShare.shareSheet),
+            child: Text(l.galleryShareWithApp),
+          ),
+        ],
+      ),
+    );
+    switch (choice) {
+      case _OtherShare.shareSheet:
+        await _shareSelected();
+      case _OtherShare.phoneAlbum:
+        await _saveSelectedToPhoneAlbum();
+      case null:
+        break;
+    }
+  }
+
+  /// Saves the selected photos, effects applied, into a phone album named
+  /// after the roll. Needs no Google sign-in; Google Photos backs the album
+  /// up and can share it from there.
+  Future<void> _saveSelectedToPhoneAlbum() async {
+    final l = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final selected = _exposures
+        .where((e) => _selectedShareIds.contains(e.id))
+        .where((e) => File(e.imagePath).existsSync());
+    if (selected.isEmpty) return;
+
+    final album = phoneAlbumName(widget.filmRoll.name);
+    setState(() => _sharing = true);
+    try {
+      final paths = await ExportService.photoPaths(selected, widget.filmRoll);
+      if (!await Gal.hasAccess(toAlbum: true)) {
+        await Gal.requestAccess(toAlbum: true);
+      }
+      for (final path in paths) {
+        await Gal.putImage(path, album: album);
+      }
+      if (!mounted) return;
+      setState(() => _mode = _SelectMode.none);
+      messenger.showSnackBar(SnackBar(
+        content: Text(l.gallerySavedToPhoneAlbum(album)),
+        duration: const Duration(seconds: 6),
+      ));
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(
+        content: Text(l.negativesSaveFailed(
+            e is GalException ? e.type.message : e.toString())),
+      ));
+    } finally {
+      if (mounted) setState(() => _sharing = false);
     }
   }
 
@@ -483,6 +566,12 @@ class _DevelopedGalleryScreenState extends State<DevelopedGalleryScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 6),
+            TextButton.icon(
+              onPressed: count == 0 || busy ? null : _saveSelectedToPhoneAlbum,
+              icon: const Icon(Icons.save_alt),
+              label: Text(l.gallerySaveToPhoneAlbum),
+            ),
           ],
         ),
       ),
@@ -594,23 +683,30 @@ class _PhotoTile extends StatelessWidget {
 
 // ─── Fullscreen viewer ────────────────────────────────────────────────────────
 
-class _FullscreenViewer extends StatefulWidget {
+/// Developed photos full screen: swipe between them, pinch to zoom, swipe up
+/// for the photo's info, switch a Shiny photo's foil, share. The phone may
+/// turn to landscape while it is open (see [RotatableScreen]).
+///
+/// Used by the gallery and by the reveal, so a frame opened while working
+/// down the film gets the same viewer as one opened afterwards.
+class PhotoViewerScreen extends StatefulWidget {
   final List<Exposure> exposures;
   final int initialIndex;
   final FilmRoll filmRoll;
 
-  const _FullscreenViewer({
+  const PhotoViewerScreen({
+    super.key,
     required this.exposures,
     required this.initialIndex,
     required this.filmRoll,
   });
 
   @override
-  State<_FullscreenViewer> createState() => _FullscreenViewerState();
+  State<PhotoViewerScreen> createState() => _PhotoViewerScreenState();
 }
 
-class _FullscreenViewerState extends State<_FullscreenViewer>
-    with SingleTickerProviderStateMixin {
+class _PhotoViewerScreenState extends State<PhotoViewerScreen>
+    with SingleTickerProviderStateMixin, RotatableScreen {
   late PageController _pageController;
   late int _currentIndex;
   bool _barsVisible = true;
@@ -655,6 +751,20 @@ class _FullscreenViewerState extends State<_FullscreenViewer>
     );
   }
 
+  /// Switches this one photo's foil on or off. When the album's foil is off,
+  /// the photo's own switch can't show it, so say where to turn it back on
+  /// instead of flipping a switch that visibly does nothing.
+  Future<void> _toggleFoil(Exposure exposure) async {
+    if (!widget.filmRoll.foilEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.photoFoilAlbumOff)),
+      );
+      return;
+    }
+    setState(() => exposure.foilEnabled = !exposure.foilEnabled);
+    await HiveService.saveExposure(exposure);
+  }
+
   void _showInfo(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -690,6 +800,24 @@ class _FullscreenViewerState extends State<_FullscreenViewer>
               style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
             actions: [
+              // Only a photo that came out Shiny has a foil to switch.
+              if (FilmEffect.hasFoil(exposure))
+                IconButton(
+                  icon: Icon(
+                    FilmEffect.hasFoilShown(exposure, widget.filmRoll)
+                        ? Icons.auto_awesome
+                        : Icons.auto_awesome_outlined,
+                    color: FilmEffect.hasFoilShown(exposure, widget.filmRoll)
+                        ? Colors.amber
+                        : Colors.white,
+                  ),
+                  tooltip: !widget.filmRoll.foilEnabled
+                      ? l.photoFoilAlbumOff
+                      : exposure.foilEnabled
+                          ? l.photoFoilTurnOff
+                          : l.photoFoilTurnOn,
+                  onPressed: () => _toggleFoil(exposure),
+                ),
               IconButton(
                 icon: const Icon(Icons.info_outline, color: Colors.white),
                 onPressed: () => _showInfo(context),
@@ -956,3 +1084,6 @@ class _InfoRow extends StatelessWidget {
     );
   }
 }
+
+/// The ways to share an album that need no Google sign-in.
+enum _OtherShare { shareSheet, phoneAlbum }

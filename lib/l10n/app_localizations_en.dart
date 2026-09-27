@@ -617,4 +617,62 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get albumFoilSub =>
       'Holographic shine on Shiny photos, on screen and when shared';
+
+  @override
+  String get photoFoilTurnOff => 'Turn foil off for this photo';
+
+  @override
+  String get photoFoilTurnOn => 'Turn foil on for this photo';
+
+  @override
+  String get photoFoilAlbumOff =>
+      'Foil is off for this whole album. Turn it back on in the album\'s settings.';
+
+  @override
+  String shortcutShootOnRoll(String roll) {
+    return 'Shoot on $roll';
+  }
+
+  @override
+  String get shortcutChooseRoll => 'Choose a roll';
+
+  @override
+  String get shortcutChooseRollTitle => 'Which roll?';
+
+  @override
+  String revealProgress(int developed, int total) {
+    return '$developed of $total developed';
+  }
+
+  @override
+  String get revealStripHint =>
+      'Scroll through your film and tap each negative to develop it.';
+
+  @override
+  String get revealOpenGallery => 'Open the gallery';
+
+  @override
+  String get googlePhotosSignInCanceled => 'Google sign-in was cancelled.';
+
+  @override
+  String get googlePhotosNotConfigured =>
+      'Google Photos sign-in isn\'t set up for this version of the app, so Google turned it down.';
+
+  @override
+  String get shareAnotherWayTitle => 'Share the album another way';
+
+  @override
+  String get shareAnotherWayBody =>
+      'Send the photos to any app (Google Photos included), or save them to your phone as an album that Google Photos backs up and can share.';
+
+  @override
+  String get galleryShareWithApp => 'Share with an app';
+
+  @override
+  String get gallerySaveToPhoneAlbum => 'Save to phone as an album';
+
+  @override
+  String gallerySavedToPhoneAlbum(String album) {
+    return 'Saved to the \"$album\" album on your phone. Google Photos can back it up and share it from there.';
+  }
 }

@@ -348,5 +348,21 @@
   "negativesPrint": "Stampa",
   "negativesFoilHint": "✨ Fotogramma foil — inclina il telefono",
   "albumFoil": "Fotogrammi foil",
-  "albumFoilSub": "Riflesso olografico sulle foto Shiny, sullo schermo e quando condividi"
+  "albumFoilSub": "Riflesso olografico sulle foto Shiny, sullo schermo e quando condividi",
+  "photoFoilTurnOff": "Disattiva il foil per questa foto",
+  "photoFoilTurnOn": "Attiva il foil per questa foto",
+  "photoFoilAlbumOff": "Il foil è disattivato per tutto l'album. Riattivalo nelle impostazioni dell'album.",
+  "shortcutShootOnRoll": "Scatta su {roll}",
+  "shortcutChooseRoll": "Scegli un rullino",
+  "shortcutChooseRollTitle": "Quale rullino?",
+  "revealProgress": "{developed} di {total} sviluppati",
+  "revealStripHint": "Scorri la pellicola e tocca ogni negativo per svilupparlo.",
+  "revealOpenGallery": "Apri la galleria",
+  "googlePhotosSignInCanceled": "L'accesso a Google è stato annullato.",
+  "googlePhotosNotConfigured": "L'accesso a Google Foto non è configurato per questa versione dell'app, quindi Google l'ha rifiutato.",
+  "shareAnotherWayTitle": "Condividi l'album in un altro modo",
+  "shareAnotherWayBody": "Invia le foto a qualsiasi app (Google Foto compresa) o salvale sul telefono come un album di cui Google Foto fa il backup e che può condividere.",
+  "galleryShareWithApp": "Condividi con un'app",
+  "gallerySaveToPhoneAlbum": "Salva sul telefono come album",
+  "gallerySavedToPhoneAlbum": "Salvato nell'album \"{album}\" del telefono. Google Foto può farne il backup e condividerlo da lì."
 }

@@ -5,9 +5,9 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Negativo needs camera access to record your daily moments.</string>
+	<string>Negativo needs the camera to take the photos on your film rolls.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Negativo needs ¬phone access to record video with audio.</string>
+	<string>Negativo needs microphone access to record video with sound.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Negativo needs access to your photo library to import media.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -79,6 +79,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- Google Sign-In on iOS needs the iOS OAuth client id; without it sign-in fails
+	     before any sheet appears. Same client as the reversed URL scheme below. -->
+	<key>GIDClientID</key>
+	<string>1007563150643-79nkud934tv9eqbbcmvn9dnk2le56b1m.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 	<dict>
