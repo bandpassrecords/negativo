@@ -7,8 +7,10 @@ import 'package:quick_actions/quick_actions.dart';
 import '../l10n/app_localizations.dart';
 import '../models/exposure.dart';
 import '../models/film_roll.dart';
+import '../screens/new_roll_screen.dart';
 import '../screens/roll_picker_screen.dart';
 import '../screens/viewfinder_screen.dart';
+import 'app_navigator.dart';
 import 'hive_service.dart';
 
 /// What a camera shortcut does when tapped.
@@ -17,7 +19,12 @@ enum CameraShortcutKind {
   shootLastRoll('shoot_last_roll'),
 
   /// A list of the loaded rolls to pick one from, then the viewfinder.
-  chooseRoll('choose_roll');
+  chooseRoll('choose_roll'),
+
+  /// "Camera", always there (Android): the last-used roll, or "load a roll"
+  /// when there is nothing to shoot on. Its fixed id and title make it the
+  /// one to drag onto the home screen as an icon, like Instagram's camera.
+  camera('camera');
 
   const CameraShortcutKind(this.type);
 
@@ -51,8 +58,10 @@ class CameraShortcut {
 }
 
 /// The rolls a shortcut can open the camera on: loaded and not yet full.
-List<FilmRoll> shootableRolls(Iterable<FilmRoll> rolls) =>
-    [for (final r in rolls) if (r.status == 'active' && !r.isFull) r];
+List<FilmRoll> shootableRolls(Iterable<FilmRoll> rolls) => [
+      for (final r in rolls)
+        if (r.status == 'active' && !r.isFull) r
+    ];
 
 /// The roll someone most likely wants to keep shooting: the one with the most
 /// recent exposure, or — for rolls not shot on yet — the most recently loaded.
@@ -73,19 +82,25 @@ FilmRoll? lastUsedRoll(Iterable<FilmRoll> rolls, Iterable<Exposure> exposures) {
 
 /// Which shortcuts to offer:
 ///
-/// - no roll to shoot on → none (the app icon alone is the way in);
-/// - one or more → "take a photo" on the last-used roll;
+/// - with [cameraTitle] (Android) → "Camera" always, in place of "take a
+///   photo on <roll>", so an icon dragged onto the home screen keeps working;
+/// - otherwise, one or more rolls to shoot on → "take a photo" on the
+///   last-used roll, and none without (the app icon alone is the way in);
 /// - more than one → also "choose a roll".
 List<CameraShortcut> planCameraShortcuts({
   required Iterable<FilmRoll> rolls,
   required Iterable<Exposure> exposures,
   required String Function(String rollName) shootOnRollTitle,
   required String chooseRollTitle,
+  String? cameraTitle,
 }) {
   final last = lastUsedRoll(rolls, exposures);
-  if (last == null) return const [];
   return [
-    CameraShortcut(CameraShortcutKind.shootLastRoll, shootOnRollTitle(last.name)),
+    if (cameraTitle != null)
+      CameraShortcut(CameraShortcutKind.camera, cameraTitle)
+    else if (last != null)
+      CameraShortcut(
+          CameraShortcutKind.shootLastRoll, shootOnRollTitle(last.name)),
     if (shootableRolls(rolls).length > 1)
       CameraShortcut(CameraShortcutKind.chooseRoll, chooseRollTitle),
   ];
@@ -97,10 +112,7 @@ List<CameraShortcut> planCameraShortcuts({
 class CameraShortcutService {
   CameraShortcutService._();
 
-  static final navigatorKey = GlobalKey<NavigatorState>();
-
   static const _quickActions = QuickActions();
-  static CameraShortcutKind? _pending;
   static List<CameraShortcut>? _published;
   static final _subscriptions = <StreamSubscription<dynamic>>[];
   static Timer? _debounce;
@@ -133,6 +145,7 @@ class CameraShortcutService {
       exposures: HiveService.getAllExposures(),
       shootOnRollTitle: l.shortcutShootOnRoll,
       chooseRollTitle: l.shortcutChooseRoll,
+      cameraTitle: Platform.isAndroid ? l.shortcutCamera : null,
     );
     if (_listEquals(plan, _published)) return;
     _published = plan;
@@ -143,9 +156,9 @@ class CameraShortcutService {
           localizedTitle: s.title,
           // Android drawables in res/drawable; iOS falls back to no icon.
           icon: Platform.isAndroid
-              ? (s.kind == CameraShortcutKind.shootLastRoll
-                  ? 'ic_shortcut_camera'
-                  : 'ic_shortcut_rolls')
+              ? (s.kind == CameraShortcutKind.chooseRoll
+                  ? 'ic_shortcut_rolls'
+                  : 'ic_shortcut_camera')
               : null,
         ),
     ]);
@@ -154,24 +167,24 @@ class CameraShortcutService {
   static void _onTapped(String type) {
     final kind = CameraShortcutKind.fromType(type);
     if (kind == null) return;
-    _pending = kind;
-    // A cold start delivers the tap before the first screen exists.
-    WidgetsBinding.instance.addPostFrameCallback((_) => openPending());
-    openPending();
+    // A cold start delivers the tap before the first screen exists;
+    // AppNavigator holds it until the app can navigate.
+    AppNavigator.run((nav) => _open(kind, nav));
   }
 
-  /// Opens the camera for a shortcut tapped before the app could navigate.
-  static void openPending() {
-    final kind = _pending;
-    final nav = navigatorKey.currentState;
-    if (kind == null || nav == null) return;
-    _pending = null;
-
+  static void _open(CameraShortcutKind kind, NavigatorState nav) {
     // Decide at tap time: the roll may have filled up or been sent off since
     // the shortcut was published.
     final rolls = HiveService.getAllFilmRolls();
     final shootable = shootableRolls(rolls);
-    if (shootable.isEmpty) return; // just open the app
+    if (shootable.isEmpty) {
+      // "Camera" with nothing to shoot on: offer to load a roll. The others
+      // just open the app.
+      if (kind == CameraShortcutKind.camera) {
+        nav.push(MaterialPageRoute(builder: (_) => const NewRollScreen()));
+      }
+      return;
+    }
 
     if (kind == CameraShortcutKind.chooseRoll && shootable.length > 1) {
       nav.push(MaterialPageRoute(builder: (_) => const RollPickerScreen()));

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Roll and camera widgets: picker labels, descriptions and accessibility labels. -->
+<resources>
+    <string name="roll_widget_label">Pellicule</string>
+    <string name="roll_widget_description">Une pellicule ouverte sur l\'écran d\'accueil : photographiez directement dessus et changez de pellicule avec les flèches.</string>
+    <string name="roll_widget_shoot">Prendre une photo</string>
+    <string name="roll_widget_previous">Pellicule précédente</string>
+    <string name="roll_widget_next">Pellicule suivante</string>
+    <string name="camera_widget_label">Appareil photo</string>
+    <string name="camera_widget_description">Ouvre l\'appareil photo sur la dernière pellicule utilisée.</string>
+</resources>

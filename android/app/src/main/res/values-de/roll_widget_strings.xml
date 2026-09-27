@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Roll and camera widgets: picker labels, descriptions and accessibility labels. -->
+<resources>
+    <string name="roll_widget_label">Filmrolle</string>
+    <string name="roll_widget_description">Eine offene Filmrolle auf dem Startbildschirm: direkt darauf fotografieren und mit den Pfeilen die Rolle wechseln.</string>
+    <string name="roll_widget_shoot">Foto aufnehmen</string>
+    <string name="roll_widget_previous">Vorherige Rolle</string>
+    <string name="roll_widget_next">Nächste Rolle</string>
+    <string name="camera_widget_label">Kamera</string>
+    <string name="camera_widget_description">Öffnet die Kamera mit der zuletzt verwendeten Filmrolle.</string>
+</resources>

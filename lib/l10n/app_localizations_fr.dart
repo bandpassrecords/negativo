@@ -649,6 +649,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shortcutChooseRollTitle => 'Quelle pellicule ?';
 
   @override
+  String get shortcutCamera => 'Appareil photo';
+
+  @override
   String revealProgress(int developed, int total) {
     return '$developed sur $total développées';
   }
@@ -685,4 +688,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String gallerySavedToPhoneAlbum(String album) {
     return 'Enregistré dans l\'album « $album » du téléphone. Google Photos peut le sauvegarder et le partager depuis là.';
   }
+
+  @override
+  String widgetFramesOf(String used, String total) {
+    return '$used / $total';
+  }
+
+  @override
+  String widgetReadyInDays(String days, String hours) {
+    return 'Prêt dans $days j $hours h';
+  }
+
+  @override
+  String widgetReadyInHours(String hours, String minutes) {
+    return 'Prêt dans $hours h $minutes min';
+  }
+
+  @override
+  String get widgetReady => 'Prêt à développer';
+
+  @override
+  String get widgetFull => 'Pellicule pleine. Envoyez-la au développement';
 }

@@ -1114,6 +1114,12 @@ abstract class AppLocalizations {
   /// **'Which roll?'**
   String get shortcutChooseRollTitle;
 
+  /// Android app shortcut (can be dragged onto the home screen) that opens the camera on the last-used roll
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get shortcutCamera;
+
   /// No description provided for @revealProgress.
   ///
   /// In en, this message translates to:
@@ -1173,6 +1179,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved to the \"{album}\" album on your phone. Google Photos can back it up and share it from there.'**
   String gallerySavedToPhoneAlbum(String album);
+
+  /// Home-screen widget: frames shot on a roll, e.g. 12 / 36
+  ///
+  /// In en, this message translates to:
+  /// **'{used} / {total}'**
+  String widgetFramesOf(String used, String total);
+
+  /// Home-screen widget: time left developing, days and hours
+  ///
+  /// In en, this message translates to:
+  /// **'Ready in {days}d {hours}h'**
+  String widgetReadyInDays(String days, String hours);
+
+  /// Home-screen widget: time left developing, hours and minutes
+  ///
+  /// In en, this message translates to:
+  /// **'Ready in {hours}h {minutes}m'**
+  String widgetReadyInHours(String hours, String minutes);
+
+  /// No description provided for @widgetReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to reveal'**
+  String get widgetReady;
+
+  /// No description provided for @widgetFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Roll full. Send it to develop'**
+  String get widgetFull;
 }
 
 class _AppLocalizationsDelegate

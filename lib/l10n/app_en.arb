@@ -378,6 +378,10 @@
     "description": "Home-screen app shortcut that asks which loaded roll to shoot on"
   },
   "shortcutChooseRollTitle": "Which roll?",
+  "shortcutCamera": "Camera",
+  "@shortcutCamera": {
+    "description": "Android app shortcut (can be dragged onto the home screen) that opens the camera on the last-used roll"
+  },
   "revealProgress": "{developed} of {total} developed",
   "@revealProgress": {
     "placeholders": {
@@ -404,5 +408,43 @@
         "type": "String"
       }
     }
-  }
+  },
+  "widgetFramesOf": "{used} / {total}",
+  "@widgetFramesOf": {
+    "description": "Home-screen widget: frames shot on a roll, e.g. 12 / 36",
+    "placeholders": {
+      "used": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetReadyInDays": "Ready in {days}d {hours}h",
+  "@widgetReadyInDays": {
+    "description": "Home-screen widget: time left developing, days and hours",
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetReadyInHours": "Ready in {hours}h {minutes}m",
+  "@widgetReadyInHours": {
+    "description": "Home-screen widget: time left developing, hours and minutes",
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetReady": "Ready to reveal",
+  "widgetFull": "Roll full. Send it to develop"
 }

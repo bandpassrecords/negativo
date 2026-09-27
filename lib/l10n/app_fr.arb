@@ -355,6 +355,7 @@
   "shortcutShootOnRoll": "Photographier sur {roll}",
   "shortcutChooseRoll": "Choisir une pellicule",
   "shortcutChooseRollTitle": "Quelle pellicule ?",
+  "shortcutCamera": "Appareil photo",
   "revealProgress": "{developed} sur {total} développées",
   "revealStripHint": "Faites défiler la pellicule et touchez chaque négatif pour le développer.",
   "revealOpenGallery": "Ouvrir la galerie",
@@ -364,5 +365,10 @@
   "shareAnotherWayBody": "Envoyez les photos vers n'importe quelle app (Google Photos compris), ou enregistrez-les sur le téléphone dans un album que Google Photos sauvegarde et peut partager.",
   "galleryShareWithApp": "Partager avec une app",
   "gallerySaveToPhoneAlbum": "Enregistrer sur le téléphone comme album",
-  "gallerySavedToPhoneAlbum": "Enregistré dans l'album « {album} » du téléphone. Google Photos peut le sauvegarder et le partager depuis là."
+  "gallerySavedToPhoneAlbum": "Enregistré dans l'album « {album} » du téléphone. Google Photos peut le sauvegarder et le partager depuis là.",
+  "widgetFramesOf": "{used} / {total}",
+  "widgetReadyInDays": "Prêt dans {days} j {hours} h",
+  "widgetReadyInHours": "Prêt dans {hours} h {minutes} min",
+  "widgetReady": "Prêt à développer",
+  "widgetFull": "Pellicule pleine. Envoyez-la au développement"
 }

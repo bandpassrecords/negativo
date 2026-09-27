@@ -8,7 +8,9 @@ import 'services/notification_service.dart';
 import 'services/hive_service.dart';
 import 'services/film_service.dart';
 import 'services/scoring_service.dart';
+import 'services/app_navigator.dart';
 import 'services/camera_shortcut_service.dart';
+import 'services/roll_widget_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +28,8 @@ void main() async {
   // Home-screen shortcuts straight into the camera. A shortcut tapped on a
   // cold start is opened once the first screen exists (see _MyAppState).
   await CameraShortcutService.init();
+  // The Android home-screen widget for an open roll.
+  await RollWidgetService.init();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -58,10 +62,8 @@ class _MyAppState extends State<MyApp> {
     _loadSettings();
     MyApp.updateLanguageCallback = _loadSettings;
     MyApp.updateThemeCallback = _loadSettings;
-    // A shortcut tapped before the app was running is opened here.
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => CameraShortcutService.openPending(),
-    );
+    // A shortcut or widget tapped before the app was running opens here.
+    WidgetsBinding.instance.addPostFrameCallback((_) => AppNavigator.flush());
   }
 
   @override
@@ -75,6 +77,7 @@ class _MyAppState extends State<MyApp> {
     final settings = HiveService.getSettings();
     // The shortcut titles are localised, so follow a language change.
     CameraShortcutService.refresh();
+    RollWidgetService.publish();
     setState(() {
       _locale = Locale(settings.language);
       switch (settings.themeMode) {
@@ -93,7 +96,7 @@ class _MyAppState extends State<MyApp> {
     const seed = Color(0xFFB8860B); // dark goldenrod — analog amber
 
     return MaterialApp(
-      navigatorKey: CameraShortcutService.navigatorKey,
+      navigatorKey: AppNavigator.navigatorKey,
       title: 'Negativo',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [

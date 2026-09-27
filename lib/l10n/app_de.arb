@@ -355,6 +355,7 @@
   "shortcutShootOnRoll": "Auf {roll} fotografieren",
   "shortcutChooseRoll": "Film auswählen",
   "shortcutChooseRollTitle": "Welcher Film?",
+  "shortcutCamera": "Kamera",
   "revealProgress": "{developed} von {total} entwickelt",
   "revealStripHint": "Scrolle durch deinen Film und tippe auf jedes Negativ, um es zu entwickeln.",
   "revealOpenGallery": "Galerie öffnen",
@@ -364,5 +365,10 @@
   "shareAnotherWayBody": "Sende die Fotos an eine beliebige App (auch Google Fotos) oder speichere sie als Album auf dem Handy, das Google Fotos sichert und teilen kann.",
   "galleryShareWithApp": "Mit einer App teilen",
   "gallerySaveToPhoneAlbum": "Als Album aufs Handy speichern",
-  "gallerySavedToPhoneAlbum": "Im Album „{album}“ auf dem Handy gespeichert. Google Fotos kann es von dort sichern und teilen."
+  "gallerySavedToPhoneAlbum": "Im Album „{album}“ auf dem Handy gespeichert. Google Fotos kann es von dort sichern und teilen.",
+  "widgetFramesOf": "{used} / {total}",
+  "widgetReadyInDays": "Fertig in {days} T. {hours} Std.",
+  "widgetReadyInHours": "Fertig in {hours} Std. {minutes} Min.",
+  "widgetReady": "Bereit zum Entwickeln",
+  "widgetFull": "Rolle voll. Zum Entwickeln schicken"
 }

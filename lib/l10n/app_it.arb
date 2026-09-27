@@ -355,6 +355,7 @@
   "shortcutShootOnRoll": "Scatta su {roll}",
   "shortcutChooseRoll": "Scegli un rullino",
   "shortcutChooseRollTitle": "Quale rullino?",
+  "shortcutCamera": "Fotocamera",
   "revealProgress": "{developed} di {total} sviluppati",
   "revealStripHint": "Scorri la pellicola e tocca ogni negativo per svilupparlo.",
   "revealOpenGallery": "Apri la galleria",
@@ -364,5 +365,10 @@
   "shareAnotherWayBody": "Invia le foto a qualsiasi app (Google Foto compresa) o salvale sul telefono come un album di cui Google Foto fa il backup e che può condividere.",
   "galleryShareWithApp": "Condividi con un'app",
   "gallerySaveToPhoneAlbum": "Salva sul telefono come album",
-  "gallerySavedToPhoneAlbum": "Salvato nell'album \"{album}\" del telefono. Google Foto può farne il backup e condividerlo da lì."
+  "gallerySavedToPhoneAlbum": "Salvato nell'album \"{album}\" del telefono. Google Foto può farne il backup e condividerlo da lì.",
+  "widgetFramesOf": "{used} / {total}",
+  "widgetReadyInDays": "Pronto tra {days}g {hours}h",
+  "widgetReadyInHours": "Pronto tra {hours}h {minutes}m",
+  "widgetReady": "Pronto da sviluppare",
+  "widgetFull": "Rullino pieno. Mandalo a sviluppare"
 }

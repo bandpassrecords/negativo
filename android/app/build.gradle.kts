@@ -126,4 +126,6 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     // AppCompat para image_cropper (UCrop)
     implementation("androidx.appcompat:appcompat:1.6.1")
+    // JVM unit tests for the roll widget's logic (RollWidgetStateTest)
+    testImplementation("junit:junit:4.13.2")
 }

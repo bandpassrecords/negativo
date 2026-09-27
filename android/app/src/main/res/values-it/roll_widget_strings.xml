@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Roll and camera widgets: picker labels, descriptions and accessibility labels. -->
+<resources>
+    <string name="roll_widget_label">Rullino</string>
+    <string name="roll_widget_description">Un rullino aperto nella schermata Home: scatta direttamente e cambia rullino con le frecce.</string>
+    <string name="roll_widget_shoot">Scatta una foto</string>
+    <string name="roll_widget_previous">Rullino precedente</string>
+    <string name="roll_widget_next">Rullino successivo</string>
+    <string name="camera_widget_label">Fotocamera</string>
+    <string name="camera_widget_description">Apre la fotocamera sull\'ultimo rullino usato.</string>
+</resources>

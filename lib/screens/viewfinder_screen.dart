@@ -23,6 +23,7 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
   bool _permissionDenied = false;
   bool _isShooting = false;
   bool _isInitializing = false;
+  bool _initAgain = false;
 
   /// When true the viewfinder shows a full blackout (shutter closed / film advancing).
   bool _shutterClosed = false;
@@ -97,11 +98,27 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
   }
 
   Future<void> _initCamera() async {
-    if (_isInitializing) return;
+    if (_controller != null) return;
+    if (_isInitializing) {
+      // Resumed mid-attempt: that attempt may fail for having started too
+      // early, so go again once it's done.
+      _initAgain = true;
+      return;
+    }
+    // Android won't open the camera for an app that isn't in the foreground
+    // yet — as when a home-screen shortcut or widget opens the viewfinder
+    // while the app is still coming up. didChangeAppLifecycleState starts it
+    // on resume instead.
+    final lifecycle = WidgetsBinding.instance.lifecycleState;
+    if (lifecycle != null && lifecycle != AppLifecycleState.resumed) return;
+
     _isInitializing = true;
     setState(() => _permissionDenied = false);
     try {
-      final status = await Permission.camera.request();
+      // Only ask when not yet granted: request() needs the activity in front,
+      // and a failed request isn't a refusal.
+      var status = await Permission.camera.status;
+      if (!status.isGranted) status = await Permission.camera.request();
       if (!status.isGranted) {
         if (mounted) setState(() => _permissionDenied = true);
         return;
@@ -114,17 +131,32 @@ class _ViewfinderScreenState extends State<ViewfinderScreen>
         enableAudio: false,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
-      await controller.initialize();
+      try {
+        await controller.initialize();
+      } catch (_) {
+        controller.dispose();
+        rethrow;
+      }
       if (mounted) {
         _controller = controller;
         setState(() => _cameraReady = true);
       } else {
         controller.dispose();
       }
+    } on CameraException catch (e) {
+      // Only a refusal gets the "enable camera access" screen; anything else
+      // (camera busy, app not in front yet) is retried on the next resume.
+      if (e.code.startsWith('CameraAccess') && mounted) {
+        setState(() => _permissionDenied = true);
+      }
     } catch (_) {
-      if (mounted) setState(() => _permissionDenied = true);
+      // As above: retried on the next resume.
     } finally {
       _isInitializing = false;
+      if (_initAgain) {
+        _initAgain = false;
+        if (mounted) _initCamera();
+      }
     }
   }
 

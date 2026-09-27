@@ -51,6 +51,7 @@ dependencies:
   sensors_plus: ^7.1.0
   gal: ^2.3.3
   quick_actions: ^1.1.1
+  home_widget: ^0.10.0
 
 dev_dependencies:
   flutter_test:

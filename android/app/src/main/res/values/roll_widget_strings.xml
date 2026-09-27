@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Roll and camera widgets: picker labels, descriptions and accessibility labels. -->
+<resources>
+    <string name="roll_widget_label">Film roll</string>
+    <string name="roll_widget_description">An open roll on your home screen: shoot straight onto it, and switch rolls with the arrows.</string>
+    <string name="roll_widget_shoot">Take a photo</string>
+    <string name="roll_widget_previous">Previous roll</string>
+    <string name="roll_widget_next">Next roll</string>
+    <string name="camera_widget_label">Camera</string>
+    <string name="camera_widget_description">Opens the camera on the roll you shot on last.</string>
+</resources>

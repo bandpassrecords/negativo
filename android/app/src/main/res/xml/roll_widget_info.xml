@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Roll widget: 4×1 by default, resizable. updatePeriodMillis is Android's
+  minimum (30 min) and only keeps a developing roll's countdown fresh; every
+  other change is pushed by the app when rolls change.
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/roll_widget_description"
+    android:initialLayout="@layout/roll_widget"
+    android:previewLayout="@layout/roll_widget"
+    android:minWidth="250dp"
+    android:minHeight="72dp"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="72dp"
+    android:targetCellWidth="4"
+    android:targetCellHeight="1"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

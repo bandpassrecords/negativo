@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Roll and camera widgets: picker labels, descriptions and accessibility labels. -->
+<resources>
+    <string name="roll_widget_label">Rollo de película</string>
+    <string name="roll_widget_description">Un rollo abierto en la pantalla de inicio: fotografía directamente en él y cambia de rollo con las flechas.</string>
+    <string name="roll_widget_shoot">Hacer una foto</string>
+    <string name="roll_widget_previous">Rollo anterior</string>
+    <string name="roll_widget_next">Siguiente rollo</string>
+    <string name="camera_widget_label">Cámara</string>
+    <string name="camera_widget_description">Abre la cámara con el último rollo que usaste.</string>
+</resources>

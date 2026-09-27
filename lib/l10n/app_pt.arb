@@ -355,6 +355,7 @@
   "shortcutShootOnRoll": "Fotografar em {roll}",
   "shortcutChooseRoll": "Escolher um rolo",
   "shortcutChooseRollTitle": "Qual rolo?",
+  "shortcutCamera": "Câmera",
   "revealProgress": "{developed} de {total} revelados",
   "revealStripHint": "Role pelo filme e toque em cada negativo para revelá-lo.",
   "revealOpenGallery": "Abrir a galeria",
@@ -364,5 +365,10 @@
   "shareAnotherWayBody": "Envie as fotos para qualquer app (inclusive o Google Fotos) ou salve no celular como um álbum que o Google Fotos faz backup e pode compartilhar.",
   "galleryShareWithApp": "Compartilhar com um app",
   "gallerySaveToPhoneAlbum": "Salvar no celular como álbum",
-  "gallerySavedToPhoneAlbum": "Salvo no álbum \"{album}\" do celular. O Google Fotos pode fazer backup e compartilhar de lá."
+  "gallerySavedToPhoneAlbum": "Salvo no álbum \"{album}\" do celular. O Google Fotos pode fazer backup e compartilhar de lá.",
+  "widgetFramesOf": "{used} / {total}",
+  "widgetReadyInDays": "Pronto em {days}d {hours}h",
+  "widgetReadyInHours": "Pronto em {hours}h {minutes}min",
+  "widgetReady": "Pronto para revelar",
+  "widgetFull": "Rolo cheio. Mande revelar"
 }

@@ -644,6 +644,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shortcutChooseRollTitle => 'Welcher Film?';
 
   @override
+  String get shortcutCamera => 'Kamera';
+
+  @override
   String revealProgress(int developed, int total) {
     return '$developed von $total entwickelt';
   }
@@ -680,4 +683,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String gallerySavedToPhoneAlbum(String album) {
     return 'Im Album „$album“ auf dem Handy gespeichert. Google Fotos kann es von dort sichern und teilen.';
   }
+
+  @override
+  String widgetFramesOf(String used, String total) {
+    return '$used / $total';
+  }
+
+  @override
+  String widgetReadyInDays(String days, String hours) {
+    return 'Fertig in $days T. $hours Std.';
+  }
+
+  @override
+  String widgetReadyInHours(String hours, String minutes) {
+    return 'Fertig in $hours Std. $minutes Min.';
+  }
+
+  @override
+  String get widgetReady => 'Bereit zum Entwickeln';
+
+  @override
+  String get widgetFull => 'Rolle voll. Zum Entwickeln schicken';
 }

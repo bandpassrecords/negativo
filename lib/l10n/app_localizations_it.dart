@@ -641,6 +641,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get shortcutChooseRollTitle => 'Quale rullino?';
 
   @override
+  String get shortcutCamera => 'Fotocamera';
+
+  @override
   String revealProgress(int developed, int total) {
     return '$developed di $total sviluppati';
   }
@@ -677,4 +680,25 @@ class AppLocalizationsIt extends AppLocalizations {
   String gallerySavedToPhoneAlbum(String album) {
     return 'Salvato nell\'album \"$album\" del telefono. Google Foto può farne il backup e condividerlo da lì.';
   }
+
+  @override
+  String widgetFramesOf(String used, String total) {
+    return '$used / $total';
+  }
+
+  @override
+  String widgetReadyInDays(String days, String hours) {
+    return 'Pronto tra ${days}g ${hours}h';
+  }
+
+  @override
+  String widgetReadyInHours(String hours, String minutes) {
+    return 'Pronto tra ${hours}h ${minutes}m';
+  }
+
+  @override
+  String get widgetReady => 'Pronto da sviluppare';
+
+  @override
+  String get widgetFull => 'Rullino pieno. Mandalo a sviluppare';
 }

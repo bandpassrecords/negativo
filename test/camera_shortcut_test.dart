@@ -84,8 +84,7 @@ void main() {
     });
 
     test('is null with nothing to shoot on', () {
-      expect(lastUsedRoll([_roll('d', status: 'developed')], const []),
-          isNull);
+      expect(lastUsedRoll([_roll('d', status: 'developed')], const []), isNull);
     });
   });
 
@@ -96,7 +95,8 @@ void main() {
 
     test('one roll: a single "take a photo" shortcut on it', () {
       expect(_plan([_roll('a')]), [
-        const CameraShortcut(CameraShortcutKind.shootLastRoll, 'Shoot on Roll a'),
+        const CameraShortcut(
+            CameraShortcutKind.shootLastRoll, 'Shoot on Roll a'),
       ]);
     });
 
@@ -106,7 +106,8 @@ void main() {
         [_shot('a', DateTime(2026, 3, 9))],
       );
       expect(plan, [
-        const CameraShortcut(CameraShortcutKind.shootLastRoll, 'Shoot on Roll a'),
+        const CameraShortcut(
+            CameraShortcutKind.shootLastRoll, 'Shoot on Roll a'),
         const CameraShortcut(CameraShortcutKind.chooseRoll, 'Choose a roll'),
       ]);
     });
@@ -114,6 +115,29 @@ void main() {
     test('a full roll does not count towards offering a choice', () {
       final plan = _plan([_roll('a'), _roll('full', capacity: 1, shot: 1)]);
       expect(plan.map((s) => s.kind), [CameraShortcutKind.shootLastRoll]);
+    });
+  });
+
+  group('planCameraShortcuts with "Camera" (Android)', () {
+    List<CameraShortcut> plan(List<FilmRoll> rolls) => planCameraShortcuts(
+          rolls: rolls,
+          exposures: const [],
+          shootOnRollTitle: (name) => 'Shoot on $name',
+          chooseRollTitle: 'Choose a roll',
+          cameraTitle: 'Camera',
+        );
+
+    test('"Camera" is there even with nothing to shoot on', () {
+      expect(plan([_roll('d', status: 'developing')]), [
+        const CameraShortcut(CameraShortcutKind.camera, 'Camera'),
+      ]);
+    });
+
+    test('it replaces "take a photo on <roll>", next to "choose a roll"', () {
+      expect(plan([_roll('a'), _roll('b')]), [
+        const CameraShortcut(CameraShortcutKind.camera, 'Camera'),
+        const CameraShortcut(CameraShortcutKind.chooseRoll, 'Choose a roll'),
+      ]);
     });
   });
 

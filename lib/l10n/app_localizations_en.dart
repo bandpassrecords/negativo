@@ -640,6 +640,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortcutChooseRollTitle => 'Which roll?';
 
   @override
+  String get shortcutCamera => 'Camera';
+
+  @override
   String revealProgress(int developed, int total) {
     return '$developed of $total developed';
   }
@@ -675,4 +678,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String gallerySavedToPhoneAlbum(String album) {
     return 'Saved to the \"$album\" album on your phone. Google Photos can back it up and share it from there.';
   }
+
+  @override
+  String widgetFramesOf(String used, String total) {
+    return '$used / $total';
+  }
+
+  @override
+  String widgetReadyInDays(String days, String hours) {
+    return 'Ready in ${days}d ${hours}h';
+  }
+
+  @override
+  String widgetReadyInHours(String hours, String minutes) {
+    return 'Ready in ${hours}h ${minutes}m';
+  }
+
+  @override
+  String get widgetReady => 'Ready to reveal';
+
+  @override
+  String get widgetFull => 'Roll full. Send it to develop';
 }
