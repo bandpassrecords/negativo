@@ -1,0 +1,186 @@
+{
+  "_comment": [
+    "The app's own changelog: the source of truth for the 'What's New' dialog",
+    "shown once after an update, and for Settings > Changelog.",
+    "",
+    "Newest release FIRST. Every entry needs a `version` (bare semver, no",
+    "leading v), a `date` (YYYY-MM-DD) and a `highlights` map of locale -> list",
+    "of one-line strings. `en` is required; any locale that is missing falls",
+    "back to it, so a release can ship translated late without breaking.",
+    "",
+    "Add the entry for a release BEFORE tagging it:",
+    "  python scripts/new_changelog_entry.py 0.4.0 --highlight \"...\"",
+    "CI enforces this: see 'Verify changelog has an entry for the tag' in",
+    ".github/workflows/android-release.yml."
+  ],
+  "releases": [
+    {
+      "version": "0.3.1",
+      "date": "2026-09-27",
+      "highlights": {
+        "en": [
+          "Developing a roll lays it out as a strip of 35 mm negatives: tap a negative to flip it into its print, in any order.",
+          "Home-screen widgets on Android: an open roll with its frames and a shutter, and a one-tap camera button.",
+          "Long-press the app icon for Camera and Choose a roll. On Android, drag Camera onto your home screen for a camera icon.",
+          "After DEV NOW or the instant boost, the roll can be opened straight away.",
+          "A single Shiny photo's foil can be switched off from the photo viewer.",
+          "The photo viewer and the negatives loupe turn to landscape with your phone.",
+          "When Google Photos fails, an album can be shared to any app or saved into a phone album.",
+          "Opening the camera from a shortcut no longer asks for a permission you already gave."
+        ],
+        "pt": [
+          "Revelar um rolo agora o mostra como uma tira de negativos 35 mm: toque num negativo para virá-lo na foto, em qualquer ordem.",
+          "Widgets na tela inicial do Android: um rolo aberto com as poses e o obturador, e um botão de câmera de um toque.",
+          "Segure o ícone do app para Câmera e Escolher um rolo. No Android, arraste Câmera para a tela inicial e tenha um ícone de câmera.",
+          "Depois de REVELAR JÁ ou do impulso instantâneo, dá para abrir o rolo na hora.",
+          "O foil de uma foto Brilhante pode ser desligado no visualizador de fotos.",
+          "O visualizador de fotos e a lupa dos negativos giram para paisagem com o celular.",
+          "Quando o Google Fotos falha, o álbum pode ser compartilhado com qualquer app ou salvo num álbum do celular.",
+          "Abrir a câmera por um atalho não pede mais uma permissão que você já deu."
+        ],
+        "es": [
+          "Revelar un rollo lo muestra como una tira de negativos de 35 mm: toca un negativo para darle la vuelta y ver la foto, en cualquier orden.",
+          "Widgets en la pantalla de inicio de Android: un rollo abierto con sus fotos y el obturador, y un botón de cámara de un toque.",
+          "Mantén pulsado el icono de la app para Cámara y Elegir un rollo. En Android, arrastra Cámara a la pantalla de inicio para tener un icono de cámara.",
+          "Tras REVELAR YA o el impulso instantáneo, el rollo se puede abrir enseguida.",
+          "El foil de una sola foto Brillante se puede desactivar desde el visor de fotos.",
+          "El visor de fotos y la lupa de negativos giran a horizontal con el teléfono.",
+          "Si Google Fotos falla, el álbum se puede compartir con cualquier app o guardar en un álbum del teléfono.",
+          "Abrir la cámara desde un atajo ya no pide un permiso que ya diste."
+        ],
+        "fr": [
+          "Développer une pellicule l'affiche comme une bande de négatifs 35 mm : touchez un négatif pour le retourner en tirage, dans n'importe quel ordre.",
+          "Widgets sur l'écran d'accueil Android : une pellicule ouverte avec ses vues et le déclencheur, et un bouton appareil photo en un geste.",
+          "Appuyez longuement sur l'icône de l'app pour Appareil photo et Choisir une pellicule. Sur Android, faites glisser Appareil photo sur l'écran d'accueil pour une icône.",
+          "Après DÉV. MAINTENANT ou le boost instantané, la pellicule peut être ouverte tout de suite.",
+          "Le foil d'une seule photo Brillante peut être désactivé depuis la visionneuse.",
+          "La visionneuse et la loupe des négatifs passent en paysage avec le téléphone.",
+          "Si Google Photos échoue, l'album peut être partagé vers n'importe quelle app ou enregistré dans un album du téléphone.",
+          "Ouvrir l'appareil photo depuis un raccourci ne demande plus une autorisation déjà accordée."
+        ],
+        "de": [
+          "Eine entwickelte Rolle erscheint als Streifen aus 35-mm-Negativen: Tippe auf ein Negativ, um es zum Abzug umzudrehen, in beliebiger Reihenfolge.",
+          "Startbildschirm-Widgets auf Android: eine offene Rolle mit ihren Bildern und dem Auslöser, und eine Kamera-Taste mit einem Tipp.",
+          "Halte das App-Symbol gedrückt für Kamera und Film auswählen. Auf Android kannst du Kamera als eigenes Symbol auf den Startbildschirm ziehen.",
+          "Nach JETZT ENTWICKELN oder dem Sofort-Boost lässt sich die Rolle direkt öffnen.",
+          "Die Folie eines einzelnen Shiny-Fotos lässt sich im Fotobetrachter ausschalten.",
+          "Fotobetrachter und Negativ-Lupe drehen sich mit dem Handy ins Querformat.",
+          "Wenn Google Fotos scheitert, kann das Album mit jeder App geteilt oder in einem Handy-Album gespeichert werden.",
+          "Die Kamera über eine Verknüpfung zu öffnen, fragt nicht mehr nach einer Berechtigung, die du schon erteilt hast."
+        ],
+        "it": [
+          "Sviluppare un rullino lo mostra come una striscia di negativi 35 mm: tocca un negativo per girarlo nella stampa, in qualsiasi ordine.",
+          "Widget nella schermata Home di Android: un rullino aperto con gli scatti e l'otturatore, e un pulsante fotocamera a un tocco.",
+          "Tieni premuta l'icona dell'app per Fotocamera e Scegli un rullino. Su Android, trascina Fotocamera nella schermata Home per avere un'icona.",
+          "Dopo SVILUPPA ORA o il boost istantaneo, il rullino si può aprire subito.",
+          "Il foil di una singola foto Shiny si può disattivare dal visualizzatore.",
+          "Il visualizzatore di foto e la lente dei negativi ruotano in orizzontale con il telefono.",
+          "Se Google Foto non funziona, l'album si può condividere con qualsiasi app o salvare in un album del telefono.",
+          "Aprire la fotocamera da una scorciatoia non chiede più un permesso già concesso."
+        ]
+      }
+    },
+    {
+      "version": "0.3.0",
+      "date": "2026-09-26",
+      "highlights": {
+        "en": [
+          "Shiny photos are now holographic foil frames that shimmer as you tilt your phone, and they're far less rare: 1 in 150 photos.",
+          "Foil can be turned off per album: long-press an album card.",
+          "Every developed roll keeps its negatives: see them on a light table, hold a frame up to the light, and save a contact sheet to your gallery.",
+          "Shared photos now include their film effect.",
+          "Google Photos export works again."
+        ],
+        "pt": [
+          "As fotos Brilhantes agora são quadros de foil holográfico que brilham ao inclinar o celular, e bem menos raras: 1 a cada 150 fotos.",
+          "O foil pode ser desligado por álbum: segure o card do álbum.",
+          "Todo rolo revelado guarda seus negativos: veja-os numa mesa de luz, erga um quadro contra a luz e salve uma folha de contato na galeria.",
+          "As fotos compartilhadas agora levam o efeito do filme.",
+          "A exportação para o Google Fotos voltou a funcionar."
+        ]
+      }
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-04-23",
+      "highlights": {
+        "en": [
+          "Photos are revealed one by one after a roll develops.",
+          "Rolls can come back with film effects, and any photo can come out Shiny as it's revealed."
+        ],
+        "pt": [
+          "As fotos são reveladas uma a uma depois que o rolo fica pronto.",
+          "Os rolos podem voltar com efeitos de filme, e qualquer foto pode sair Brilhante na revelação."
+        ]
+      }
+    },
+    {
+      "version": "0.1.4",
+      "date": "2026-04-18",
+      "highlights": {
+        "en": [
+          "Fixed Google Photos sync."
+        ],
+        "pt": [
+          "Corrigida a sincronização com o Google Fotos."
+        ]
+      }
+    },
+    {
+      "version": "0.1.3",
+      "date": "2026-04-17",
+      "highlights": {
+        "en": [
+          "Development notifications have their own icon.",
+          "Fixed uploading an album to Google Photos."
+        ],
+        "pt": [
+          "As notificações de revelação ganharam um ícone próprio.",
+          "Corrigido o envio de álbuns para o Google Fotos."
+        ]
+      }
+    },
+    {
+      "version": "0.1.2",
+      "date": "2026-03-31",
+      "highlights": {
+        "en": [
+          "Faster and smoother."
+        ],
+        "pt": [
+          "Mais rápido e fluido."
+        ]
+      }
+    },
+    {
+      "version": "0.1.1",
+      "date": "2026-03-31",
+      "highlights": {
+        "en": [
+          "Two more types of film roll.",
+          "Camera permission is picked up as soon as you grant it.",
+          "A new app icon, and fewer permissions asked for."
+        ],
+        "pt": [
+          "Mais dois tipos de rolo de filme.",
+          "A permissão da câmera é reconhecida assim que você a concede.",
+          "Um novo ícone do app, e menos permissões pedidas."
+        ]
+      }
+    },
+    {
+      "version": "0.1.0",
+      "date": "2026-03-31",
+      "highlights": {
+        "en": [
+          "The first Negativo: load a roll, shoot without seeing your photos, send it to develop and wait for your prints.",
+          "Earn points as you shoot and spend them on film stocks and faster development."
+        ],
+        "pt": [
+          "O primeiro Negativo: carregue um rolo, fotografe sem ver as fotos, mande revelar e espere pelas cópias.",
+          "Ganhe pontos fotografando e gaste em filmes e revelação mais rápida."
+        ]
+      }
+    }
+  ]
+}

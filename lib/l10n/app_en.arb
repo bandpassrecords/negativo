@@ -458,5 +458,67 @@
     }
   },
   "developedDialogLater": "Later",
-  "developedDialogOpen": "Open"
+  "developedDialogOpen": "Open",
+  "whatsNewTitle": "What's new",
+  "@whatsNewTitle": {
+    "description": "Title of the dialog shown once after an update, when it covers several versions"
+  },
+  "whatsNewTitleWithVersion": "What's new in {version}",
+  "@whatsNewTitleWithVersion": {
+    "description": "Title of the What's New dialog for a single version",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "whatsNewIntro": "Here's what changed since you last opened Negativo.",
+  "@whatsNewIntro": {
+    "description": "Line under the What's New title"
+  },
+  "whatsNewGotIt": "Got it",
+  "@whatsNewGotIt": {
+    "description": "Closes the What's New dialog"
+  },
+  "changelogFullButton": "Full changelog",
+  "@changelogFullButton": {
+    "description": "Opens the full changelog from the What's New dialog"
+  },
+  "versionLabel": "Version {version}",
+  "@versionLabel": {
+    "description": "Heading for one release in the changelog, e.g. Version 0.3.1",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "changelogTitle": "Changelog",
+  "@changelogTitle": {
+    "description": "Title of the changelog page, and its entry in Settings"
+  },
+  "changelogSub": "What changed in each version",
+  "@changelogSub": {
+    "description": "Subtitle of the changelog entry in Settings"
+  },
+  "changelogEmpty": "No changelog in this build.",
+  "@changelogEmpty": {
+    "description": "Shown on the changelog page when the build has no changelog"
+  },
+  "changelogCurrentVersionBadge": "Installed",
+  "@changelogCurrentVersionBadge": {
+    "description": "Badge on the changelog entry for the version installed"
+  },
+  "settingsAbout": "About",
+  "@settingsAbout": {
+    "description": "Settings section with the app version and changelog"
+  },
+  "settingsVersion": "Version",
+  "@settingsVersion": {
+    "description": "Settings row showing the installed app version"
+  },
+  "settingsVersionDev": "Development build",
+  "@settingsVersionDev": {
+    "description": "Shown instead of a version number for a local, untagged build"
+  }
 }

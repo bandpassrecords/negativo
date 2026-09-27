@@ -374,5 +374,18 @@
   "developedDialogTitle": "Rullino sviluppato",
   "developedDialogBody": "{roll} è pronto. Aprirlo ora per vedere le foto?",
   "developedDialogLater": "Più tardi",
-  "developedDialogOpen": "Apri"
+  "developedDialogOpen": "Apri",
+  "whatsNewTitle": "Novità",
+  "whatsNewTitleWithVersion": "Novità della {version}",
+  "whatsNewIntro": "Ecco cosa è cambiato dall'ultima volta che hai aperto Negativo.",
+  "whatsNewGotIt": "Ho capito",
+  "changelogFullButton": "Cronologia completa",
+  "versionLabel": "Versione {version}",
+  "changelogTitle": "Cronologia versioni",
+  "changelogSub": "Cosa è cambiato in ogni versione",
+  "changelogEmpty": "Questa build non ha una cronologia.",
+  "changelogCurrentVersionBadge": "Installata",
+  "settingsAbout": "Informazioni",
+  "settingsVersion": "Versione",
+  "settingsVersionDev": "Build di sviluppo"
 }

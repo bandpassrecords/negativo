@@ -9,6 +9,7 @@ import 'services/hive_service.dart';
 import 'services/film_service.dart';
 import 'services/scoring_service.dart';
 import 'services/app_navigator.dart';
+import 'services/changelog_service.dart';
 import 'services/camera_shortcut_service.dart';
 import 'services/roll_widget_service.dart';
 
@@ -19,6 +20,14 @@ void main() async {
   await initializeDateFormatting('pt', null);
 
   await HiveService.init();
+  // Installs from before the changelog never recorded a version; one with
+  // rolls in it has been used, so its first update still gets What's New.
+  if (!isDevBuild) {
+    await ChangelogService.seedBaselineForUpgrade(
+      hadPriorUse: HiveService.getTotalRolls() > 0,
+      currentVersion: kAppVersion,
+    );
+  }
   await NotificationService.init();
   await ScoringService.init();
 

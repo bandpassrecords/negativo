@@ -374,5 +374,18 @@
   "developedDialogTitle": "Pellicule développée",
   "developedDialogBody": "{roll} est prête. L’ouvrir maintenant pour voir vos photos ?",
   "developedDialogLater": "Plus tard",
-  "developedDialogOpen": "Ouvrir"
+  "developedDialogOpen": "Ouvrir",
+  "whatsNewTitle": "Nouveautés",
+  "whatsNewTitleWithVersion": "Nouveautés de la {version}",
+  "whatsNewIntro": "Voici ce qui a changé depuis la dernière ouverture de Negativo.",
+  "whatsNewGotIt": "J'ai compris",
+  "changelogFullButton": "Historique complet",
+  "versionLabel": "Version {version}",
+  "changelogTitle": "Historique des versions",
+  "changelogSub": "Ce qui a changé dans chaque version",
+  "changelogEmpty": "Cette version n'a pas d'historique.",
+  "changelogCurrentVersionBadge": "Installée",
+  "settingsAbout": "À propos",
+  "settingsVersion": "Version",
+  "settingsVersionDev": "Version de développement"
 }

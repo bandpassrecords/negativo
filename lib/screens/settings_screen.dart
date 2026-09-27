@@ -4,6 +4,8 @@ import '../l10n/app_localizations.dart';
 import '../services/hive_service.dart';
 import '../services/scoring_service.dart';
 import '../models/app_settings.dart';
+import '../services/changelog_service.dart';
+import 'changelog_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -135,6 +137,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _StatTile(
             label: l.settingsTotalRolls,
             value: '${HiveService.getTotalRolls()}',
+          ),
+
+          const Divider(height: 32),
+
+          // ── About ────────────────────────────────────────────────
+          _SectionHeader(title: l.settingsAbout),
+          ListTile(
+            title: Text(l.settingsVersion),
+            trailing: Text(
+              isDevBuild ? l.settingsVersionDev : kAppVersion,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          ListTile(
+            title: Text(l.changelogTitle),
+            subtitle: Text(l.changelogSub),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ChangelogScreen()),
+            ),
           ),
 
           const SizedBox(height: 32),

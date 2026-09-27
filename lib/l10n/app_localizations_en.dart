@@ -713,4 +713,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get developedDialogOpen => 'Open';
+
+  @override
+  String get whatsNewTitle => 'What\'s new';
+
+  @override
+  String whatsNewTitleWithVersion(String version) {
+    return 'What\'s new in $version';
+  }
+
+  @override
+  String get whatsNewIntro =>
+      'Here\'s what changed since you last opened Negativo.';
+
+  @override
+  String get whatsNewGotIt => 'Got it';
+
+  @override
+  String get changelogFullButton => 'Full changelog';
+
+  @override
+  String versionLabel(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get changelogTitle => 'Changelog';
+
+  @override
+  String get changelogSub => 'What changed in each version';
+
+  @override
+  String get changelogEmpty => 'No changelog in this build.';
+
+  @override
+  String get changelogCurrentVersionBadge => 'Installed';
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsVersionDev => 'Development build';
 }

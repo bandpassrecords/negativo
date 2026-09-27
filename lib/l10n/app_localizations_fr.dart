@@ -723,4 +723,48 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get developedDialogOpen => 'Ouvrir';
+
+  @override
+  String get whatsNewTitle => 'Nouveautés';
+
+  @override
+  String whatsNewTitleWithVersion(String version) {
+    return 'Nouveautés de la $version';
+  }
+
+  @override
+  String get whatsNewIntro =>
+      'Voici ce qui a changé depuis la dernière ouverture de Negativo.';
+
+  @override
+  String get whatsNewGotIt => 'J\'ai compris';
+
+  @override
+  String get changelogFullButton => 'Historique complet';
+
+  @override
+  String versionLabel(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get changelogTitle => 'Historique des versions';
+
+  @override
+  String get changelogSub => 'Ce qui a changé dans chaque version';
+
+  @override
+  String get changelogEmpty => 'Cette version n\'a pas d\'historique.';
+
+  @override
+  String get changelogCurrentVersionBadge => 'Installée';
+
+  @override
+  String get settingsAbout => 'À propos';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsVersionDev => 'Version de développement';
 }
