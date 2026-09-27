@@ -374,5 +374,18 @@
   "developedDialogTitle": "Rollo revelado",
   "developedDialogBody": "{roll} está listo. ¿Abrirlo ahora para ver tus fotos?",
   "developedDialogLater": "Más tarde",
-  "developedDialogOpen": "Abrir"
+  "developedDialogOpen": "Abrir",
+  "whatsNewTitle": "Novedades",
+  "whatsNewTitleWithVersion": "Novedades de la {version}",
+  "whatsNewIntro": "Esto es lo que ha cambiado desde la última vez que abriste Negativo.",
+  "whatsNewGotIt": "Entendido",
+  "changelogFullButton": "Historial completo",
+  "versionLabel": "Versión {version}",
+  "changelogTitle": "Historial de versiones",
+  "changelogSub": "Qué cambió en cada versión",
+  "changelogEmpty": "Esta compilación no tiene historial.",
+  "changelogCurrentVersionBadge": "Instalada",
+  "settingsAbout": "Acerca de",
+  "settingsVersion": "Versión",
+  "settingsVersionDev": "Compilación de desarrollo"
 }

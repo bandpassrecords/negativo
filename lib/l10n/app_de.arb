@@ -374,5 +374,18 @@
   "developedDialogTitle": "Film entwickelt",
   "developedDialogBody": "{roll} ist fertig. Jetzt öffnen und die Fotos ansehen?",
   "developedDialogLater": "Später",
-  "developedDialogOpen": "Öffnen"
+  "developedDialogOpen": "Öffnen",
+  "whatsNewTitle": "Neuigkeiten",
+  "whatsNewTitleWithVersion": "Neu in {version}",
+  "whatsNewIntro": "Das hat sich geändert, seit du Negativo zuletzt geöffnet hast.",
+  "whatsNewGotIt": "Verstanden",
+  "changelogFullButton": "Alle Änderungen",
+  "versionLabel": "Version {version}",
+  "changelogTitle": "Versionsverlauf",
+  "changelogSub": "Was sich in jeder Version geändert hat",
+  "changelogEmpty": "Dieser Build enthält keinen Versionsverlauf.",
+  "changelogCurrentVersionBadge": "Installiert",
+  "settingsAbout": "Über",
+  "settingsVersion": "Version",
+  "settingsVersionDev": "Entwicklungs-Build"
 }

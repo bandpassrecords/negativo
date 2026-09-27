@@ -715,4 +715,48 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get developedDialogOpen => 'Apri';
+
+  @override
+  String get whatsNewTitle => 'Novità';
+
+  @override
+  String whatsNewTitleWithVersion(String version) {
+    return 'Novità della $version';
+  }
+
+  @override
+  String get whatsNewIntro =>
+      'Ecco cosa è cambiato dall\'ultima volta che hai aperto Negativo.';
+
+  @override
+  String get whatsNewGotIt => 'Ho capito';
+
+  @override
+  String get changelogFullButton => 'Cronologia completa';
+
+  @override
+  String versionLabel(String version) {
+    return 'Versione $version';
+  }
+
+  @override
+  String get changelogTitle => 'Cronologia versioni';
+
+  @override
+  String get changelogSub => 'Cosa è cambiato in ogni versione';
+
+  @override
+  String get changelogEmpty => 'Questa build non ha una cronologia.';
+
+  @override
+  String get changelogCurrentVersionBadge => 'Installata';
+
+  @override
+  String get settingsAbout => 'Informazioni';
+
+  @override
+  String get settingsVersion => 'Versione';
+
+  @override
+  String get settingsVersionDev => 'Build di sviluppo';
 }

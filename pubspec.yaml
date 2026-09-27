@@ -1,7 +1,7 @@
 name: negativo
 description: Negativo — analog camera simulator, shoot film rolls and develop them later
 publish_to: 'none'
-version: 1.0.0+1
+version: 0.0.0+0
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -68,6 +68,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/changelog/
 
 module:
   androidX: true

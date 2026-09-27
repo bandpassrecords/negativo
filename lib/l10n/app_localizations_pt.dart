@@ -714,4 +714,48 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get developedDialogOpen => 'Abrir';
+
+  @override
+  String get whatsNewTitle => 'Novidades';
+
+  @override
+  String whatsNewTitleWithVersion(String version) {
+    return 'Novidades da $version';
+  }
+
+  @override
+  String get whatsNewIntro =>
+      'Veja o que mudou desde a última vez que você abriu o Negativo.';
+
+  @override
+  String get whatsNewGotIt => 'Entendi';
+
+  @override
+  String get changelogFullButton => 'Histórico completo';
+
+  @override
+  String versionLabel(String version) {
+    return 'Versão $version';
+  }
+
+  @override
+  String get changelogTitle => 'Histórico de versões';
+
+  @override
+  String get changelogSub => 'O que mudou em cada versão';
+
+  @override
+  String get changelogEmpty => 'Esta versão não tem histórico.';
+
+  @override
+  String get changelogCurrentVersionBadge => 'Instalada';
+
+  @override
+  String get settingsAbout => 'Sobre';
+
+  @override
+  String get settingsVersion => 'Versão';
+
+  @override
+  String get settingsVersionDev => 'Versão de desenvolvimento';
 }

@@ -1233,6 +1233,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open'**
   String get developedDialogOpen;
+
+  /// Title of the dialog shown once after an update, when it covers several versions
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get whatsNewTitle;
+
+  /// Title of the What's New dialog for a single version
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new in {version}'**
+  String whatsNewTitleWithVersion(String version);
+
+  /// Line under the What's New title
+  ///
+  /// In en, this message translates to:
+  /// **'Here\'s what changed since you last opened Negativo.'**
+  String get whatsNewIntro;
+
+  /// Closes the What's New dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get whatsNewGotIt;
+
+  /// Opens the full changelog from the What's New dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Full changelog'**
+  String get changelogFullButton;
+
+  /// Heading for one release in the changelog, e.g. Version 0.3.1
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String versionLabel(String version);
+
+  /// Title of the changelog page, and its entry in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Changelog'**
+  String get changelogTitle;
+
+  /// Subtitle of the changelog entry in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'What changed in each version'**
+  String get changelogSub;
+
+  /// Shown on the changelog page when the build has no changelog
+  ///
+  /// In en, this message translates to:
+  /// **'No changelog in this build.'**
+  String get changelogEmpty;
+
+  /// Badge on the changelog entry for the version installed
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get changelogCurrentVersionBadge;
+
+  /// Settings section with the app version and changelog
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// Settings row showing the installed app version
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settingsVersion;
+
+  /// Shown instead of a version number for a local, untagged build
+  ///
+  /// In en, this message translates to:
+  /// **'Development build'**
+  String get settingsVersionDev;
 }
 
 class _AppLocalizationsDelegate

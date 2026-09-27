@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
+import '../services/changelog_service.dart';
+import '../widgets/whats_new_dialog.dart';
+import 'changelog_screen.dart';
 import 'rolls_screen.dart';
 import 'albums_screen.dart';
 import 'progress_screen.dart';
@@ -14,6 +17,33 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!isDevBuild) _showWhatsNew();
+  }
+
+  /// Once after an update: what changed since the version last opened.
+  Future<void> _showWhatsNew() async {
+    // Give a shortcut or widget tap on a cold start time to open its screen.
+    await Future<void>.delayed(const Duration(seconds: 1));
+    if (!mounted || !(ModalRoute.of(context)?.isCurrent ?? false)) {
+      // Something else is on screen (the camera, say): don't cover it, and
+      // leave the update unseen so the next launch shows it.
+      return;
+    }
+    final releases = await ChangelogService.takePendingChangelog(kAppVersion);
+    if (!mounted) return;
+    await showWhatsNewDialog(
+      context,
+      releases,
+      onViewFullChangelog: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ChangelogScreen()),
+      ),
+    );
+  }
 
   Widget _buildTab() {
     switch (_index) {
